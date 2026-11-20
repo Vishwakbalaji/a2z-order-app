@@ -1,0 +1,166 @@
+/**
+ * A2Z Beverage Distributors — "Price Deals" price sheet (2 pages, A4).
+ * Source file: A2Z_Beverages_Price_Deals_A4_2.pdf
+ *
+ * Transcribed row-by-row from the rendered PDF pages and cross-checked
+ * automatically against the in-app PDF parser (see src/lib/pdf/priceSheetParser.test.ts).
+ * Every price is the price of ONE CASE, exactly as printed. Nothing here is invented.
+ *
+ * Format: [section (department), brand label, description/size as printed, case price]
+ */
+export const A2Z_SOURCE_FILE = 'A2Z_Beverages_Price_Deals_A4_2.pdf';
+
+export const A2Z_COMPANY = {
+  companyName: 'A2Z Beverage Distributors',
+  companyAddress: '1919 NW 19th Street, Fort Lauderdale, FL 33311',
+  companyPhone: '(954) 899-5552',
+};
+
+export type SheetRow = [section: string, brand: string, desc: string, price: string];
+
+export const A2Z_PRICE_ROWS: SheetRow[] = [
+  // ---------------- WATER ----------------
+  ['WATER', 'ZEPHYRHILLS', '8OZ / 48CT', '8.49'],
+  ['WATER', 'ZEPHYRHILLS', '16OZ / 32CT', '6.99'],
+  ['WATER', 'ZEPHYRHILLS', '16OZ / 40CT', '7.49'],
+  ['WATER', 'ZEPHYRHILLS', '20OZ / 28CT', '12.49'],
+  ['WATER', 'ZEPHYRHILLS', '700ML SPORT / 24CT', '11.49'],
+  ['WATER', 'ZEPHYRHILLS', '1L / 15CT', '10.49'],
+  ['WATER', 'ZEPHYRHILLS', '1.5L / 12CT', '12.49'],
+  ['WATER', 'ZEPHYRHILLS', '1 GAL / 6CT', '10.49'],
+  ['WATER', 'EVIAN WATER', '330ML / 24CT', '19.99'],
+  ['WATER', 'EVIAN WATER', '500ML / 24CT', '22.99'],
+  ['WATER', 'EVIAN WATER', '750ML SPORT / 12CT', '19.99'],
+  ['WATER', 'EVIAN WATER', '1L / 12CT', '21.99'],
+  ['WATER', 'EVIAN WATER', '1.5L / 12CT', '23.99'],
+  ['WATER', 'AQUAFINA', '16.9OZ / 32CT', '6.99'],
+  ['WATER', 'AQUAFINA', '20OZ / 24CT', '24.99'],
+  ['WATER', 'AQUAFINA', '1L / 15CT', '25.49'],
+  ['WATER', 'SMART WATER', '20OZ / 24CT', '30.99'],
+  ['WATER', 'SMART WATER', '700ML SPORT / 24CT', '34.99'],
+  ['WATER', 'SMART WATER', '1L / 12CT', '19.99'],
+  ['WATER', 'SMART WATER', '1.5L / 12CT', '29.99'],
+  ['WATER', 'FIJI WATER', '0.5L / 24CT', '24.99'],
+  ['WATER', 'FIJI WATER', '700ML SPORTS / 12CT', '21.49'],
+  ['WATER', 'FIJI WATER', '1L / 12CT', '24.49'],
+  ['WATER', 'FIJI WATER', '1.5L / 12CT', '25.49'],
+  ['WATER', 'PURE LIFE', '16.9OZ / 40CT', '5.99'],
+  ['WATER', 'PURE LIFE', '20OZ / 24CT', '10.99'],
+  ['WATER', 'PURE LIFE', '1 GAL / 6CT', '8.99'],
+  ['WATER', 'ESSENTIA WATER', '20OZ / 24CT', '27.99'],
+  ['WATER', 'ESSENTIA WATER', '700ML SPORTS / 24CT', '34.99'],
+  ['WATER', 'ESSENTIA WATER', '1L / 12CT', '21.99'],
+  ['WATER', 'ESSENTIA WATER', '1.5L / 12CT', '24.99'],
+  ['WATER', 'SAN PELLEGRINO', '8.4OZ / 24CT (GLASS)', '24.99'],
+  ['WATER', 'SAN PELLEGRINO', '330ML / 24CT (CAN)', '18.99'],
+  ['WATER', 'SAN PELLEGRINO', '0.5L / 24CT (PLASTIC)', '24.99'],
+  ['WATER', 'SAN PELLEGRINO', '750ML / 12CT (GLASS)', '28.99'],
+  ['WATER', 'SAN PELLEGRINO', '1L / 12CT (PLASTIC)', '29.99'],
+  ['WATER', 'MAISON PERRIER', '11OZ / 24CT (GLASS)', '26.99'],
+  ['WATER', 'MAISON PERRIER', '16OZ / 24CT (PLASTIC)', '25.99'],
+  ['WATER', 'MAISON PERRIER', '750ML / 12CT (GLASS)', '30.99'],
+  ['WATER', 'SARATOGA WATER', 'STILL 12OZ / 24CT', '23.99'],
+  ['WATER', 'SARATOGA WATER', 'STILL 28OZ / 12CT', '24.49'],
+  ['WATER', 'SARATOGA WATER', 'SPARKLING 12OZ / 12CT', '22.49'],
+  ['WATER', 'SARATOGA WATER', 'SPARKLING 28OZ / 12CT', '24.49'],
+  ['WATER', 'ACQUA PANNA', '500ML / 24CT', '30.99'],
+  ['WATER', 'ACQUA PANNA', '750ML / 12CT (GLASS)', '26.99'],
+  ['WATER', 'ACQUA PANNA', '1L / 12CT', '29.99'],
+  ['WATER', 'BLUE WATER', '16.9OZ / 24CT', '3.59'],
+  ['WATER', 'DASANI WATER', '20OZ / 24CT', '21.99'],
+  ['WATER', 'DASANI WATER', '1L / 12CT', '21.99'],
+  ['WATER', 'CORE WATER', '700ML SPORT / 24CT', '34.99'],
+  ['WATER', 'CORE WATER', '1L / 12CT', '23.50'],
+
+  // ---------------- SODA ----------------
+  ['SODA', 'COKE / FANTA / SPRITE & FLAVORS', '20OZ / 24CT', '32.99'],
+  ['SODA', 'COKE / FANTA / SPRITE & FLAVORS', '16OZ / 24CT', '30.99'],
+  ['SODA', 'COKE / FANTA / SPRITE & FLAVORS', '12OZ / 2-12CT', '16.99'],
+  ['SODA', 'COKE / FANTA / SPRITE & FLAVORS', '2L / 8CT', '21.50'],
+  ['SODA', 'COKE MEXICO', '355ML / 24CT (GLASS)', '40.99'],
+  ['SODA', 'PEPSI / DEW / DR PEPPER', '20OZ / 24CT', '25.99'],
+  ['SODA', 'PEPSI / DEW / DR PEPPER', '12OZ / 2-12CT', '14.99'],
+  ['SODA', 'PEPSI / DEW / DR PEPPER', '2L / 8CT', '21.50'],
+  ['SODA', 'GINGER ALE / 7UP / A&W', '20OZ / 24CT', '25.99'],
+  ['SODA', 'GINGER ALE / 7UP / A&W', '12OZ / 2-12CT', '12.99'],
+  ['SODA', 'GINGER ALE / 7UP / A&W', '2L / 8CT', '13.99'],
+  ['SODA', 'SUNKIST / CRUSH', '20OZ / 24CT', '25.99'],
+  ['SODA', 'SUNKIST / CRUSH', '12OZ / 2-12CT', '12.99'],
+  ['SODA', 'MINUTE MAID', '20OZ / 24CT', '32.99'],
+  ['SODA', 'CLUB SODA', '1L / 15CT', '24.99'],
+  ['SODA', 'CLUB SODA', 'CAN 12OZ / 24CT', '12.99'],
+  ['SODA', 'TONIC WATER', '1L / 15CT', '24.99'],
+  ['SODA', 'TONIC WATER', 'CAN 12OZ / 24CT', '12.99'],
+  ['SODA', 'JARRITOS', '12.5OZ / 24CT', '23.99'],
+  ['SODA', 'JUPINA', '12OZ / 24CT', '14.99'],
+  ['SODA', 'WATERMELON', '12OZ / 24CT', '13.99'],
+  ['SODA', 'MALTA INDIA', '12OZ / 24CT', '23.99'],
+  ['SODA', 'VITA MALTA', '11.2OZ / 24CT', '24.49'],
+  ['SODA', 'INCA KOLA', '12OZ / 2-12CT', '15.99'],
+
+  // ---------------- SPORTS DRINKS ----------------
+  ['SPORTS DRINKS', 'GATORADE', '20OZ / 24CT', '23.99'],
+  ['SPORTS DRINKS', 'GATORADE', '28OZ / 15CT', '29.99'],
+  ['SPORTS DRINKS', 'POWERADE', '20OZ / 24CT', '23.99'],
+  ['SPORTS DRINKS', 'POWERADE', '28OZ / 15CT', '22.49'],
+  ['SPORTS DRINKS', 'ELECTROLIT', '21OZ / 12CT', '25.99'],
+  ['SPORTS DRINKS', 'VITAMIN WATER', '20OZ / 12CT', '19.99'],
+  ['SPORTS DRINKS', 'BODYARMOR', '16OZ / 12CT', '20.99'],
+  ['SPORTS DRINKS', 'BODYARMOR', '28OZ / 15CT', '30.99'],
+
+  // ---------------- JUICES ----------------
+  ['JUICES', 'SNAPPLE', '16OZ / 12CT', '12.99'],
+  ['JUICES', 'TROPICANA', '15OZ / 12CT', '22.99'],
+  ['JUICES', 'TROPICANA', '11OZ / 12CT', '23.99'],
+  ['JUICES', 'COCONUT WATER', 'PARROT 16OZ / 24CT', '26.99'],
+  ['JUICES', 'COCONUT WATER', 'PARROT 10OZ / 24CT', '22.99'],
+  ['JUICES', 'COCONUT WATER', 'FOCO 17.6OZ / 24CT', '39.95'],
+  ['JUICES', 'COCONUT WATER', 'VITA COCO 11.0OZ / 12CT', '19.90'],
+  ['JUICES', 'COCONUT WATER', 'VITA COCO 16.9OZ / 12CT', '29.99'],
+  ['JUICES', 'COCONUT WATER', 'VITA COCO 1L / 12CT', '49.99'],
+  ['JUICES', 'OKF', '16.9OZ / 12CT', '15.99'],
+  ['JUICES', 'DOLE', 'PINEAPPLE JUICE 8OZ / 24CT', '19.99'],
+  ['JUICES', 'BAI', '18OZ / 12CT', '22.99'],
+  ['JUICES', 'OCEAN SPRAY', '15.2OZ / 12CT', '16.99'],
+  ['JUICES', 'OCEAN SPRAY', '64OZ / 8CT', '29.99'],
+  ['JUICES', 'PURE LEAF TEA', '18.5OZ / 12CT', '17.99'],
+  ['JUICES', 'ARIZONA', '20OZ / 24CT', '18.49'],
+  ['JUICES', 'MINUTE MAID JUICE', '12OZ / 24CT', '35.99'],
+  ['JUICES', 'EVERFRESH', '16OZ / 12CT', '16.99'],
+  ['JUICES', 'EVERFRESH', '32OZ / 12CT', '26.99'],
+
+  // ---------------- SHOPPING BAGS ----------------
+  ['SHOPPING BAGS', 'SHOPPING BAGS', 'SMALL / 1200 BAGS', '13.00'],
+  ['SHOPPING BAGS', 'SHOPPING BAGS', 'MEDIUM / 900 BAGS', '13.00'],
+  ['SHOPPING BAGS', 'SHOPPING BAGS', 'BIG / 500 BAGS', '13.00'],
+  ['SHOPPING BAGS', 'SHOPPING BAGS', 'LIQUOR BAGS / 750CT', '17.50'],
+
+  // ---------------- ENERGY ENHANCER / DRINKS ----------------
+  ['ENERGY ENHANCER / DRINKS', 'MONSTER', '16OZ / 24CT', '38.50'],
+  ['ENERGY ENHANCER / DRINKS', 'MONSTER', '24OZ / 12CT', '42.49'],
+  ['ENERGY ENHANCER / DRINKS', 'RED BULL', '8OZ / 24CT', '40.99'],
+  ['ENERGY ENHANCER / DRINKS', 'RED BULL', '12OZ / 24CT', '54.99'],
+  ['ENERGY ENHANCER / DRINKS', 'RED BULL', '16OZ / 12CT', '40.99'],
+  ['ENERGY ENHANCER / DRINKS', 'RED BULL', '20OZ / 12CT', '48.99'],
+  ['ENERGY ENHANCER / DRINKS', 'ALANI', '12OZ / 12CT', '23.99'],
+  ['ENERGY ENHANCER / DRINKS', 'C4', '16OZ / 12CT', '25.99'],
+  ['ENERGY ENHANCER / DRINKS', 'GHOST', '16OZ / 12CT', '26.99'],
+  ['ENERGY ENHANCER / DRINKS', 'CELSIUS', '12OZ / 12CT', '20.49'],
+  ['ENERGY ENHANCER / DRINKS', 'BANG', '16OZ / 12CT', '24.99'],
+  ['ENERGY ENHANCER / DRINKS', 'BLOOM', '12OZ / 12CT', '24.99'],
+
+  // ---------------- MILK ----------------
+  ['MILK', 'NUTRAMENT', '12OZ / 12CT', '22.99'],
+  ['MILK', 'SPORTS SHAKE', '11OZ / 12CT', '20.99'],
+  ['MILK', 'MUSCLE MILK', '11OZ / 15CT', '25.99'],
+  ['MILK', 'MUSCLE MILK', '42G / 12CT', '41.99'],
+  ['MILK', 'STARBUCKS', '9.5OZ / 15CT', '22.99'],
+  ['MILK', 'STARBUCKS', '6.5OZ / 12CT', '27.99'],
+  ['MILK', 'STARBUCKS', '13.9OZ / 12CT', '34.99'],
+  ['MILK', 'STARBUCKS', '15.7OZ / 12CT', '35.99'],
+  ['MILK', 'DUNKIN', '13.7OZ / 12CT', '26.49'],
+  ['MILK', 'NESQUIK', '14OZ / 12CT', '23.49'],
+  ['MILK', 'YOO-HOO', '15.5OZ / 24CT', '28.50'],
+  ['MILK', 'CORE POWER', '26G / 12CT', '34.99'],
+  ['MILK', 'CORE POWER', '42G / 12CT', '49.99'],
+];
