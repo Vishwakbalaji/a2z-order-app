@@ -106,6 +106,7 @@ export interface Settings extends CompanyInfo {
   selectedStoreId: string | null;
   orderSeq: number;
   seededAt: number;
+  bundledVersion?: number; // highest bundled dataset (src/data/bundled.ts) applied on this phone
 }
 
 /** A confirmed product → price sheet mapping, remembered across re-imports. */

@@ -98,7 +98,7 @@ function deriveCatalog(products: Product[], priceItems: PriceItem[]): Partial<Ap
 
 export async function init() {
   try {
-    await importer.seedIfEmpty();
+    await importer.syncBundledData();
     await reload();
     // ask the browser not to evict our data under storage pressure
     try {

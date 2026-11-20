@@ -4,11 +4,12 @@
  */
 import { db, uid } from './db';
 import { takeSnapshot } from './backup';
-import type { Mapping, PriceItem, Product } from '../types';
+import type { DraftLine, Mapping, PriceItem, Product } from '../types';
 import { matchProduct } from '../lib/matching';
 import { displayName, mappingKey, priceItemKey, unitsFromText } from '../lib/products';
-import { A2Z_COMPANY, A2Z_PRICE_ROWS, A2Z_SOURCE_FILE } from '../data/a2zPriceSheet';
-import { parseMoneyToCents } from '../lib/money';
+import { A2Z_COMPANY } from '../data/a2zPriceSheet';
+import { BUNDLED_DATASETS, type BundledMapping } from '../data/bundled';
+import { normText } from '../lib/normalize';
 
 export interface PriceRowInput {
   section: string;
@@ -253,36 +254,89 @@ export async function leaveUnmatched(productId: string) {
   });
 }
 
-/** First run: load the A2Z price sheet that was supplied with the app. */
-export async function seedIfEmpty(): Promise<boolean> {
-  const s = await db.settings.get('app');
-  if (s) return false;
-  const now = Date.now();
-  await db.transaction('rw', [db.priceItems, db.products, db.settings, db.imports, db.mappings], async () => {
-    if (await db.settings.get('app')) return;
-    await applyPriceSheet(
-      A2Z_PRICE_ROWS.map(([section, brand, desc, price]) => ({
-        section,
-        brand,
-        desc,
-        priceCents: parseMoneyToCents(price)!,
-        raw: `${brand} | ${desc} | $${price}`,
-      })),
-      A2Z_SOURCE_FILE,
-      { snapshot: false },
-    );
-    await db.settings.put({
-      id: 'app',
-      ...A2Z_COMPANY,
-      repName: 'Vishwak',
-      repPhone: '',
-      logoDataUrl: null,
-      selectedStoreId: null,
-      orderSeq: 0,
-      seededAt: now,
+/**
+ * Applies data shipped with the app (src/data/bundled.ts) that this phone has not
+ * applied yet. First run = the A2Z price sheet. Later versions (e.g. the catalog) are
+ * applied on the next start after the app is updated — stores, carts and orders untouched.
+ */
+export async function syncBundledData(): Promise<number[]> {
+  const run = async () => {
+    const applied: number[] = [];
+    await db.transaction('rw', db.settings, async () => {
+      if (await db.settings.get('app')) return;
+      await db.settings.put({
+        id: 'app',
+        ...A2Z_COMPANY,
+        repName: 'Vishwak',
+        repPhone: '',
+        logoDataUrl: null,
+        selectedStoreId: null,
+        orderSeq: 0,
+        seededAt: Date.now(),
+        bundledVersion: 0,
+      });
     });
-  });
-  return true;
+    for (const ds of [...BUNDLED_DATASETS].sort((a, b) => a.version - b.version)) {
+      const s = (await db.settings.get('app'))!;
+      const done = s.bundledVersion ?? (s.seededAt ? 1 : 0); // installs from before versioning had v1
+      if (ds.version <= done) continue;
+      if (ds.kind === 'pricesheet') {
+        await applyPriceSheet(ds.rows, ds.fileName, { snapshot: done > 0 });
+      } else {
+        await addBundledMappings(ds.mappings || []);
+        await applyCatalog(ds.rows, ds.fileName);
+        await moveDraftsToCatalogNames();
+      }
+      const cur = (await db.settings.get('app'))!;
+      await db.settings.put({ ...cur, bundledVersion: ds.version });
+      applied.push(ds.version);
+    }
+    return applied;
+  };
+  // one tab at a time, so two open tabs never import the same data twice
+  const locks = typeof navigator !== 'undefined' ? navigator.locks : undefined;
+  return locks ? locks.request('a2z-bundled-data', run) : run();
+}
+
+/**
+ * Draft carts may hold price-sheet products that a catalog product now replaces.
+ * Move those lines to the catalog product — only when exactly ONE active catalog
+ * product is matched to that price line (e.g. "COKE / FANTA / SPRITE" lines that
+ * several catalog flavours share are left as they are). Completed orders never change.
+ */
+export async function moveDraftsToCatalogNames() {
+  const products = await db.products.toArray();
+  const byItem = new Map<string, Product[]>();
+  for (const p of products) {
+    if (p.origin === 'pricesheet' || !p.active || p.matchStatus !== 'matched' || !p.priceItemId) continue;
+    byItem.set(p.priceItemId, [...(byItem.get(p.priceItemId) || []), p]);
+  }
+  const replace = new Map<string, string>();
+  for (const p of products) {
+    const c = p.origin === 'pricesheet' && p.priceItemId ? byItem.get(p.priceItemId) : undefined;
+    if (c && c.length === 1) replace.set(p.id, c[0].id);
+  }
+  if (!replace.size) return;
+  for (const d of await db.drafts.toArray()) {
+    if (!d.lines.some((l) => replace.has(l.productId))) continue;
+    const merged = new Map<string, DraftLine>();
+    for (const l of d.lines) {
+      const id = replace.get(l.productId) || l.productId;
+      const prev = merged.get(id);
+      merged.set(id, prev ? { ...prev, qty: prev.qty + l.qty, note: [prev.note, l.note].filter(Boolean).join('; ') || undefined } : { ...l, productId: id });
+    }
+    await db.drafts.put({ ...d, lines: [...merged.values()], updatedAt: d.updatedAt + 1 });
+  }
+}
+
+/** Verified mappings shipped with a catalog. Decisions you made in the app are never overwritten. */
+async function addBundledMappings(list: BundledMapping[]) {
+  const now = Date.now();
+  for (const m of list) {
+    const key = m.sku ? `SKU:${m.sku.trim().toUpperCase()}` : `N:${normText(m.catalogRaw)}`;
+    if (await db.mappings.get(key)) continue;
+    await db.mappings.put({ key, priceItemKey: m.priceBrand == null || m.priceDesc == null ? null : priceItemKey(m.priceBrand, m.priceDesc), updatedAt: now });
+  }
 }
 
 export { displayName };

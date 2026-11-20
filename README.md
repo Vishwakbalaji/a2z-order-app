@@ -26,7 +26,17 @@ Prices are always per case. A product without a reliable price shows **"Price no
 
 ---
 
-## Deploy (one-time, free): Cloudflare Pages
+## Hosting: GitHub Pages (current setup)
+
+The app is published from this repository by `.github/workflows/deploy.yml`. Every push to `main` runs the unit tests, builds the app and deploys it to:
+
+**https://vishwakbalaji.github.io/a2z-order-app/**
+
+GitHub Pages is free for public repositories and never puts a site to sleep. The repository holds only code and the A2Z price list; your stores, carts and orders stay on your phone and are never uploaded. One-time setup: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+
+**Catalog and price-sheet updates:** send the file to Claude. It adds the data as a new versioned entry in `src/data/bundled.ts` and pushes. On your phone, the app applies the update on its next start: product names follow the catalog, prices follow the price sheet, nothing is deleted, and your stores, carts and order history stay as they are. The steps Claude follows are in `CLAUDE.md`. You can also still upload files yourself under Settings.
+
+## Alternative hosting (free): Cloudflare Pages
 
 Cloudflare Pages' free plan serves static sites with unlimited bandwidth and never puts the site to sleep. Free plans and limits can change; check Cloudflare's pricing page.
 
