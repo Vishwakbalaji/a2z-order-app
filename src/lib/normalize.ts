@@ -15,6 +15,13 @@ export function normText(input: string): string {
   let s = ` ${(input || '').toUpperCase()} `;
   s = s.replace(/[’']/g, '');
   s = s.replace(/\s+/g, ' ');
+  // common typing slips in distributor lists (parsing only; original text is kept for display)
+  s = s.replace(/(\d)0Z\b/g, '$1OZ'); // "120Z" -> "12OZ"
+  s = s.replace(/(\d)OOZ\b/g, '$10OZ'); // "2OOZ" -> "20OZ"
+  s = s.replace(/(^|[^\d.])\.(\d)/g, '$10.$2'); // ".5L" -> "0.5L"
+  s = s.replace(/([A-Z])(\d+(?:\.\d+)?(?:OZ|ML|L|GAL|CT|PK)\b)/g, '$1 $2'); // "HAZE16OZ" -> "HAZE 16OZ"
+  s = s.replace(/(\d)\s*FL\b(?!\.?\s*OZ)/g, '$1OZ'); // "13.7FL" -> "13.7OZ"
+  s = s.replace(/\bALKLINE\b/g, 'ALKALINE');
   // join "500 ML" -> "500ML", "1.5 L" -> "1.5L"
   s = s.replace(/(\d)\s*(FL\.?\s*OZ|FLOZ|OUNCES?|OZS?)\b/g, '$1OZ');
   s = s.replace(/(\d)\s*(MILLILITERS?|MILLILITRES?|MLS?)\b/g, '$1ML');
@@ -54,11 +61,19 @@ export function parseSize(input: string): SizeInfo | null {
   return { ml: v * ML_PER[unit], label: `${m[1]}${unit}` };
 }
 
-export function sameSize(a: SizeInfo | null, b: SizeInfo | null): boolean | null {
+/**
+ * 'same' = identical within 0.5% (16.9OZ = 500ML = 0.5L), 'near' = 0.5–6% apart (8.4OZ vs 8OZ —
+ * possibly the same product written differently: never priced automatically), 'diff' otherwise.
+ */
+export function sizeRelation(a: SizeInfo | null, b: SizeInfo | null): 'same' | 'near' | 'diff' | null {
   if (!a || !b) return null;
-  if (a.grams != null || b.grams != null) return a.grams != null && b.grams != null && Math.abs(a.grams - b.grams) < 0.01;
-  const x = a.ml!, y = b.ml!;
-  return Math.abs(x - y) / Math.max(x, y) <= 0.03; // 16.9OZ ≈ 500ML ≈ 0.5L
+  if (a.grams != null || b.grams != null) return a.grams != null && b.grams != null && Math.abs(a.grams - b.grams) < 0.01 ? 'same' : 'diff';
+  const r = Math.abs(a.ml! - b.ml!) / Math.max(a.ml!, b.ml!);
+  return r <= 0.005 ? 'same' : r <= 0.06 ? 'near' : 'diff';
+}
+export function sameSize(a: SizeInfo | null, b: SizeInfo | null): boolean | null {
+  const r = sizeRelation(a, b);
+  return r === null ? null : r === 'same';
 }
 
 export interface PackInfo {
@@ -69,8 +84,18 @@ export interface PackInfo {
 /** Units per case: "24CT", "2-12CT" (=24), "1200 BAGS", "CASE 24", "/ 24". */
 export function parsePack(input: string): PackInfo | null {
   const s = normText(input);
-  let m = s.match(/\b(\d+)\s*[-X]\s*(\d+)CT\b/);
-  if (m) return { units: parseInt(m[1]) * parseInt(m[2]), label: `${m[1]}-${m[2]}CT` };
+  // "1/4/6" = 4 six-packs
+  let m = s.match(/\b(\d+)\s*\/\s*(\d+)\s*\/\s*(\d+)(?:CT)?\b/);
+  if (m) {
+    const f = [m[1], m[2], m[3]].map((x) => parseInt(x)).filter((x) => x > 1);
+    return { units: f.reduce((a, b) => a * b, 1), label: f.length > 1 ? `${f.join('-')}CT` : `${f[0] || 1}CT` };
+  }
+  // "2-12CT", "2/12", "2/6PK", "4X6CT"; "1/12" is a plain case of 12
+  m = s.match(/\b(\d+)\s*[-\/X]\s*(\d+)(?:CT)?\b(?!\s*(?:OZ|ML|L|GAL|G)\b)/);
+  if (m && !/^0/.test(m[2])) {
+    const a = parseInt(m[1]), b = parseInt(m[2]);
+    return a === 1 ? { units: b, label: `${b}CT` } : { units: a * b, label: `${a}-${b}CT` };
+  }
   m = s.match(/\b(\d+)CT\b/);
   if (m) return { units: parseInt(m[1]), label: `${m[1]}CT` };
   m = s.match(/\b(\d+)\s*(BAGS|BOTTLES|CANS|PCS|PIECES|UNITS)\b/);
@@ -83,16 +108,21 @@ export function parsePack(input: string): PackInfo | null {
 export type Packaging = 'GLASS' | 'CAN' | 'PLASTIC' | null;
 export function parsePackaging(input: string): Packaging {
   const s = normText(input);
-  if (/\bGLASS\b/.test(s)) return 'GLASS';
+  if (/\b(GLASS|GLAS|GLS|GL)\b/.test(s)) return 'GLASS';
   if (/\bCANS?\b/.test(s)) return 'CAN';
   if (/\b(PLASTIC|PET)\b/.test(s)) return 'PLASTIC';
   return null;
 }
 
-/** Words that describe a variant (still/sparkling, sport cap...) — must agree when both present. */
-const VARIANT_WORDS = ['STILL', 'SPARKLING', 'SPORT', 'DIET', 'ZERO'];
+/**
+ * Words that make a different PRODUCT, not just a flavour: the price sheet lists these as
+ * separate lines (still vs sparkling, sport cap) or they are clearly different items
+ * (alkaline water, variety packs). Diet / zero / flavours share the brand + size price,
+ * exactly as the price sheet is organised ("COKE / FANTA / SPRITE & FLAVORS", "MONSTER 16OZ").
+ */
+const VARIANT_WORDS = ['STILL', 'SPARKLING', 'SPORT', 'ALKALINE', 'VARIETY'];
 export function variantWords(input: string): string[] {
-  const t = new Set(tokens(input).map((w) => (w === 'SPORTS' ? 'SPORT' : w)));
+  const t = new Set(tokens(input).map((w) => (w === 'SPORTS' ? 'SPORT' : w === 'VRTY' || w === 'VPK' ? 'VARIETY' : w)));
   return VARIANT_WORDS.filter((w) => t.has(w));
 }
 

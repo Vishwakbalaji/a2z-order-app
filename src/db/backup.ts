@@ -1,7 +1,7 @@
 import { db, uid, DATA_TABLES, type DataTable } from './db';
 
 export const BACKUP_APP_ID = 'a2z-order-app';
-export const BACKUP_VERSION = 1;
+export const BACKUP_VERSION = 2; // v2 adds weekly reports + order adjustments (v1 files still restore)
 
 export interface BackupFile {
   app: typeof BACKUP_APP_ID;
@@ -32,6 +32,8 @@ const KEY_OF: Record<DataTable, string> = {
   settings: 'id',
   mappings: 'key',
   imports: 'id',
+  reports: 'id',
+  adjustments: 'id',
 };
 
 /** Validates a backup file; returns a list of problems (empty = OK). */

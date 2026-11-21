@@ -13,6 +13,7 @@ import { ImportCatalogScreen } from './screens/admin/ImportCatalog';
 import { ReviewMatchesScreen } from './screens/admin/ReviewMatches';
 import { ManageProductsScreen, ProductEditScreen } from './screens/admin/ManageProducts';
 import { BackupScreen } from './screens/admin/Backup';
+import { WeeklyReportsScreen, WeeklyReportScreen } from './screens/WeeklyReports';
 
 function BottomNav({ tab }: { tab: string }) {
   const drafts = useApp((s) => s.drafts);
@@ -72,6 +73,7 @@ export function App() {
   if (!ready) screen = <div className="p-10 text-center text-gray-500">Loading…</div>;
   else if (tab === 'cart') screen = <CartScreen />;
   else if (tab === 'orders') screen = sub ? <OrderDetailScreen id={sub} /> : <OrdersScreen />;
+  else if (tab === 'reports') screen = sub ? <WeeklyReportScreen key={sub} id={sub} /> : <WeeklyReportsScreen />;
   else if (tab === 'stores') screen = sub ? <StoreEditScreen id={sub} /> : <StoresScreen />;
   else if (tab === 'settings') {
     if (sub === 'import-prices') screen = <ImportPricesScreen />;
@@ -92,7 +94,7 @@ export function App() {
       <main ref={mainRef} className="flex-1 overflow-y-auto overscroll-contain" id="main">
         {screen}
       </main>
-      <BottomNav tab={['cart', 'orders', 'stores', 'settings'].includes(tab) ? tab : 'products'} />
+      <BottomNav tab={tab === 'reports' ? 'orders' : ['cart', 'orders', 'stores', 'settings'].includes(tab) ? tab : 'products'} />
       <StorePickerHost />
       <DialogHost />
       <ToastHost />

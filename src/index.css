@@ -42,3 +42,9 @@ textarea {
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom);
 }
+/* the app draws its own clear (✕) button in search fields */
+input[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}

@@ -2,7 +2,7 @@ import { memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useSta
 import { TopBar } from '../components/TopBar';
 import { Icon, Stepper, promptDialog } from '../components/ui';
 import { pickStore } from '../components/StorePicker';
-import { useApp, changeQty, setQty } from '../state/store';
+import { useApp, changeQty, setQty, updateSettings } from '../state/store';
 import { search } from '../lib/search';
 import { effectivePrice, titleName } from '../lib/products';
 import { formatCents } from '../lib/money';
@@ -34,7 +34,7 @@ const ProductRow = memo(function ProductRow({ p, qty, price }: { p: Product; qty
     <li className={`row-cv flex items-center gap-2 px-3 py-2.5 border-b border-gray-100 ${qty > 0 ? 'bg-brand-light/60' : 'bg-white'}`} data-testid="product-row">
       <div className="flex-1 min-w-0">
         <div className="font-semibold leading-snug text-[15px] break-words">{titleName(p) || p.variation}</div>
-        {titleName(p) && <div className="text-[15px] text-gray-800 leading-snug break-words">{p.variation}</div>}
+        {titleName(p) && p.variation && <div className="text-[15px] text-gray-800 leading-snug break-words">{p.variation}</div>}
         <div className="mt-0.5 text-[15px]">
           {price != null ? (
             <span className="font-bold text-gray-900 tabular-nums">
@@ -59,6 +59,7 @@ export function ProductsScreen() {
   const departments = useApp((s) => s.departments);
   const drafts = useApp((s) => s.drafts);
   const storeId = useApp((s) => s.settings.selectedStoreId);
+  const notice = useApp((s) => s.settings.dataNotice);
 
   const [q, setQ] = useState(() => sessionStorage.getItem('q') || '');
   const [dept, setDept] = useState(() => sessionStorage.getItem('dept') || 'All');
@@ -150,6 +151,24 @@ export function ProductsScreen() {
           </div>
         </div>
       </div>
+      {notice && !q && (
+        <div className="mx-3 my-2 p-3 rounded-xl bg-brand-light border border-brand/30 text-sm" role="status" data-testid="data-notice">
+          <div className="flex items-start gap-2">
+            <div className="flex-1">
+              <div className="font-semibold text-brand">{notice.title}</div>
+              <div className="text-gray-700 mt-0.5">{notice.text}</div>
+              {notice.review > 0 && (
+                <a href="#/settings/review" className="inline-block mt-1 text-brand font-semibold underline">
+                  Review {notice.review} products without a confirmed price
+                </a>
+              )}
+            </div>
+            <button type="button" aria-label="Dismiss" className="w-9 h-9 -mr-1 -mt-1 flex items-center justify-center text-gray-500" onClick={() => updateSettings({ dataNotice: null })}>
+              <Icon name="x" />
+            </button>
+          </div>
+        </div>
+      )}
       <div className="px-3 py-1.5 text-xs text-gray-500 bg-gray-50 border-b border-gray-200" aria-live="polite">
         {ids.length} product{ids.length === 1 ? '' : 's'} · prices are per case
       </div>

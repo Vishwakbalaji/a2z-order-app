@@ -2,7 +2,10 @@
 
 A mobile-first ordering app for taking store orders on products from **A2Z Beverage Distributors**. It opens straight to the product list, with no login. You pick a store, search, tap **+ / −** to set case quantities, review the cart, and download a professional PDF to send to the distributor.
 
-- **Real data:** ships with the 131 products and case prices from `A2Z_Beverages_Price_Deals_A4_2.pdf`. The PDF parser and a hand transcription agree exactly on every row.
+- **Real data:**
+  - **Catalog:** the 542 products from `A2Z_Beverages_Product_List_11.20.26_.pdf`, under the catalog's own names, departments and brand groups.
+  - **Prices:** case prices from the 131-line `A2Z_Beverages_Price_Deals_A4_2.pdf`.
+  - **Matching:** 334 products are priced automatically (same brand, size and case count). 139 have a suggested price waiting for your one-tap confirmation, and 69 aren't on the price sheet.
 - **Works offline:** after the first visit it is an installable PWA.
 - **No server and no database account:** everything is stored on your phone in IndexedDB, with backup and restore to a file.
 - **Free hosting:** it is a static website (Cloudflare Pages recommended).
@@ -25,6 +28,43 @@ A mobile-first ordering app for taking store orders on products from **A2Z Bever
 Prices are always per case. A product without a reliable price shows **"Price not available"**. It can still be ordered, but the cart warns you and leaves it out of the total.
 
 ---
+
+## New stores
+
+**Add New Store** has a **Mark as New Store** toggle, on by default. Untick it for a store you already serve. The date added is recorded automatically.
+
+- The **first finalized order** of a new store prints **NEW STORE — FIRST ORDER** under the store details in the distributor PDF.
+- Later orders for that store never show it, and other stores are not affected.
+- A PDF downloaded from the cart before finalizing also shows the label but doesn't use it up. Only **Finalize Order** does.
+- Re-downloading that first order from Order History always shows the label again.
+- The status is saved in the database and in backups, so it survives refreshes, app updates and restoring on a new phone.
+
+## Weekly Reports (Orders → Weekly Reports)
+
+Your private sales and commission report. It is never sent to the distributor.
+
+- **Week:** Saturday 12:00 AM to Friday 11:59:59 PM, New York time. Week 1 is Nov 21–27, 2026.
+- **What counts:** only finalized orders, counted in the week they were finalized.
+  - **Voided orders** don't count. Use "Void order" on the order's page.
+  - **Orders with a missing price** are listed as flagged and left out of confirmed sales until you add the price. Tap "N/A — add" on the order's page.
+- **Contents:**
+  - a summary;
+  - A. new stores added (stores marked "New Store");
+  - B. orders per store (several orders from one store are combined, and the store is counted once);
+  - C. total sales and cases;
+  - D. active stores that didn't order, from Week 2 onward;
+  - E. your **1% commission**, rounded to the cent.
+- **Generate Weekly Report** shows the current week as **provisional**. Nothing is saved until the week ends.
+- **Finalized reports:** each week becomes a permanent report with a unique ID (e.g. `WR-2026-11-21`). It is never recalculated.
+  - If something changes later, the report shows a notice. **Create revised report** makes `WR-…-R1` and keeps the original, with an audit trail.
+- **Download Weekly Report PDF**, e.g. `Weekly_Sales_Report_2026-11-21_to_2026-11-27.pdf`.
+
+**About "automatic every Friday":** the app is a free static website with no server. Your orders live only on your phone, so no cloud job can see them. Instead, the app finalizes every week that has ended:
+- when you open it;
+- every minute while it's open;
+- when you switch back to it.
+
+So if your phone is off at midnight on Friday, the report is created the next time you open the app, with exactly the same numbers. A week can never be finalized twice.
 
 ## Hosting: GitHub Pages (current setup)
 
@@ -92,7 +132,7 @@ All stores, carts, orders, products, prices, matches and settings are stored **i
 - To move to a new phone: open the app there, then **Restore from backup file**.
 - Before every import or restore, the app keeps an automatic **safety snapshot** on the phone (the last 6), which you can roll back to.
 
-Cloud sync between phones is possible as a later add-on (for example a small Cloudflare Worker with a private key stored on your devices). It was not added because it brings credentials and security work. Backup files cover moving between phones today.
+**Cloud storage and server-side Friday reports (optional upgrade, not set up yet).** Automatic cloud saving and a true server-side Friday job need a small online database. A suitable free setup is a Cloudflare Worker with a D1 database and a scheduled trigger every Friday night. It would need your own free Cloudflare account and a private device key stored on your phones, so it still needs no login, but strangers couldn't read or change your data. No secrets would be in the website. It isn't included yet because it needs that account. Backup files cover moving between phones today.
 
 ---
 

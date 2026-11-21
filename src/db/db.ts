@@ -1,5 +1,5 @@
 import Dexie, { type Table } from 'dexie';
-import type { Draft, ImportLog, Mapping, Order, PriceItem, Product, Settings, Snapshot, Store } from '../types';
+import type { Draft, ImportLog, Mapping, Order, OrderAdjustment, PriceItem, Product, Settings, Snapshot, Store, WeeklyReport } from '../types';
 
 export class AppDB extends Dexie {
   products!: Table<Product, string>;
@@ -11,6 +11,8 @@ export class AppDB extends Dexie {
   mappings!: Table<Mapping, string>;
   imports!: Table<ImportLog, string>;
   snapshots!: Table<Snapshot, string>;
+  reports!: Table<WeeklyReport, string>;
+  adjustments!: Table<OrderAdjustment, string>;
 
   constructor(name = 'a2z-order-app') {
     super(name);
@@ -26,10 +28,16 @@ export class AppDB extends Dexie {
       imports: 'id, at',
       snapshots: 'id, at',
     });
+    // v2: weekly reports (primary key = unique report id, so a period can never be finalized twice)
+    // and order adjustments (voids / resolved prices recorded after an order was finalized).
+    this.version(2).stores({
+      reports: 'id, periodKey, startUtc',
+      adjustments: 'id, orderId, at',
+    });
   }
 }
 
-export const DATA_TABLES = ['products', 'priceItems', 'stores', 'drafts', 'orders', 'settings', 'mappings', 'imports'] as const;
+export const DATA_TABLES = ['products', 'priceItems', 'stores', 'drafts', 'orders', 'settings', 'mappings', 'imports', 'reports', 'adjustments'] as const;
 export type DataTable = (typeof DATA_TABLES)[number];
 
 export let db = new AppDB();

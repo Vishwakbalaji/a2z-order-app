@@ -1,13 +1,34 @@
 import type { DraftLine, PriceItem, Product, Totals } from '../types';
-import { normText, parsePack } from './normalize';
+import { editDistance, normText, parsePack, tokens } from './normalize';
 
-export function displayName(p: Pick<Product, 'brand' | 'name' | 'variation'>): string {
-  return [p.brand, p.name, p.variation].map((s) => (s || '').trim()).filter(Boolean).join(' ').replace(/\s+/g, ' ');
+type Naming = Pick<Product, 'brand' | 'name' | 'variation'> & { origin?: Product['origin'] };
+
+/**
+ * Does the product name already say the brand? ("COKE CAN" for brand Coke, "NESQUICK …" for
+ * Nesquik, "ESSENTIAL WATER" for Essentia). Then the brand is not repeated in front of it.
+ */
+function nameHasBrand(name: string, brand: string): boolean {
+  const first = tokens(brand)[0];
+  if (!first) return true;
+  const compact = (s: string) => normText(s).replace(/[^A-Z0-9]/g, '');
+  if (compact(name).includes(compact(first))) return true;
+  return first.length >= 5 && tokens(name).some((t) => t.length >= 5 && editDistance(t, first, 1) <= 1);
 }
 
-/** Name without the variation (for the product card title). */
-export function titleName(p: Pick<Product, 'brand' | 'name'>): string {
-  return [p.brand, p.name].map((s) => (s || '').trim()).filter(Boolean).join(' ');
+/**
+ * Full product name. Catalog products keep the distributor's catalog description exactly
+ * (name + size part), adding the brand in front only when the name doesn't already contain it
+ * (e.g. CSV catalogs with a separate brand column). Other products: brand + name + size.
+ */
+export function displayName(p: Naming): string {
+  const parts = p.origin === 'catalog' && nameHasBrand(p.name, p.brand) ? [p.name, p.variation] : [p.brand, p.name, p.variation];
+  return parts.map((s) => (s || '').trim()).filter(Boolean).join(' ').replace(/\s+/g, ' ');
+}
+
+/** Name without the size part (for the product card title). */
+export function titleName(p: Pick<Product, 'brand' | 'name'> & { origin?: Product['origin'] }): string {
+  const parts = p.origin === 'catalog' && nameHasBrand(p.name, p.brand) ? [p.name] : [p.brand, p.name];
+  return parts.map((s) => (s || '').trim()).filter(Boolean).join(' ');
 }
 
 export function priceItemKey(brand: string, desc: string): string {

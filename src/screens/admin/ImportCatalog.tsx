@@ -30,6 +30,7 @@ export function ImportCatalogScreen() {
   const [rows, setRows] = useState<EditRow[] | null>(null);
   const [warnings, setWarnings] = useState<string[]>([]);
   const [editing, setEditing] = useState<number | null>(null);
+  const [complete, setComplete] = useState(true);
 
   const onFile = async (f: File) => {
     setFileName(f.name);
@@ -52,7 +53,8 @@ export function ImportCatalogScreen() {
             variation: pick(o, 'variation', 'size', 'size_case'),
             unitsPerCase: Number.isFinite(units) ? units : null,
             sku: pick(o, 'sku', 'code', 'item_code', 'upc'),
-            raw: Object.values(o).join(' | '),
+            // the catalog's own product text (used for matching and shown as "original name")
+            raw: [pick(o, 'brand'), name, pick(o, 'variation', 'size', 'size_case')].filter(Boolean).join(' '),
           });
         }
       } else {
@@ -86,8 +88,8 @@ export function ImportCatalogScreen() {
     if (!ok) return;
     setBusy('Importing and matching prices…');
     try {
-      const s = await applyCatalog(included, fileName || 'catalog');
-      toast(`Catalog imported: ${s.matched} matched, ${s.review} to review, ${s.unmatched} unmatched`);
+      const s = await applyCatalog(included, fileName || 'catalog', { complete });
+      toast(`Catalog imported: ${s.added} new, ${s.updated} updated${s.discontinued ? `, ${s.discontinued} no longer in catalog` : ''}. ${s.matched} priced, ${s.review} to review, ${s.unmatched} unmatched.`);
       go('settings/review');
     } catch (e) {
       toast('Import failed: ' + (e as Error).message, 'err');
@@ -135,6 +137,12 @@ export function ImportCatalogScreen() {
           <>
             <Card className="p-3 text-sm">
               <Badge tone="blue">{rows.length} products found</Badge> <span className="text-gray-600">Check them, edit with ✎, untick lines that are not products.</span>
+              <label className="flex items-start gap-2 mt-3">
+                <input type="checkbox" className="w-5 h-5 mt-0.5 accent-brand" checked={complete} onChange={(e) => setComplete(e.target.checked)} name="completeCatalog" />
+                <span>
+                  <b>This is the complete catalog.</b> Products from earlier catalogs that are not in this file get a "not in latest catalog" flag (they are kept). Untick when the file only adds a few products.
+                </span>
+              </label>
             </Card>
             <ul className="space-y-2">
               {rows.map((r, i) => (

@@ -24,6 +24,8 @@ export interface PdfOrder {
   orderNo?: string;
   lines: PdfLine[];
   totals: Totals;
+  /** Shows "NEW STORE — FIRST ORDER" under the store details (a new store's first order only). */
+  newStoreFirstOrder?: boolean;
 }
 
 let defaultLogo: Promise<string | null> | null = null;
@@ -160,6 +162,22 @@ export async function buildOrderPdf(o: PdfOrder, kind: 'order' | 'detailed'): Pr
     y + 12,
   );
   y = Math.max(y1, y2) + 8;
+
+  // ---- new store label (first finalized order of a store marked "New Store")
+  if (o.newStoreFirstOrder) {
+    const label = 'NEW STORE — FIRST ORDER';
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    const w = doc.getTextWidth(label) + 28;
+    doc.setFillColor(254, 242, 242);
+    doc.setDrawColor(200, 30, 38);
+    doc.setLineWidth(1.6);
+    doc.roundedRect(M, y, w, 28, 4, 4, 'FD');
+    doc.setTextColor(200, 30, 38);
+    doc.text(label, M + 14, y + 19);
+    doc.setTextColor(20);
+    y += 40;
+  }
 
   // ---- table
   const lines = o.lines.filter((l) => l.qty > 0);

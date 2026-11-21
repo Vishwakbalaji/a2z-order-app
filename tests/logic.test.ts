@@ -10,6 +10,11 @@ import { parseMoneyToCents, formatCents } from '../src/lib/money';
 import { parsePack, parseSize, sameSize } from '../src/lib/normalize';
 import { validateBackup } from '../src/db/backup';
 import type { PriceItem, Product } from '../src/types';
+import { BUNDLED_DATASETS } from '../src/data/bundled';
+
+// These tests cover price-sheet behaviour and generic matching, so they start from the price
+// sheet only. The real catalog (bundled v2+) is covered in tests/catalog.test.ts.
+BUNDLED_DATASETS.splice(1);
 
 let n = 0;
 async function freshApp() {

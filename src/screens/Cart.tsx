@@ -4,7 +4,7 @@ import { Badge, Card, Icon, Stepper, btnDanger, btnSecondary, confirmDialog, pro
 import { PdfActions } from '../components/PdfActions';
 import { pickStore } from '../components/StorePicker';
 import { askQty } from './Products';
-import { useApp, changeQty, setQty, setNote, clearDraft, finalizeOrder, cartTotals, getState } from '../state/store';
+import { useApp, changeQty, setQty, setNote, clearDraft, finalizeOrder, cartTotals, getState, isFirstOrderPending } from '../state/store';
 import { displayName, effectivePrice, titleName } from '../lib/products';
 import { formatCents } from '../lib/money';
 import type { DraftLine, Product } from '../types';
@@ -30,7 +30,7 @@ const CartRow = memo(function CartRow({ line, p, price }: { line: DraftLine; p: 
       <div className="flex items-start gap-2">
         <div className="flex-1 min-w-0">
           <div className="font-semibold leading-snug break-words">{titleName(p) || p.variation}</div>
-          {titleName(p) && <div className="text-gray-800 leading-snug break-words">{p.variation}</div>}
+          {titleName(p) && p.variation && <div className="text-gray-800 leading-snug break-words">{p.variation}</div>}
           <div className="text-sm mt-0.5">
             {price != null ? (
               <span className="text-gray-600 tabular-nums">{formatCents(price)} per case</span>
@@ -100,6 +100,8 @@ export function CartScreen() {
         return { name: p ? displayName(p) : '(deleted product)', qty: l.qty, priceCents: p ? effectivePrice(p, s.priceItemById) : null, note: l.note };
       }),
       totals: cartTotals(lines, s),
+      // shown (not used up) while this new store's first order is still a draft
+      newStoreFirstOrder: isFirstOrderPending(store.id, s),
     };
   };
 
@@ -121,6 +123,11 @@ export function CartScreen() {
             <div className="truncate">{store.address}</div>
             {(store.phone || store.manager) && <div className="truncate">{[store.manager, store.phone].filter(Boolean).join(' · ')}</div>}
           </div>
+          {isFirstOrderPending(store.id) && (
+            <div className="mx-3 mt-3 p-3 rounded-xl bg-red-50 border border-red-300 text-red-800 text-sm" data-testid="new-store-banner">
+              <b>NEW STORE — FIRST ORDER.</b> The order PDF shows this label. It is used up when you finalize this order; later orders won't show it.
+            </div>
+          )}
           {totals.unpricedLines > 0 && (
             <div className="mx-3 mt-3 p-3 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-sm flex gap-2" role="alert">
               <Icon name="alert" className="w-5 h-5 shrink-0" />

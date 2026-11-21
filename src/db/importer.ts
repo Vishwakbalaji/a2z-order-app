@@ -4,7 +4,7 @@
  */
 import { db, uid } from './db';
 import { takeSnapshot } from './backup';
-import type { DraftLine, Mapping, PriceItem, Product } from '../types';
+import type { DraftLine, Mapping, PriceItem, Product, Settings } from '../types';
 import { matchProduct } from '../lib/matching';
 import { displayName, mappingKey, priceItemKey, unitsFromText } from '../lib/products';
 import { A2Z_COMPANY } from '../data/a2zPriceSheet';
@@ -149,14 +149,17 @@ export async function applyPriceSheet(rows: PriceRowInput[], fileName: string, o
 }
 
 /** Add / update catalog products and match them to price lines. Nothing is deleted. */
-export async function applyCatalog(rows: CatalogRowInput[], fileName: string) {
+/** `complete` = the file is the whole catalog, so products missing from it are flagged (never deleted). */
+export async function applyCatalog(rows: CatalogRowInput[], fileName: string, opts: { complete?: boolean } = {}) {
+  const complete = opts.complete ?? true;
   await takeSnapshot(`Before catalog import: ${fileName}`);
   const now = Date.now();
-  const summary = { added: 0, updated: 0, matched: 0, review: 0, unmatched: 0 };
+  const summary: CatalogSummary = { total: 0, added: 0, updated: 0, unchanged: 0, duplicates: 0, discontinued: 0, matched: 0, review: 0, unmatched: 0 };
   await db.transaction('rw', [db.priceItems, db.products, db.imports, db.mappings], async () => {
     const all = await db.products.toArray();
     const catalog = all.filter((p) => p.origin === 'catalog');
     const byKey = new Map(catalog.map((p) => [mappingKey(p), p]));
+    const seen = new Set<string>();
     let order = all.reduce((m, p) => Math.max(m, p.order), 0);
     for (const r of rows) {
       const base = {
@@ -170,10 +173,17 @@ export async function applyCatalog(rows: CatalogRowInput[], fileName: string) {
         catalogName: r.raw.trim() || [r.brand, r.name, r.variation].join(' ').trim(),
       };
       const key = mappingKey(base);
+      if (seen.has(key)) {
+        summary.duplicates++; // the same product twice in one catalog: keep one
+        continue;
+      }
+      seen.add(key);
       const old = byKey.get(key);
       if (old) {
-        summary.updated++;
-        await db.products.put({ ...old, ...base, updatedAt: now });
+        const changed = (Object.keys(base) as (keyof typeof base)[]).some((k) => old[k] !== base[k]) || old.missingFromCatalog;
+        if (changed) summary.updated++;
+        else summary.unchanged++;
+        if (changed) await db.products.put({ ...old, ...base, missingFromCatalog: false, updatedAt: now });
       } else {
         summary.added++;
         const p: Product = {
@@ -195,19 +205,44 @@ export async function applyCatalog(rows: CatalogRowInput[], fileName: string) {
         byKey.set(key, p);
       }
     }
+    // products from an earlier catalog that are not in this one: flagged, never deleted
+    for (const p of complete ? catalog : []) {
+      if (seen.has(mappingKey(p)) || p.missingFromCatalog) continue;
+      summary.discontinued++;
+      await db.products.put({ ...p, missingFromCatalog: true, updatedAt: now });
+    }
     await rematchCatalogProducts();
-    const after = await db.products.where('origin').equals('catalog').toArray();
+    const after = (await db.products.where('origin').equals('catalog').toArray()).filter((p) => p.active && !p.missingFromCatalog);
+    summary.total = after.length;
     for (const p of after) summary[p.matchStatus]++;
     await db.imports.add({
       id: uid('imp_'),
       kind: 'catalog',
       fileName,
       at: now,
-      summary: `${summary.added} new, ${summary.updated} updated products — ${summary.matched} matched, ${summary.review} need review, ${summary.unmatched} unmatched`,
+      summary: catalogSummaryText(summary),
       rawLines: rows.map((r) => r.raw),
     });
   });
   return summary;
+}
+
+export interface CatalogSummary {
+  total: number; // active products in the catalog after this import
+  added: number;
+  updated: number;
+  unchanged: number;
+  duplicates: number;
+  discontinued: number; // in an earlier catalog but not in this one (flagged, kept)
+  matched: number;
+  review: number;
+  unmatched: number;
+}
+export function catalogSummaryText(s: CatalogSummary): string {
+  return [
+    `${s.total} catalog products: ${s.matched} priced automatically, ${s.review} need review, ${s.unmatched} not on the price sheet.`,
+    `${s.added} new, ${s.updated} updated, ${s.unchanged} unchanged${s.discontinued ? `, ${s.discontinued} no longer in the catalog (kept, flagged)` : ''}${s.duplicates ? `, ${s.duplicates} duplicate rows skipped` : ''}.`,
+  ].join(' ');
 }
 
 /** Re-run matching for catalog/manual products that were not confirmed by hand. */
@@ -280,15 +315,21 @@ export async function syncBundledData(): Promise<number[]> {
       const s = (await db.settings.get('app'))!;
       const done = s.bundledVersion ?? (s.seededAt ? 1 : 0); // installs from before versioning had v1
       if (ds.version <= done) continue;
+      let notice: Settings['dataNotice'] | undefined;
       if (ds.kind === 'pricesheet') {
         await applyPriceSheet(ds.rows, ds.fileName, { snapshot: done > 0 });
-      } else {
+      } else if (ds.kind === 'catalog') {
         await addBundledMappings(ds.mappings || []);
-        await applyCatalog(ds.rows, ds.fileName);
+        const summary = await applyCatalog(ds.rows, ds.fileName);
         await moveDraftsToCatalogNames();
+        notice = { title: 'Product catalog updated', text: catalogSummaryText(summary), at: Date.now(), review: summary.review + summary.unmatched };
       }
       const cur = (await db.settings.get('app'))!;
-      await db.settings.put({ ...cur, bundledVersion: ds.version });
+      const next: Settings = { ...cur, bundledVersion: ds.version, ...(notice ? { dataNotice: notice } : {}) };
+      if (ds.kind === 'settings') {
+        for (const [k, v] of Object.entries(ds.fillEmpty) as [keyof typeof ds.fillEmpty, string][]) if (!String(next[k] ?? '').trim()) next[k] = v;
+      }
+      await db.settings.put(next);
       applied.push(ds.version);
     }
     return applied;

@@ -38,6 +38,8 @@ export function StoresScreen() {
                         {s.name}
                         {selected === s.id && <Badge tone="blue">Selected</Badge>}
                         {n > 0 && <Badge tone="amber">{n} in draft</Badge>}
+                        {s.isNew && !s.firstOrderId && <Badge tone="green">NEW · first order pending</Badge>}
+                        {s.isNew && s.firstOrderId && <Badge tone="gray">New store · ordered</Badge>}
                       </div>
                       <div className="text-sm text-gray-600">{s.address}</div>
                       {(s.manager || s.phone) && <div className="text-sm text-gray-500">{[s.manager, s.phone].filter(Boolean).join(' · ')}</div>}

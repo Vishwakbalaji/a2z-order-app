@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Badge, Card, Empty, PageHeader, btnPrimary, btnSecondary, promptDialog, toast } from '../../components/ui';
+import { Badge, Card, Empty, PageHeader, btnPrimary, btnSecondary, confirmDialog, promptDialog, toast } from '../../components/ui';
 import { PriceItemPicker } from '../../components/PriceItemPicker';
 import { useApp, confirmMatch, leaveUnmatched, saveProduct } from '../../state/store';
 import { formatCents, parseMoneyToCents } from '../../lib/money';
@@ -25,6 +25,9 @@ export function ReviewMatchesScreen() {
     await saveProduct({ ...p, priceOverrideCents: cents });
     toast(cents == null ? 'Manual price removed' : `Price set to ${formatCents(cents)}`);
   };
+  const groupMap = new Map<string, Product[]>();
+  for (const p of by('review')) if (p.suggestedPriceItemId && priceItemById.has(p.suggestedPriceItemId)) groupMap.set(p.suggestedPriceItemId, [...(groupMap.get(p.suggestedPriceItemId) || []), p]);
+  const groups = [...groupMap.entries()].filter(([, ps]) => ps.length > 1).sort((a, b) => b[1].length - a[1].length);
 
   return (
     <div>
@@ -49,6 +52,52 @@ export function ReviewMatchesScreen() {
           </Empty>
         )}
         {list.length > 0 && !shown.length && <Empty title="Nothing here" />}
+        {tab === 'review' && groups.length > 0 && (
+          <details className="bg-white rounded-2xl border border-gray-200 p-3">
+            <summary className="font-semibold cursor-pointer">Confirm several at once ({groups.length} suggested price lines)</summary>
+            <p className="text-xs text-gray-500 mt-1 mb-2">Each button confirms every product suggested for that price line. You'll see the full list before anything is saved.</p>
+            <ul className="divide-y divide-gray-100">
+              {groups.map(([itemId, ps]) => {
+                const it = priceItemById.get(itemId)!;
+                return (
+                  <li key={itemId} className="py-2 flex items-center gap-2">
+                    <div className="flex-1 min-w-0 text-sm">
+                      <div className="font-medium break-words">
+                        {it.brand} {it.desc} — {formatCents(it.priceCents)}
+                      </div>
+                      <div className="text-gray-500">{ps.length} products</div>
+                    </div>
+                    <button
+                      type="button"
+                      className="h-10 px-3 rounded-xl bg-brand text-white text-sm font-semibold"
+                      onClick={async () => {
+                        const ok = await confirmDialog(
+                          `Confirm ${ps.length} products?`,
+                          <>
+                            <div className="mb-2">
+                              All of these will be priced at <b>{formatCents(it.priceCents)}</b> per case ({it.brand} {it.desc}):
+                            </div>
+                            <ul className="text-sm max-h-60 overflow-auto list-disc pl-5">
+                              {ps.map((p) => (
+                                <li key={p.id}>{displayName(p)}</li>
+                              ))}
+                            </ul>
+                          </>,
+                          'Confirm all',
+                        );
+                        if (!ok) return;
+                        for (const p of ps) await confirmMatch(p.id, itemId);
+                        toast(`${ps.length} matches confirmed and saved`);
+                      }}
+                    >
+                      Confirm all {ps.length}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </details>
+        )}
         <ul className="space-y-2">
           {shown.map((p) => {
             const linked = p.priceItemId ? priceItemById.get(p.priceItemId) : undefined;
@@ -58,7 +107,7 @@ export function ReviewMatchesScreen() {
               <li key={p.id}>
                 <Card className="p-3">
                   <div className="text-xs text-gray-500">{[p.department, p.category].filter(Boolean).join(' › ')}</div>
-                  <div className="font-semibold break-words">{p.catalogName || displayName(p)}</div>
+                  <div className="font-semibold break-words">{displayName(p)}</div>
                   {p.priceOverrideCents != null && (
                     <div className="mt-1">
                       <Badge tone="blue">Manual price {formatCents(p.priceOverrideCents)}</Badge>

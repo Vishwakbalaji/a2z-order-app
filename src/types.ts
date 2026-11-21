@@ -37,6 +37,7 @@ export interface Product {
   matchScore: number;
   suggestedPriceItemId: string | null; // for 'review'
   active: boolean; // false = discontinued / hidden
+  missingFromCatalog?: boolean; // was in an earlier catalog but not in the latest one (kept, flagged)
   order: number;
   createdAt: number;
   updatedAt: number;
@@ -49,8 +50,14 @@ export interface Store {
   phone: string;
   manager: string;
   archived: boolean;
-  createdAt: number;
+  archivedAt?: number | null; // when it was archived (weekly reports use this)
+  createdAt: number; // "Date Added" — recorded automatically
   updatedAt: number;
+  /** Marked "New Store" when it was created (acquired). Stores created before this feature are not new. */
+  isNew?: boolean;
+  /** Order id of the first finalized order that carried the "NEW STORE — FIRST ORDER" label. */
+  firstOrderId?: string | null;
+  firstOrderAt?: number | null;
 }
 
 export interface DraftLine {
@@ -95,7 +102,62 @@ export interface Order {
   company: CompanyInfo;
   lines: OrderLine[];
   totals: Totals;
+  createdAt: number; // finalized date/time — decides the reporting week
+  /** true only on a new store's first finalized order: its PDFs show "NEW STORE — FIRST ORDER". */
+  newStoreFirstOrder?: boolean;
+}
+
+/**
+ * A correction recorded AFTER an order was finalized. The order snapshot itself never changes;
+ * reports apply adjustments when they are generated, and finalized reports are never rewritten.
+ */
+export interface OrderAdjustment {
+  id: string;
+  orderId: string;
+  kind: 'void' | 'price'; // void = cancelled order; price = a missing case price resolved
+  lineIndex?: number;
+  priceCents?: number;
+  reason: string;
+  at: number;
+}
+
+export interface ReportStoreRow {
+  storeId: string;
+  name: string;
+  location: string;
+}
+export interface WeeklyReportData {
+  newStores: (ReportStoreRow & { addedAt: number })[];
+  storesWithOrders: (ReportStoreRow & { orders: number; cases: number; valueCents: number; pendingOrders: number })[];
+  orders: { orderId: string; orderNo: string; storeId: string; storeName: string; at: number; cases: number; valueCents: number | null }[];
+  flaggedOrders: { orderId: string; orderNo: string; storeName: string; unpricedLines: number }[];
+  ordersCount: number;
+  distinctStores: number;
+  totalCases: number;
+  salesCents: number; // confirmed sales: eligible orders whose every line has a price
+  activeStores: number;
+  nonOrdering: (ReportStoreRow & { lastOrderAt: number | null })[] | null; // null = first week (not applicable)
+  commissionRateBps: number; // 100 = 1%
+  commissionCents: number;
+}
+export interface WeeklyReport {
+  id: string; // unique: "WR-2026-11-21" (original) or "WR-2026-11-21-R1" (revision)
+  periodKey: string; // week start (Saturday) "YYYY-MM-DD", America/New_York
+  revision: number; // 0 = original
+  weekNumber: number;
+  start: string; // Saturday YYYY-MM-DD
+  end: string; // Friday YYYY-MM-DD
+  startUtc: number;
+  endUtc: number; // exclusive (next Saturday 00:00 New York)
+  status: 'final' | 'superseded' | 'provisional'; // provisional = week still open, never saved
+  supersededBy?: string | null;
+  supersedes?: string | null;
+  revisionReason?: string;
   createdAt: number;
+  generatedBy: 'auto' | 'manual';
+  rep: { name: string; phone: string };
+  company: CompanyInfo;
+  data: WeeklyReportData;
 }
 
 export interface Settings extends CompanyInfo {
@@ -107,6 +169,7 @@ export interface Settings extends CompanyInfo {
   orderSeq: number;
   seededAt: number;
   bundledVersion?: number; // highest bundled dataset (src/data/bundled.ts) applied on this phone
+  dataNotice?: { title: string; text: string; at: number; review: number } | null; // shown once after a bundled update
 }
 
 /** A confirmed product → price sheet mapping, remembered across re-imports. */

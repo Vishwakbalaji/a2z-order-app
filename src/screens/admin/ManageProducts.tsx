@@ -86,6 +86,8 @@ export function ManageProductsScreen() {
                           {p.origin === 'manual' && <Badge tone="blue">added by you</Badge>}
                           {p.priceOverrideCents != null && <Badge tone="amber">manual price</Badge>}
                           {p.priceItemId && priceItemById.get(p.priceItemId)?.missingFromLatest && <Badge tone="red">not on latest sheet</Badge>}
+                          {p.missingFromCatalog && <Badge tone="red">not in latest catalog</Badge>}
+                          {p.matchStatus === 'review' && p.origin !== 'pricesheet' && <Badge tone="amber">needs review</Badge>}
                         </div>
                       </div>
                       <span className={`tabular-nums font-semibold ${price == null ? 'text-amber-700 text-sm' : ''}`}>{price == null ? 'No price' : formatCents(price)}</span>

@@ -7,7 +7,8 @@ import { useSyncExternalStore } from 'react';
 import { db, uid } from '../db/db';
 import * as importer from '../db/importer';
 import { exportBackup, restoreBackup, restoreSnapshot, type BackupFile } from '../db/backup';
-import type { Draft, DraftLine, Order, PriceItem, Product, Settings, Store } from '../types';
+import type { Draft, DraftLine, Order, OrderAdjustment, PriceItem, Product, Settings, Store } from '../types';
+import { ensureWeeklyReports } from '../db/reports';
 import { buildIndex, type IndexEntry } from '../lib/search';
 import { computeTotals, displayName, effectivePrice, supersededPriceItemIds } from '../lib/products';
 
@@ -25,6 +26,7 @@ export interface AppState {
   browseIds: string[]; // active, visible products in catalog order
   departments: string[];
   reviewCount: number;
+  reportsVersion: number;
 }
 
 const emptySettings: Settings = {
@@ -54,6 +56,7 @@ let state: AppState = {
   browseIds: [],
   departments: [],
   reviewCount: 0,
+  reportsVersion: 0,
 };
 
 const listeners = new Set<() => void>();
@@ -82,7 +85,16 @@ function deriveCatalog(products: Product[], priceItems: PriceItem[]): Partial<Ap
     const d = p.department || 'Other';
     if (!deptOrder.has(d)) deptOrder.set(d, deptOrder.size);
   });
-  visible.sort((a, b) => (deptOrder.get(a.department || 'Other')! - deptOrder.get(b.department || 'Other')!) || a.order - b.order);
+  // within a department: grouped by brand (A–Z), catalog products first, then catalog / sheet order
+  const groupKey = (p: Product) => (p.category || p.brand || '').toUpperCase().split(/[\s/]+/)[0] || '~';
+  const keys = new Map(visible.map((p) => [p.id, groupKey(p)]));
+  visible.sort(
+    (a, b) =>
+      deptOrder.get(a.department || 'Other')! - deptOrder.get(b.department || 'Other')! ||
+      keys.get(a.id)!.localeCompare(keys.get(b.id)!) ||
+      Number(a.origin === 'pricesheet') - Number(b.origin === 'pricesheet') ||
+      a.order - b.order,
+  );
   const departments = [...new Set(visible.map((p) => p.department || 'Other'))];
   return {
     products,
@@ -100,6 +112,7 @@ export async function init() {
   try {
     await importer.syncBundledData();
     await reload();
+    await refreshReports(); // finalize any reporting week that ended while the app was closed
     // ask the browser not to evict our data under storage pressure
     try {
       await navigator.storage?.persist?.();
@@ -288,18 +301,28 @@ export async function updateSettings(patch: Partial<Settings>) {
 export async function selectStore(id: string | null) {
   await updateSettings({ selectedStoreId: id });
 }
+/**
+ * Create or update a store. "New Store" can only be SET when the store is created; editing can
+ * only remove the mark, and only while its first order has not been finalized yet.
+ */
 export async function saveStore(input: Partial<Store> & { name: string; address: string }): Promise<Store> {
   const now = Date.now();
   const old = input.id ? state.stores.find((s) => s.id === input.id) : undefined;
+  const archived = input.archived ?? old?.archived ?? false;
+  const isNew = old ? !!old.isNew && !(input.isNew === false && !old.firstOrderId) : !!input.isNew;
   const store: Store = {
     id: old?.id || uid('s_'),
     name: input.name.trim(),
     address: input.address.trim(),
     phone: (input.phone || '').trim(),
     manager: (input.manager || '').trim(),
-    archived: input.archived ?? old?.archived ?? false,
+    archived,
+    archivedAt: archived ? (old?.archived ? old.archivedAt ?? old.updatedAt : now) : null,
     createdAt: old?.createdAt || now,
     updatedAt: now,
+    isNew,
+    firstOrderId: old?.firstOrderId ?? null,
+    firstOrderAt: old?.firstOrderAt ?? null,
   };
   await db.stores.put(store);
   const stores = [...state.stores.filter((s) => s.id !== store.id), store].sort((a, b) => a.name.localeCompare(b.name));
@@ -358,15 +381,67 @@ export async function finalizeOrder(storeId: string): Promise<Order> {
     totals: cartTotals(lines),
     createdAt: now.getTime(),
   };
-  await db.transaction('rw', db.orders, db.drafts, db.settings, async () => {
+  let updatedStore: Store | null = null;
+  await db.transaction('rw', db.orders, db.drafts, db.settings, db.stores, async () => {
+    // "NEW STORE — FIRST ORDER": decided from the database inside the same transaction, so it can
+    // be used exactly once per store, and is recorded in the order snapshot for re-downloads.
+    const fresh = await db.stores.get(storeId);
+    if (fresh?.isNew && !fresh.firstOrderId) {
+      order.newStoreFirstOrder = true;
+      updatedStore = { ...fresh, firstOrderId: order.id, firstOrderAt: order.createdAt };
+      await db.stores.put(updatedStore);
+    }
     await db.orders.add(order);
     await db.drafts.put({ storeId, lines: [], updatedAt: stamp() });
     await db.settings.put({ ...state.settings, orderSeq: seq });
   });
   const drafts = new Map(state.drafts);
   drafts.set(storeId, []);
-  set({ drafts, settings: { ...state.settings, orderSeq: seq } });
+  const us = updatedStore as Store | null;
+  set({ drafts, settings: { ...state.settings, orderSeq: seq }, ...(us ? { stores: state.stores.map((s) => (s.id === us.id ? us : s)) } : {}) });
+  void refreshReports();
   return order;
+}
+
+/** True while a store marked "New Store" has not had its first order finalized (drafts/previews never use it up). */
+export function isFirstOrderPending(storeId: string | null | undefined, s: AppState = state): boolean {
+  const st = storeId ? s.stores.find((x) => x.id === storeId) : undefined;
+  return !!(st?.isNew && !st.firstOrderId);
+}
+
+/* ------------------------- order adjustments (after finalizing) ------------------------- */
+
+export async function listAdjustments(orderId?: string): Promise<OrderAdjustment[]> {
+  const all = orderId ? await db.adjustments.where('orderId').equals(orderId).toArray() : await db.adjustments.toArray();
+  return all.sort((a, b) => a.at - b.at);
+}
+/** Cancels a finalized order for reporting purposes. The order record itself is not changed. */
+export async function voidOrder(orderId: string, reason: string) {
+  if (!reason.trim()) throw new Error('Please give a reason.');
+  const existing = await listAdjustments(orderId);
+  if (existing.some((a) => a.kind === 'void')) throw new Error('This order is already voided.');
+  await db.adjustments.add({ id: uid('adj_'), orderId, kind: 'void', reason: reason.trim(), at: Date.now() });
+  void refreshReports();
+}
+/** Records the case price for a line that had no price when the order was finalized. */
+export async function resolveOrderPrice(orderId: string, lineIndex: number, priceCents: number, reason = 'Missing price resolved') {
+  const o = await db.orders.get(orderId);
+  if (!o || !o.lines[lineIndex]) throw new Error('Order line not found');
+  if (o.lines[lineIndex].priceCents != null) throw new Error('This line already has a price.');
+  await db.adjustments.add({ id: uid('adj_'), orderId, kind: 'price', lineIndex, priceCents, reason, at: Date.now() });
+  void refreshReports();
+}
+
+/* ------------------------- weekly reports ------------------------- */
+
+/** Bumped whenever orders, stores or reports change, so the reports screen can refresh. */
+export async function refreshReports() {
+  try {
+    await ensureWeeklyReports();
+  } catch (e) {
+    console.error(e);
+  }
+  set({ reportsVersion: state.reportsVersion + 1 });
 }
 export async function listOrders(): Promise<Order[]> {
   return db.orders.orderBy('createdAt').reverse().toArray();
@@ -441,8 +516,8 @@ export async function applyPriceSheet(rows: importer.PriceRowInput[], fileName: 
   await reload();
   return r;
 }
-export async function applyCatalog(rows: importer.CatalogRowInput[], fileName: string) {
-  const r = await importer.applyCatalog(rows, fileName);
+export async function applyCatalog(rows: importer.CatalogRowInput[], fileName: string, opts: { complete?: boolean } = {}) {
+  const r = await importer.applyCatalog(rows, fileName, opts);
   await reload();
   return r;
 }
@@ -458,10 +533,12 @@ export async function restoreFromBackup(data: BackupFile) {
   walClearAll();
   await restoreBackup(data);
   await reload();
+  await refreshReports();
 }
 export async function restoreFromSnapshot(id: string) {
   await flushDrafts();
   walClearAll();
   await restoreSnapshot(id);
   await reload();
+  await refreshReports();
 }

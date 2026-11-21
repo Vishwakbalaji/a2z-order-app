@@ -7,7 +7,7 @@
  * unambiguous match. Anything else becomes 'review' (with a suggestion) or 'unmatched'.
  */
 import type { Mapping, MatchStatus, PriceItem, Product } from '../types';
-import { brandAlternatives, dice, editDistance, normText, parsePack, parsePackaging, parseSize, sameSize, tokens, variantWords } from './normalize';
+import { brandAlternatives, editDistance, normText, parsePack, parsePackaging, parseSize, sizeRelation, tokens, variantWords } from './normalize';
 import { displayName, mappingKey } from './products';
 
 const ALIASES: [RegExp, string][] = [
@@ -16,7 +16,7 @@ const ALIASES: [RegExp, string][] = [
   [/\bSEVEN[\s-]?UP\b|\b7[\s-]UP\b/g, '7UP'],
   [/\bDR\.\s?PEPPER\b/g, 'DR PEPPER'],
   [/\bSMARTWATER\b/g, 'SMART WATER'],
-  [/\bBODY ARMOR\b/g, 'BODYARMOR'],
+  [/\bBODY ARMOU?R\b/g, 'BODYARMOR'],
   [/\bYOO ?HOO\b/g, 'YOO-HOO'],
   [/\bS\.? ?PELLEGRINO\b/g, 'SAN PELLEGRINO'],
 ];
@@ -32,6 +32,7 @@ export interface Candidate {
   item: PriceItem;
   score: number; // 0..1
   strong: boolean;
+  evidence: boolean; // brand or wording actually agree (size + case count alone is not evidence)
   reasons: string[];
 }
 
@@ -47,12 +48,14 @@ export function scoreCandidate(p: ProductLike, item: PriceItem): Candidate | nul
   const reasons: string[] = [];
 
   if (p.sku && item.sku && p.sku.trim().toUpperCase() === item.sku.trim().toUpperCase()) {
-    return { item, score: 1, strong: true, reasons: ['Same SKU'] };
+    return { item, score: 1, strong: true, evidence: true, reasons: ['Same SKU'] };
   }
 
-  // size — a conflict rules the line out
-  const sz = sameSize(parseSize(pText), parseSize(iText));
-  if (sz === false) return null;
+  // size — a clear conflict rules the line out; a near size (8.4OZ vs 8OZ) can only be suggested
+  const rel = sizeRelation(parseSize(pText), parseSize(iText));
+  if (rel === 'diff') return null;
+  const sz = rel === 'same' ? true : null;
+  if (rel === 'near') reasons.push(`Size close but not identical (${parseSize(pText)!.label} vs ${parseSize(iText)!.label})`);
   // units per case — a conflict rules the line out
   const pUnits = p.unitsPerCase ?? parsePack(pText)?.units ?? null;
   const iUnits = parsePack(iText)?.units ?? null;
@@ -71,12 +74,36 @@ export function scoreCandidate(p: ProductLike, item: PriceItem): Candidate | nul
   let brand = 0;
   const alts = brandAlternatives(canon(item.brand));
   if (!alts.length) alts.push(canon(item.brand));
+  // lines like "COCONUT WATER | VITA COCO 1L / 12CT": the words before the size name the brand too
+  const lead = canon(item.desc).split(/\s\d|\s\//)[0].trim();
+  if (lead && !/\d/.test(lead) && !/^(STILL|SPARKLING|CAN|SMALL|MEDIUM|BIG|LIQUOR BAGS)$/.test(lead) && tokens(lead).length <= 3) alts.push(lead);
   const pBrand = canon(p.brand || '');
-  for (const alt of alts) {
-    const at = tokens(alt);
-    if (!at.length) continue;
-    const frac = at.filter(has).length / at.length;
-    brand = Math.max(brand, frac === 1 ? 1 : frac * 0.7, pBrand ? dice(alt, pBrand) * 0.9 : 0);
+  if (pBrand) {
+    // The product states its brand (catalog "Group"): the price line must be for that brand,
+    // or name it at the very start of the description. A flavour word ("RED BULL WATERMELON",
+    // "BAI COCONUT") is never treated as the brand.
+    const own = brandAlternatives(pBrand).concat(pBrand);
+    const compact = (s: string) => s.replace(/[^A-Z0-9]/g, '');
+    const pWords = tokens(pText);
+    for (const alt of alts) {
+      const at = tokens(alt);
+      if (!at.length) continue;
+      const sameBrand = own.some((o) => {
+        const ot = tokens(o);
+        if (compact(o) === compact(alt)) return true;
+        if (ot.length && ot.every((w) => at.includes(w))) return true; // "PERRIER" in "MAISON PERRIER"
+        return compact(o).length >= 5 && editDistance(compact(o), compact(alt), 1) <= 1; // "ESSENTIAL" ~ "ESSENTIA"
+      });
+      const atStart = at.every((w, i) => pWords[i] === w);
+      if (sameBrand || atStart) brand = 1;
+    }
+  } else {
+    for (const alt of alts) {
+      const at = tokens(alt);
+      if (!at.length) continue;
+      const frac = at.filter(has).length / at.length;
+      brand = Math.max(brand, frac === 1 ? 1 : frac * 0.7);
+    }
   }
   if (brand >= 1) reasons.push('Brand matches');
   if (sz) reasons.push('Same size');
@@ -93,14 +120,15 @@ export function scoreCandidate(p: ProductLike, item: PriceItem): Candidate | nul
 
   const pkgAmbiguous = !!iPkg && !pPkg;
   // "12OZ / 2-12CT" (two 12-packs) vs a product that just says "24CT": same total, maybe not the same item
-  const iMulti = parsePack(iText)?.label.includes('-');
-  const pMulti = parsePack(pText)?.label.includes('-');
-  if (iMulti && !pMulti && pk) reasons.push('Price line is a multi-pack');
+  const iMulti = !!parsePack(iText)?.label.includes('-');
+  const pMulti = !!parsePack(pText)?.label.includes('-');
+  if (iMulti !== pMulti && pk) reasons.push(iMulti ? 'Price line is a multi-pack' : 'Product is a multi-pack');
   const variantAmbiguous = iVar.some((v) => !pVar.includes(v)) || pVar.some((v) => !iVar.includes(v));
-  const strong = brand >= 1 && sz === true && pk === true && descOk && !pkgAmbiguous && !variantAmbiguous && !(iMulti && !pMulti);
+  const strong = brand >= 1 && sz === true && pk === true && descOk && !pkgAmbiguous && !variantAmbiguous && iMulti === pMulti;
   if (pkgAmbiguous) reasons.push(`Price line is ${iPkg}; product doesn't say`);
   if (variantAmbiguous) reasons.push('Variant words differ');
-  return { item, score: Math.round(score * 1000) / 1000, strong, reasons };
+  const evidence = brand >= 1 || textSim >= 0.5;
+  return { item, score: Math.round(score * 1000) / 1000, strong, evidence, reasons };
 }
 
 export interface MatchResult {
@@ -121,7 +149,7 @@ export function rankCandidates(p: ProductLike, items: PriceItem[], limit = 8): C
     const c = scoreCandidate(p, it);
     if (c && c.score > 0.2) out.push(c);
   }
-  out.sort((x, y) => Number(y.strong) - Number(x.strong) || y.score - x.score);
+  out.sort((x, y) => Number(y.strong) - Number(x.strong) || Number(y.evidence) - Number(x.evidence) || y.score - x.score);
   return out.slice(0, limit);
 }
 
@@ -140,7 +168,7 @@ export function matchProduct(p: ProductLike, items: PriceItem[], mappings: Map<s
     return { status: 'matched', priceItemId: c.item.id, suggestedPriceItemId: null, method: c.reasons[0] === 'Same SKU' ? 'sku' : 'auto', score: c.score, candidates: cands };
   }
   const best = cands[0];
-  if (best && best.score >= REVIEW_MIN_SCORE) {
+  if (best && best.evidence && best.score >= REVIEW_MIN_SCORE) {
     return { status: 'review', priceItemId: null, suggestedPriceItemId: best.item.id, method: '', score: best.score, candidates: cands };
   }
   return { status: 'unmatched', priceItemId: null, suggestedPriceItemId: null, method: '', score: best?.score ?? 0, candidates: cands };
