@@ -73,7 +73,7 @@ test.beforeEach(async ({ page }, info) => {
 
 test('@smoke loads the A2Z catalog with case prices from the price sheet', async ({ page }) => {
   await expect(page.getByText('A2Z Beverage Distributors')).toBeVisible();
-  await expect(page.getByTestId('data-notice')).toContainText('443 of 542 catalog products are priced (coverage 81.7%): 389 verified and 54 confirmed by you.');
+  await expect(page.getByTestId('data-notice')).toContainText('456 of 542 catalog products are priced (coverage 84.1%); 86 show "Price not added".');
   await searchFor(page, 'zephyrhills 8oz');
   const row = page.getByTestId('product-row').first();
   await expect(row).toContainText('ZEPHYRHILLS');
@@ -85,24 +85,27 @@ test('@smoke loads the A2Z catalog with case prices from the price sheet', async
 
 test('pricing audit: verified prices used, flagged ones wait for review, unmatched shows the closest line', async ({ page }) => {
   await searchFor(page, 'vitamin water essential');
-  const vw = page.getByTestId('product-row').first();
-  await expect(vw).toContainText('VITAMIN WATER ESSENTIAL');
-  await expect(vw).toContainText('Price needs review'); // 80%: still waiting, no price
+  await expect(page.getByTestId('product-row').first()).toContainText('$19.99'); // from the owner's matched-prices list
+  await searchFor(page, 'fanta grape mexico');
+  const fm = page.getByTestId('product-row').first();
+  await expect(fm).toContainText('FANTA GRAPE MEXICO');
+  await expect(fm).toContainText('Price not added'); // NO PRICE in his list
   await searchFor(page, 'smart water alkline 1l');
   await expect(page.getByTestId('product-row').first()).toContainText('$19.99'); // above 80%: accepted by the owner
   await page.goto('/#/settings/review');
   const card = page.getByTestId('audit-card');
-  await expect(card).toContainText('Verified automatically389');
-  await expect(card).toContainText('Confirmed by you54');
-  await expect(card).toContainText('Coverage81.7%');
-  const li = page.locator('li', { hasText: 'VITAMIN WATER ESSENTIAL-ORANGE 20OZ' });
-  await expect(li).toContainText('Catalog does not show the case count');
-  await expect(li).toContainText('$19.99');
+  await expect(card).toContainText('Verified automatically388');
+  await expect(card).toContainText('Confirmed by you68');
+  await expect(card).toContainText('Coverage84.1%');
+  const li = page.locator('li', { hasText: 'TROPICANA PREMIUM LIVELY LEMONADE' });
+  await expect(li).toContainText('Catalog does not show the size');
   await page.getByRole('button', { name: /^Unmatched/ }).click();
   const ba = page.locator('li', { hasText: 'BODY ARMOUR TROPICAL PUNCH 28OZ 12C' });
   await expect(ba.getByTestId('closest-line')).toContainText('Case count differs (12 vs 15)');
+  await expect(page.locator('li', { hasText: 'GATORADE FUTURE USE 20OZ 24CT' }).getByTestId('closest-line')).toContainText('Price not added (NO PRICE in your matched-prices list)');
   await page.getByRole('button', { name: /^Matched/ }).click();
   await expect(page.locator('li', { hasText: 'COKE MEXICO 355ML 24CT' })).toContainText('$40.99');
+  await expect(page.locator('li', { hasText: 'VITAMIN WATER ESSENTIAL-ORANGE 20OZ' })).toContainText('from your matched-prices list');
   await expect(page.locator('li', { hasText: 'SMART WATER ALKLINE 1L 12CT' })).toContainText('accepted by you (above 80%)');
   await page.screenshot({ path: `${OUT}/${test.info().project.name}-audit.png`, fullPage: false });
 });
@@ -306,7 +309,7 @@ test('QA 12-13: catalog CSV import, manual match persists after reload, unpriced
   await expect(page.locator('li', { hasText: 'Saratoga Spring Water 28OZ 12PK' }).getByText('confirmed by you')).toBeVisible();
   await addStore(page, 'Snack Store');
   await searchFor(page, 'lays classic');
-  await expect(page.getByTestId('product-row').first()).toContainText('Price not available');
+  await expect(page.getByTestId('product-row').first()).toContainText('Price not added');
   await inc(page, 'Lays Classic Potato Chips 1.5OZ 64CT').click();
   await addCases(page, 'saratoga spring water 28', 'Saratoga Spring Water 28OZ 12PK', 1);
   await expect(page.getByTestId('product-row').first()).toContainText('$24.49');

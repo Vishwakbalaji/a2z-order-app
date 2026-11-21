@@ -42,7 +42,7 @@ const ProductRow = memo(function ProductRow({ p, qty, price }: { p: Product; qty
               <span className="font-normal text-gray-500 text-sm"> / case</span>
             </span>
           ) : (
-            <span className="text-amber-700 font-semibold text-sm">{p.matchStatus === 'review' ? 'Price needs review' : 'Price not available'}</span>
+            <span className="text-amber-700 font-semibold text-sm">Price not added</span>
           )}
         </div>
       </div>

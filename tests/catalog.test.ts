@@ -4,6 +4,7 @@ import { AppDB, useDb, db } from '../src/db/db';
 import * as S from '../src/state/store';
 import { BUNDLED_DATASETS, LATEST_BUNDLED_VERSION } from '../src/data/bundled';
 import { A2Z_CATALOG_ROWS, splitDescription } from '../src/data/a2zCatalog';
+import { OWNER_DOC_MATCHES } from '../src/data/ownerMatchedPrices';
 import { syncBundledData } from '../src/db/importer';
 import { displayName } from '../src/lib/products';
 import { search } from '../src/lib/search';
@@ -43,9 +44,29 @@ describe('real A2Z catalog (bundled update v2)', () => {
     expect(catalog.some((p) => p.catalogName === 'RED BULL 20OZ 12CT')).toBe(true);
     const by = (st: string) => catalog.filter((p) => p.matchStatus === st).length;
     // owner verification policy (v5): 389 verified; plus 54 suggestions above 80% the owner accepted (v6)
-    expect({ matched: by('matched'), review: by('review'), unmatched: by('unmatched') }).toEqual({ matched: 389 + 54, review: 26, unmatched: 73 });
+    // + v7 (the owner's matched-prices list): 20 more priced, 7 he lists as NO PRICE → "Price not added"
+    expect({ matched: by('matched'), review: by('review'), unmatched: by('unmatched') }).toEqual({ matched: 389 + 54 + 20 - 7, review: 8, unmatched: 78 });
     expect(catalog.filter((p) => p.matchMethod === 'rule90').length).toBe(0);
-    expect(catalog.filter((p) => p.matchMethod === 'owner80').length).toBe(54);
+    expect(catalog.filter((p) => p.matchMethod === 'owner80').length).toBe(54 - 6); // 6 of them are NO PRICE in his list
+    expect(catalog.filter((p) => p.matchMethod === 'ownerdoc').length).toBe(27);
+    // his list, priced: each price is exactly the price-sheet line's price
+    for (const [raw, , , cents] of OWNER_DOC_MATCHES) {
+      expect(S.priceOf(cat(raw).id), raw).toBe(cents);
+      expect(cat(raw).matchMethod, raw).toBe('ownerdoc');
+    }
+    expect(S.priceOf(cat('VITAMIN WATER ESSENTIAL-ORANGE 20OZ').id)).toBe(1999);
+    expect(S.priceOf(cat('CANADA DRY CAN CRANBERRY 12OZ 24CT').id)).toBe(1299);
+    // NO PRICE in his list → no price, even where the app had one before
+    for (const d of ['FANTA MEXICO 355ML 24CT', 'FANTA GRAPE MEXICO 355ML 24CT', 'GATORADE FUTURE USE 20OZ 24CT', 'MAISON PERRIER GLASS 330ML 24PK', 'RED BULL VARIETY PK IVB WP CS 8.4OZ']) {
+      expect(S.priceOf(cat(d).id), d).toBeNull();
+      expect(cat(d).matchStatus, d).toBe('unmatched');
+    }
+    // prices in his list that the price sheet does not support are not applied
+    expect(S.priceOf(cat('SAN PELLEGRINO GLASS 11OZ 24CT').id)).toBeNull();
+    expect(S.priceOf(cat('SARATOGA SPARKLING GLASS 12OZ 24CT').id)).toBeNull();
+    // products his list leaves out keep what they had
+    expect(S.priceOf(cat('ACQUA PANNA 500 ML 24PK').id)).toBe(3099);
+    expect(S.priceOf(cat('TROPICANA ORANGE 32OZ').id)).toBeNull();
     expect(s.priceItems.length).toBe(131);
     // spot checks against the price sheet
     expect(S.priceOf(cat('COKE DIET 20OZ 24CT').id)).toBe(3299);
@@ -76,9 +97,9 @@ describe('real A2Z catalog (bundled update v2)', () => {
     }
     // 80% and below: still waiting for the owner, without a price
     const flagged: [string, string][] = [
-      ['VITAMIN WATER ESSENTIAL-ORANGE 20OZ', 'Catalog does not show the case count'],
-      ['CORE POWER 42GR VANILLA ELITE 14OZ', 'Catalog does not show the case count'],
-      ['OKF RED SMOOTHY 12CT', 'Catalog does not show the size'],
+      ['CORE POWER 42GR STRAWBERRY ELITE 14', 'case count not shown'],
+      ['TROPICANA PREMIUM LIVELY LEMONADE 1', 'Catalog does not show the size'],
+      ['BODY ARMOUR TROPICCAL PASSION FRUIT', 'Catalog does not show the size'],
     ];
     for (const [d, why] of flagged) {
       expect(cat(d).matchStatus, d).toBe('review');
@@ -111,8 +132,8 @@ describe('real A2Z catalog (bundled update v2)', () => {
     const sheetCoke = s.products.find((p) => p.origin === 'pricesheet' && displayName(p) === 'COKE / FANTA / SPRITE & FLAVORS 20OZ / 24CT')!;
     expect(s.browseIds).not.toContain(sheetCoke.id);
     // the one-time summary notice
-    expect(s.settings.dataNotice?.title).toBe('Your confirmed prices applied (above 80%)');
-    expect(s.settings.dataNotice?.text).toContain('54 more products now have a price. 443 of 542 catalog products are priced (coverage 81.7%): 389 verified and 54 confirmed by you. 26 suggestions at 80% or below wait for your review and 73 have no price line.');
+    expect(s.settings.dataNotice?.title).toBe('Your matched-prices list applied');
+    expect(s.settings.dataNotice?.text).toContain('20 products added from your list, 7 marked "Price not added" as in your list. 456 of 542 catalog products are priced (coverage 84.1%); 86 show "Price not added".');
   });
 
   it('the v5 re-check keeps decisions made by hand, past orders and carts', async () => {
@@ -170,7 +191,7 @@ describe('real A2Z catalog (bundled update v2)', () => {
 
     // v6: the owner accepts suggestions above 80% — never over his own decisions
     BUNDLED_DATASETS.push(...saved.slice(1));
-    expect(await syncBundledData()).toEqual([6]);
+    expect(await syncBundledData()).toEqual([6, 7]);
     await S.reload();
     expect(S.priceOf(cat('SMART WATER ALKLINE 1.5L 12CT').id)).toBe(2999);
     expect(cat('SMART WATER ALKLINE 1.5L 12CT').matchMethod).toBe('owner80');

@@ -354,7 +354,7 @@ export function matchProduct(p: ProductLike, items: PriceItem[], mappings: Map<s
   const none = { flags: [] as string[], notes: [] as string[], basis: null, candidates: [] as Candidate[] };
   if (saved && saved.source !== 'rule90') {
     // decided by hand — always kept
-    if (saved.priceItemKey === null) return { ...none, status: 'unmatched', priceItemId: null, suggestedPriceItemId: null, method: 'manual', score: 0, confidence: 0 };
+    if (saved.priceItemKey === null) return { ...none, status: 'unmatched', priceItemId: null, suggestedPriceItemId: null, method: saved.source || 'manual', score: 0, confidence: 0 };
     const it = items.find((i) => i.key === saved.priceItemKey);
     // 'owner80' = the owner's "accept everything above 80%" decision (v6); otherwise confirmed in the app
     if (it) return { ...none, status: 'matched', priceItemId: it.id, suggestedPriceItemId: null, method: saved.source || 'manual', score: 1, confidence: 100 };

@@ -90,7 +90,7 @@ export function ManageProductsScreen() {
                           {p.matchStatus === 'review' && p.origin !== 'pricesheet' && <Badge tone="amber">needs review</Badge>}
                         </div>
                       </div>
-                      <span className={`tabular-nums font-semibold ${price == null ? 'text-amber-700 text-sm' : ''}`}>{price == null ? 'No price' : formatCents(price)}</span>
+                      <span className={`tabular-nums font-semibold ${price == null ? 'text-amber-700 text-sm' : ''}`}>{price == null ? 'Price not added' : formatCents(price)}</span>
                     </a>
                   </li>
                 );

@@ -16,6 +16,7 @@ import { unitsFromText } from '../lib/products';
 import { A2Z_PRICE_ROWS, A2Z_SOURCE_FILE } from './a2zPriceSheet';
 import { A2Z_CATALOG_FILE, A2Z_CATALOG_ROWS, brandForGroup, splitDescription } from './a2zCatalog';
 import { ACCEPTED_80, ACCEPTED_90 } from './acceptedMatches';
+import { OWNER_DOC_FILE, OWNER_DOC_MATCHES } from './ownerMatchedPrices';
 
 /** A verified catalog-product → price-sheet-line link (checked by a person, not guessed). */
 export interface BundledMapping {
@@ -99,7 +100,15 @@ export const BUNDLED_DATASETS: BundledDataset[] = [
     fileName: 'Owner decision 2026-11-21: accept every suggested price above 80% (checked by him)',
     mappings: ACCEPTED_80.map(([catalogRaw, priceBrand, priceDesc]) => ({ catalogRaw, priceBrand, priceDesc, source: 'owner80' })),
   },
-  // Next: { version: 7, kind: 'catalog' | 'pricesheet' | 'settings' | 'mappings' | 'rematch', ... }
+  {
+    // Owner's matched-prices document, verified against the price sheet (see ownerMatchedPrices.ts):
+    // 20 products priced from it, 7 that it lists as NO PRICE → "Price not added". Hand decisions kept.
+    version: 7,
+    kind: 'mappings',
+    fileName: OWNER_DOC_FILE,
+    mappings: OWNER_DOC_MATCHES.map(([catalogRaw, priceBrand, priceDesc]) => ({ catalogRaw, priceBrand, priceDesc, source: 'ownerdoc' })),
+  },
+  // Next: { version: 8, kind: 'catalog' | 'pricesheet' | 'settings' | 'mappings' | 'rematch', ... }
 ];
 
 export const LATEST_BUNDLED_VERSION = Math.max(...BUNDLED_DATASETS.map((d) => d.version));

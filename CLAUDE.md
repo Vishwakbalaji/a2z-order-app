@@ -20,7 +20,9 @@ Live on GitHub Pages; every push to `main` runs `.github/workflows/deploy.yml` (
   Hand decisions (Mapping without source) always win. Owner decision 2026-11-21 (v6): every suggestion
   ABOVE 80% (81–94) accepted as his confirmation (src/data/acceptedMatches.ts ACCEPTED_80, Mapping.source
   'owner80', method 'owner80', counted as "confirmed by you"); 80% and below stay for review. Ask him
-  before applying the 80% rule to a future catalog/price sheet. Coverage = (verified + confirmed by owner) ÷ total.
+  before applying the 80% rule to a future catalog/price sheet.
+  A later bundled owner decision (e.g. 'ownerdoc') may replace an earlier bundled one (rule90/owner80),
+  never a decision made by hand in the app (Mapping without source). Coverage = (verified + confirmed by owner) ÷ total.
   Audit: `OUT=/tmp/audit npx vitest run tests/tool-audit.test.ts` → /tmp/audit.md (+ .json). Apply the same
   policy to future catalogs/price sheets; report the audit table to the owner.
 - Never delete or overwrite user data (stores, carts, orders, his own matching decisions).
@@ -68,7 +70,12 @@ Goal: products should appear under the catalog's names/departments/categories, p
   20 of the v4 acceptances taken back (alkaline, variety, sport, multi-pack, count cut off/differs)
 - v6 mappings: 54 suggestions above 80% accepted by the owner → 443 priced (389 verified + 54 confirmed,
   coverage 81.7%), 26 review (all at 80%), 73 unmatched
-Next free version: 7.
+- v7 mappings: owner's "A2Z_Catalog_Matched_Prices.pdf" (tests/fixtures; checked with tests/tool-reconcile.test.ts):
+  433 rows already agreed; 20 priced from it (each = its price-sheet line), 7 NO PRICE in it → unpriced
+  (source 'ownerdoc'); NOT applied: San Pellegrino Glass 11OZ ($26.99 = Perrier line) and Saratoga Sparkling
+  Glass 12OZ (STILL line). → 456 priced (coverage 84.1%), 86 show "Price not added" (owner's wording for
+  every product without a price). His list skipped 7 catalog products (left as they were).
+Next free version: 8.
 
 ## Cloud sync (Cloudflare Worker + D1) — `worker/`
 - `worker/src/index.ts`: /status, /claim (first phone sets the key hash), /sync (push outbox + pull by seq),

@@ -247,7 +247,7 @@ export function catalogSummaryText(s: CatalogSummary): string {
 
 /** Pricing audit counts. Coverage = (verified + confirmed by you) ÷ total; suggestions don't count. */
 export function auditCounts(catalog: Product[]) {
-  const byOwner = (p: Product) => p.matchMethod === 'manual' || p.matchMethod === 'owner80';
+  const byOwner = (p: Product) => p.matchMethod === 'manual' || p.matchMethod === 'owner80' || p.matchMethod === 'ownerdoc';
   const manual = catalog.filter((p) => p.priceOverrideCents != null || (p.matchStatus === 'matched' && byOwner(p))).length;
   const verified = catalog.filter((p) => p.priceOverrideCents == null && p.matchStatus === 'matched' && !byOwner(p)).length;
   const review = catalog.filter((p) => p.priceOverrideCents == null && p.matchStatus === 'review').length;
@@ -351,7 +351,14 @@ export async function syncBundledData(): Promise<number[]> {
         const unmatched = cat.filter((p) => p.matchStatus === 'unmatched').length;
         const a = auditCounts(cat);
         notice =
-          ds.mappings[0]?.source === 'owner80'
+          ds.mappings[0]?.source === 'ownerdoc'
+            ? {
+                title: 'Your matched-prices list applied',
+                text: `Checked against the price sheet: ${ds.mappings.filter((m) => m.priceBrand != null).length} products added from your list, ${ds.mappings.filter((m) => m.priceBrand == null).length} marked "Price not added" as in your list. ${matched} of ${cat.length} catalog products are priced (coverage ${a.coverage}%); ${review + unmatched} show "Price not added".`,
+                at: Date.now(),
+                review: review + unmatched,
+              }
+            : ds.mappings[0]?.source === 'owner80'
             ? {
                 title: 'Your confirmed prices applied (above 80%)',
                 text: `${matched - before} more products now have a price. ${matched} of ${cat.length} catalog products are priced (coverage ${a.coverage}%): ${a.verified} verified and ${a.manual} confirmed by you. ${review} suggestions at 80% or below wait for your review and ${unmatched} have no price line. Accepted ones are marked "accepted by you (above 80%)" in Review price matching, where you can change any of them.`,
@@ -432,8 +439,9 @@ async function addBundledMappings(list: BundledMapping[]) {
   for (const m of list) {
     const key = m.sku ? `SKU:${m.sku.trim().toUpperCase()}` : `N:${normText(m.catalogRaw)}`;
     const cur = await db.mappings.get(key);
-    // a decision made by hand always wins; an old 90%-rule link (ignored since v5) may be replaced
-    if (cur && cur.source !== 'rule90') continue;
+    // a decision made by hand in the app (no source) always wins; a link from an earlier bundled owner
+    // decision (90% rule, 80% rule) may be replaced by a later one (his matched-prices document)
+    if (cur && !cur.source) continue;
     await db.mappings.put({ key, priceItemKey: m.priceBrand == null || m.priceDesc == null ? null : priceItemKey(m.priceBrand, m.priceDesc), updatedAt: now, ...(m.source ? { source: m.source } : {}) });
   }
 }
