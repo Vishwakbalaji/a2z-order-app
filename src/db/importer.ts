@@ -5,7 +5,7 @@
 import { db, stableId, uid } from './db';
 import { takeSnapshot } from './backup';
 import type { DraftLine, Mapping, PriceItem, Product, Settings } from '../types';
-import { matchProduct } from '../lib/matching';
+import { matchProduct, buildSiblingCounts, DEFAULT_CONTEXT } from '../lib/matching';
 import { displayName, mappingKey, priceItemKey, unitsFromText } from '../lib/products';
 import { A2Z_COMPANY } from '../data/a2zPriceSheet';
 import { BUNDLED_DATASETS, type BundledMapping } from '../data/bundled';
@@ -245,6 +245,16 @@ export function catalogSummaryText(s: CatalogSummary): string {
   ].join(' ');
 }
 
+/** Pricing audit counts. Coverage = (verified + confirmed by you) ÷ total; suggestions don't count. */
+export function auditCounts(catalog: Product[]) {
+  const manual = catalog.filter((p) => p.priceOverrideCents != null || (p.matchStatus === 'matched' && p.matchMethod === 'manual')).length;
+  const verified = catalog.filter((p) => p.priceOverrideCents == null && p.matchStatus === 'matched' && p.matchMethod !== 'manual').length;
+  const review = catalog.filter((p) => p.priceOverrideCents == null && p.matchStatus === 'review').length;
+  const unmatched = catalog.filter((p) => p.priceOverrideCents == null && p.matchStatus === 'unmatched').length;
+  const total = catalog.length;
+  return { total, verified, manual, review, unmatched, coverage: total ? Math.round(((verified + manual) / total) * 1000) / 10 : 0 };
+}
+
 /** Re-run matching for catalog/manual products that were not confirmed by hand. */
 export async function rematchCatalogProducts() {
   const items = await db.priceItems.toArray();
@@ -252,19 +262,25 @@ export async function rematchCatalogProducts() {
   const products = (await db.products.toArray()).filter((p) => p.origin !== 'pricesheet');
   const now = Date.now();
   const itemIds = new Set(items.map((i) => i.id));
+  const ctx = { ...DEFAULT_CONTEXT, items, siblings: buildSiblingCounts(products.filter((p) => p.active)) };
   for (const p of products) {
     // respect decisions made by hand, unless the chosen price line no longer exists
     if (p.matchMethod === 'manual' && (!p.priceItemId || itemIds.has(p.priceItemId))) continue;
-    const r = matchProduct(p, items, mappings);
-    await db.products.put({
+    const r = matchProduct(p, items, mappings, ctx);
+    const next = {
       ...p,
       matchStatus: r.status,
       priceItemId: r.priceItemId,
       suggestedPriceItemId: r.suggestedPriceItemId,
       matchMethod: r.method,
       matchScore: r.score,
-      updatedAt: now,
-    });
+      matchBasis: r.basis,
+      matchFlags: r.flags,
+      matchNotes: r.notes,
+    };
+    // unchanged products are not rewritten (keeps cloud sync quiet)
+    const same = (['matchStatus', 'priceItemId', 'suggestedPriceItemId', 'matchMethod', 'matchScore', 'matchBasis'] as const).every((k) => (p[k] ?? null) === (next[k] ?? null)) && JSON.stringify(p.matchFlags ?? []) === JSON.stringify(r.flags) && JSON.stringify(p.matchNotes ?? []) === JSON.stringify(r.notes);
+    if (!same) await db.products.put({ ...next, updatedAt: now });
   }
 }
 
@@ -337,6 +353,21 @@ export async function syncBundledData(): Promise<number[]> {
           text: `${matched - before} more products now have a price. ${matched} of ${cat.length} catalog products are priced; ${review} suggestions below 90% wait for your review and ${unmatched} are not on the price sheet. Accepted ones are marked "accepted by your 90% rule" in Review price matching, where you can change any of them.`,
           at: Date.now(),
           review: review + unmatched,
+        };
+      }
+      if (ds.kind === 'rematch') {
+        const prev = new Map((await db.products.toArray()).map((p) => [p.id, p]));
+        await rematchCatalogProducts();
+        await moveDraftsToCatalogNames();
+        const cat = (await db.products.toArray()).filter((p) => p.origin === 'catalog' && p.active && !p.missingFromCatalog);
+        const a = auditCounts(cat);
+        const lost = cat.filter((p) => prev.get(p.id)?.matchStatus === 'matched' && p.matchStatus !== 'matched').length;
+        const gained = cat.filter((p) => prev.get(p.id)?.matchStatus !== 'matched' && p.matchStatus === 'matched').length;
+        notice = {
+          title: 'Prices re-checked with your verification rules',
+          text: `${a.verified} catalog products verified${a.manual ? ` and ${a.manual} confirmed by you` : ''} (coverage ${a.coverage}%). ${a.review} wait for your confirmation and ${a.unmatched} have no price line.${lost ? ` ${lost} prices were taken back for your confirmation (e.g. alkaline, variety pack, multi-pack or a different case count).` : ''}${gained ? ` ${gained} newly verified.` : ''} Products waiting for confirmation are not counted in totals.`,
+          at: Date.now(),
+          review: a.review + a.unmatched,
         };
       }
       const cur = (await db.settings.get('app'))!;

@@ -191,7 +191,7 @@ describe('catalog matching', () => {
         { department: 'Soda', category: 'Cola', brand: 'Coca-Cola', name: 'Classic', variation: '20 oz 24 pack', unitsPerCase: null, sku: '', raw: 'Coca-Cola Classic 20 oz 24 pack' },
         // ambiguous: Saratoga has STILL and SPARKLING 28OZ/12CT lines
         { department: 'Water', category: 'Bottled Water', brand: 'Saratoga', name: 'Water', variation: '28OZ 12PK', unitsPerCase: null, sku: '', raw: 'Saratoga Water 28OZ 12PK' },
-        // packaging not stated while price line is GLASS -> review
+        // packaging not stated while the only price line for that size is GLASS
         { department: 'Water', category: 'Sparkling', brand: 'San Pellegrino', name: 'Sparkling Water', variation: '750ML 12PK', unitsPerCase: null, sku: '', raw: 'San Pellegrino Sparkling Water 750ML 12PK' },
         // size that does not exist on the price sheet -> unmatched
         { department: 'Water', category: 'Bottled Water', brand: 'Evian', name: 'Water', variation: '200ML 24PK', unitsPerCase: null, sku: '', raw: 'Evian Water 200ML 24PK' },
@@ -209,7 +209,9 @@ describe('catalog matching', () => {
     expect(S.priceOf(st('Coca-Cola Classic 20 oz 24 pack').id)).toBe(3299);
     expect(st('Saratoga Water 28OZ 12PK').matchStatus).toBe('review');
     expect(S.priceOf(st('Saratoga Water 28OZ 12PK').id)).toBeNull(); // never an uncertain price
-    expect(st('San Pellegrino Sparkling Water 750ML 12PK').matchStatus).toBe('review');
+    // the only San Pellegrino 750ML / 12CT line is GLASS; the catalog does not say → verified, with a note
+    expect(st('San Pellegrino Sparkling Water 750ML 12PK').matchStatus).toBe('matched');
+    expect(st('San Pellegrino Sparkling Water 750ML 12PK').matchNotes!.join(' ')).toContain('only line');
     expect(st('Evian Water 200ML 24PK').matchStatus).not.toBe('matched');
     expect(st('Lays Classic 1.5OZ 64CT').matchStatus).toBe('unmatched');
     expect(S.priceOf(st('Lays Classic 1.5OZ 64CT').id)).toBeNull();
@@ -310,5 +312,50 @@ describe('backup & restore', () => {
   it('rejects invalid files', () => {
     expect(validateBackup({ hello: 1 }).length).toBeGreaterThan(0);
     expect(validateBackup({ app: 'a2z-order-app', version: 1, tables: { products: [{ nope: 1 }], settings: [{ id: 'app' }] } }).length).toBeGreaterThan(0);
+  });
+});
+
+describe('owner verification policy (matching rules)', () => {
+  const item = (brand: string, desc: string, i = 0) => ({ id: 'i' + i + brand + desc, key: brand + '|' + desc, section: '', brand, desc, sku: '', priceCents: 1000 + i, prevPriceCents: null, raw: '', sourceFile: '', importedAt: 0, missingFromLatest: false, order: i });
+  const prod = (brand: string, text: string, category = brand) => ({ brand, category, name: text, variation: '', sku: '', unitsPerCase: null, catalogName: text });
+  const m = (p: ReturnType<typeof prod>, items: ReturnType<typeof item>[]) => matchProduct(p, items, new Map());
+
+  it('exact brand + size + count → verified; same size written differently → verified', () => {
+    expect(m(prod('Evian', 'EVIAN WATER 0.5L 24CT'), [item('EVIAN WATER', '500ML / 24CT')]).status).toBe('matched');
+  });
+  it('size within 0.3 oz → strong suggestion, flagged, not priced', () => {
+    const r = m(prod('Starbucks', 'STARBUCKS MOCHA 13.7OZ 12CT'), [item('STARBUCKS', '13.9OZ / 12CT')]);
+    expect(r.status).toBe('review');
+    expect(r.confidence).toBeGreaterThanOrEqual(90);
+    expect(r.flags.join()).toContain('0.2 oz');
+  });
+  it('size more than 0.3 oz apart → below 90, review only', () => {
+    const r = m(prod('Red Bull', 'RED BULL 8.4OZ 24PK'), [item('RED BULL', '8OZ / 24CT')]);
+    expect(r.status).toBe('review');
+    expect(r.confidence).toBeLessThan(90);
+  });
+  it('a different case count is never matched, whatever the score', () => {
+    const r = m(prod('Body Armour', 'BODY ARMOUR PUNCH 28OZ 12CT'), [item('BODYARMOR', '28OZ / 15CT')]);
+    expect(r.status).toBe('unmatched');
+    expect(r.priceItemId).toBeNull();
+  });
+  it('alkaline / variety pack / sport cap are material differences (never verified)', () => {
+    expect(m(prod('Smart Water', 'SMART WATER ALKLINE 1L 12CT'), [item('SMART WATER', '1L / 12CT')]).status).toBe('review');
+    expect(m(prod('Celsius', 'CELSIUS VRTY PACK 12OZ 12CT'), [item('CELSIUS', '12OZ / 12CT')]).status).toBe('review');
+    expect(m(prod('Smart Water', 'SMART WATER 700ML 24PK'), [item('SMART WATER', '700ML SPORT / 24CT')]).status).toBe('review');
+  });
+  it('two lines that both fit → not verified', () => {
+    const r = m(prod('Acme', 'ACME COLA 12OZ 24CT'), [item('ACME', '12OZ / 24CT', 1), item('ACME COLA', '12OZ / 24CT', 2)]);
+    expect(r.status).toBe('review');
+  });
+  it('a generic product-type line does not name the brand → review', () => {
+    const r = m(prod('Canada Dry', 'CANADA DRY CLUB SODA 1L 15CT'), [item('CLUB SODA', '1L / 15CT')]);
+    expect(r.status).toBe('review');
+  });
+  it('confirmations by hand always win', () => {
+    const it2 = item('BODYARMOR', '28OZ / 15CT');
+    const p = prod('Body Armour', 'BODY ARMOUR PUNCH 28OZ 12CT');
+    const r = matchProduct(p, [it2], new Map([['N:BODY ARMOUR PUNCH 28OZ 12CT', { key: 'N:BODY ARMOUR PUNCH 28OZ 12CT', priceItemKey: it2.key, updatedAt: 0 }]]));
+    expect(r).toMatchObject({ status: 'matched', method: 'manual', priceItemId: it2.id });
   });
 });

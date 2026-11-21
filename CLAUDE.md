@@ -7,10 +7,19 @@ Live on GitHub Pages; every push to `main` runs `.github/workflows/deploy.yml` (
 ## Hard rules (from the owner)
 - Never invent products, sizes or prices. Every value must come from a document he supplied.
 - Never auto-assign an uncertain price. Ambiguous matches stay "Needs review".
-  Owner decision 2026-11-21: review suggestions scoring 90% or more (as shown in the app) ARE
-  accepted (bundled v4, Mapping.source = 'rule90', labelled "accepted by your 90% rule"); below
-  90% stays for his manual review. Apply the same 90% rule to future catalogs/price sheets unless he
-  says otherwise, and list the accepted ones that look like a different pack/product for him.
+- Owner VERIFICATION POLICY (2026-11-21, bundled v5 — replaces the earlier blanket "accept ≥90%" rule v4;
+  rule90 mappings are ignored by the matcher). Implemented in `src/lib/matching.ts` (`assessCandidate`):
+  brand first (catalog Group) → product type/variation → size → case count. Size: exact, or ≤0.3 oz =
+  strong candidate (flagged, max 92); more = review. Case count must be identical (cut-off counts only
+  when the visible digits or ALL same-size siblings confirm it). Material differences are never verified:
+  alkaline, variety pack, sport cap, still/sparkling, multi-pack vs loose case, a different product line
+  ("MINUTE MAID JUICE"), a generic type line that doesn't name the brand, two lines that both fit.
+  Confidence: ≥95 with no flags = verified (priced); 75–94 = suggestion (NOT priced, not in totals);
+  <75 = unmatched (closest line shown as info). One brand line with no flavor named (e.g. "CELSIUS 12OZ /
+  12CT") prices all flavors at that size+count (`brandLevelFlavors`, the owner can be asked to change it).
+  Hand decisions (Mapping without source) always win. Coverage = (verified + confirmed by owner) ÷ total.
+  Audit: `OUT=/tmp/audit npx vitest run tests/tool-audit.test.ts` → /tmp/audit.md (+ .json). Apply the same
+  policy to future catalogs/price sheets; report the audit table to the owner.
 - Never delete or overwrite user data (stores, carts, orders, his own matching decisions).
 - Completed orders are immutable snapshots.
 - The distributor PDF ("Order PDF") must never contain prices.
@@ -34,8 +43,8 @@ Goal: products should appear under the catalog's names/departments/categories, p
    a test with the PDF in `tests/fixtures/` (see `tests/priceSheetParser.test.ts`).
 3. Save the data in `src/data/` (e.g. `a2zCatalog.ts`, rows of `CatalogRowInput`: department, category,
    brand, name, variation "500ML / 24CT", unitsPerCase, sku, raw = original text).
-4. Run matching against the current price sheet: `OUT=/tmp/r.txt npx vitest run tests/tool-match-report.test.ts`
-   (edit it to use the new rows) and review EVERY automatic match. For links you have verified by reading both documents
+4. Run the audit against the current price sheet: `OUT=/tmp/audit npx vitest run tests/tool-audit.test.ts`
+   (edit it to use the new rows) and review EVERY verified match. For links you have verified by reading both documents
    (same brand, size, case count, packaging), add `BundledMapping`s. Leave genuinely ambiguous ones out
    (they show as "Needs review" in the app) and list them for the owner.
 5. Ship it by appending a new entry to `BUNDLED_DATASETS` in `src/data/bundled.ts` with
@@ -51,9 +60,10 @@ Goal: products should appear under the catalog's names/departments/categories, p
 - v2 catalog `A2Z_Beverages_Product_List_11.20.26_.pdf` (543 printed rows → 542 products; 334 auto-priced,
   139 review, 69 not on the price sheet)
 - v3 settings: rep phone +1 561-552-6556 (fills an empty field only)
-- v4 mappings: 72 suggestions ≥90% accepted (src/data/acceptedMatches.ts, made with
-  tests/tool-accept90.test.ts) → 406 priced, 67 review, 69 not on the price sheet
-Next free version: 5.
+- v4 mappings: 72 suggestions ≥90% accepted (src/data/acceptedMatches.ts) — superseded by v5
+- v5 rematch: owner verification policy → 389 verified (71.8%), 80 suggestions for review, 73 unmatched;
+  20 of the v4 acceptances taken back (alkaline, variety, sport, multi-pack, count cut off/differs)
+Next free version: 6.
 
 ## Cloud sync (Cloudflare Worker + D1) — `worker/`
 - `worker/src/index.ts`: /status, /claim (first phone sets the key hash), /sync (push outbox + pull by seq),

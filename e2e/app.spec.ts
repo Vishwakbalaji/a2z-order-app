@@ -73,7 +73,7 @@ test.beforeEach(async ({ page }, info) => {
 
 test('@smoke loads the A2Z catalog with case prices from the price sheet', async ({ page }) => {
   await expect(page.getByText('A2Z Beverage Distributors')).toBeVisible();
-  await expect(page.getByTestId('data-notice')).toContainText('406 of 542 catalog products are priced; 67 suggestions below 90% wait for your review');
+  await expect(page.getByTestId('data-notice')).toContainText('389 catalog products verified (coverage 71.8%). 80 wait for your confirmation and 73 have no price line.');
   await searchFor(page, 'zephyrhills 8oz');
   const row = page.getByTestId('product-row').first();
   await expect(row).toContainText('ZEPHYRHILLS');
@@ -81,6 +81,27 @@ test('@smoke loads the A2Z catalog with case prices from the price sheet', async
   await expect(row).toContainText('$8.49');
   await searchFor(page, '');
   await page.screenshot({ path: `${OUT}/${test.info().project.name}-products.png` });
+});
+
+test('pricing audit: verified prices used, flagged ones wait for review, unmatched shows the closest line', async ({ page }) => {
+  await searchFor(page, 'smart water alkline 1l');
+  const alk = page.getByTestId('product-row').first();
+  await expect(alk).toContainText('SMART WATER ALKLINE');
+  await expect(alk).toContainText('1L 12CT');
+  await expect(alk).toContainText('Price needs review');
+  await page.goto('/#/settings/review');
+  const card = page.getByTestId('audit-card');
+  await expect(card).toContainText('Verified automatically389');
+  await expect(card).toContainText('Coverage71.8%');
+  const li = page.locator('li', { hasText: 'SMART WATER ALKLINE 1L 12CT' });
+  await expect(li).toContainText('Alkaline water — the price sheet lists only regular');
+  await expect(li).toContainText('$19.99');
+  await page.getByRole('button', { name: /^Unmatched/ }).click();
+  const ba = page.locator('li', { hasText: 'BODY ARMOUR TROPICAL PUNCH 28OZ 12C' });
+  await expect(ba.getByTestId('closest-line')).toContainText('Case count differs (12 vs 15)');
+  await page.getByRole('button', { name: /^Matched/ }).click();
+  await expect(page.locator('li', { hasText: 'COKE MEXICO 355ML 24CT' })).toContainText('$40.99');
+  await page.screenshot({ path: `${OUT}/${test.info().project.name}-audit.png`, fullPage: false });
 });
 
 test('QA 1-9: +/- quantities, auto cart add/remove, sync, totals', async ({ page }) => {

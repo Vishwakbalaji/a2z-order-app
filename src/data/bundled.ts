@@ -31,6 +31,8 @@ export type BundledDataset =
   | { version: number; kind: 'catalog'; fileName: string; rows: CatalogRowInput[]; mappings?: BundledMapping[] }
   // links between catalog products and price lines (decisions you already made by hand are never overwritten)
   | { version: number; kind: 'mappings'; fileName: string; mappings: BundledMapping[] }
+  // re-run price matching for every catalog product with the current rules (hand decisions are kept)
+  | { version: number; kind: 'rematch'; fileName: string }
   // settings values applied only where the setting is still empty (never overwrites what you typed)
   | { version: number; kind: 'settings'; fileName: string; fillEmpty: Partial<Pick<Settings, 'repName' | 'repPhone' | 'companyName' | 'companyAddress' | 'companyPhone'>> };
 
@@ -80,7 +82,16 @@ export const BUNDLED_DATASETS: BundledDataset[] = [
     fileName: 'Owner rule 2026-11-21: accept suggested prices scoring 90% or more',
     mappings: ACCEPTED_90.map(([catalogRaw, priceBrand, priceDesc]) => ({ catalogRaw, priceBrand, priceDesc, source: 'rule90' })),
   },
-  // Next: { version: 5, kind: 'catalog' | 'pricesheet' | 'settings' | 'mappings', ... }
+  {
+    // Owner's verification policy (2026-11-21) replaces the blanket 90% rule: brand → product type →
+    // size (≤ 0.3 oz = flagged) → exact case count; material differences (alkaline, variety pack,
+    // sport cap, multi-pack, a different product line) are never verified. Prices accepted by the
+    // 90% rule are re-checked; decisions made by hand are never touched. See tests/tool-audit.test.ts.
+    version: 5,
+    kind: 'rematch',
+    fileName: 'Owner verification policy 2026-11-21: full re-check of every catalog price',
+  },
+  // Next: { version: 6, kind: 'catalog' | 'pricesheet' | 'settings' | 'mappings' | 'rematch', ... }
 ];
 
 export const LATEST_BUNDLED_VERSION = Math.max(...BUNDLED_DATASETS.map((d) => d.version));

@@ -35,7 +35,13 @@ export interface Product {
   matchStatus: MatchStatus;
   matchMethod: string; // 'pricesheet' | 'sku' | 'auto' | 'manual' | ''
   matchScore: number;
-  suggestedPriceItemId: string | null; // for 'review'
+  suggestedPriceItemId: string | null; // for 'review' (for 'unmatched': the closest line, information only)
+  /** Why the match was verified: 'exact' | 'naming' | 'flavors-listed' | 'brand-level' | 'count-cut-off' | 'sku'. */
+  matchBasis?: string | null;
+  /** Material differences / uncertainties that keep it from being verified (shown in Review). */
+  matchFlags?: string[];
+  /** Non-blocking observations (e.g. "0.5L = 500ML"). */
+  matchNotes?: string[];
   active: boolean; // false = discontinued / hidden
   missingFromCatalog?: boolean; // was in an earlier catalog but not in the latest one (kept, flagged)
   order: number;

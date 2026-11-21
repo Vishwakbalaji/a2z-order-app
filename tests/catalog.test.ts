@@ -42,8 +42,9 @@ describe('real A2Z catalog (bundled update v2)', () => {
     expect(new Set(catalog.map((p) => p.catalogName)).size).toBe(542);
     expect(catalog.some((p) => p.catalogName === 'RED BULL 20OZ 12CT')).toBe(true);
     const by = (st: string) => catalog.filter((p) => p.matchStatus === st).length;
-    expect({ matched: by('matched'), review: by('review'), unmatched: by('unmatched') }).toEqual({ matched: 334 + 72, review: 67, unmatched: 69 }); // 334 strict + 72 accepted by the 90% rule (v4)
-    expect(catalog.filter((p) => p.matchMethod === 'rule90').length).toBe(72);
+    // owner verification policy (v5): brand → type → size → exact case count; material differences are never verified
+    expect({ matched: by('matched'), review: by('review'), unmatched: by('unmatched') }).toEqual({ matched: 389, review: 80, unmatched: 73 });
+    expect(catalog.filter((p) => p.matchMethod === 'rule90').length).toBe(0);
     expect(s.priceItems.length).toBe(131);
     // spot checks against the price sheet
     expect(S.priceOf(cat('COKE DIET 20OZ 24CT').id)).toBe(3299);
@@ -53,16 +54,35 @@ describe('real A2Z catalog (bundled update v2)', () => {
     expect(S.priceOf(cat('EVIAN WATER 0.5L 24CT').id)).toBe(2299); // 0.5L = 500ML
     expect(S.priceOf(cat('SAN PELLEGRINO .5L 24PK PLASTIC').id)).toBe(2499);
     expect(S.priceOf(cat('VITA COCO 1L 12CT').id)).toBe(4999);
-    // uncertain → no price, but a suggestion for review
-    // accepted by the owner's 90% rule
-    expect(S.priceOf(cat('COKE MEXICO 355ML 24CT').id)).toBe(4099);
-    expect(cat('COKE MEXICO 355ML 24CT').matchMethod).toBe('rule90');
+    expect(S.priceOf(cat('COKE MEXICO 355ML 24CT').id)).toBe(4099); // its own line, not the generic Coke can line
+    expect(cat('COKE MEXICO 355ML 24CT').matchMethod).toBe('auto');
+    // case count cut off in the catalog ("…16OZ 12C") but readable
     expect(S.priceOf(cat('BODY ARMOUR TROPICAL PUNCH 16OZ 12C').id)).toBe(2099);
-    // below 90%: still waiting for review, no price
-    for (const d of ['RED BULL 8.4OZ 24PK', 'CANADA DRY GINGER ALE 20OZ 24CT', 'ZEPHYRHILLS 16.9OZ 32CT', 'MOUNTAIN DEW 2L 2-4PK']) {
-      expect(cat(d).matchStatus).toBe('review');
-      expect(S.priceOf(cat(d).id)).toBeNull();
+    expect(cat('BODY ARMOUR TROPICAL PUNCH 16OZ 12C').matchBasis).toBe('count-cut-off');
+    // material differences are never verified: they wait for the owner, without a price
+    const flagged: [string, string][] = [
+      ['SMART WATER ALKLINE 1L 12CT', 'Alkaline'],
+      ['CELSIUS VRTY PACK 12OZ 12CT', 'Variety pack'],
+      ['SMART WATER 700ML 24PK', 'sport-cap'],
+      ['FIJI WATER 1L 2/6PK', 'multi-pack'],
+      ['MINUTE MAID LEMONADE 12OZ 2/12PK', 'MINUTE MAID JUICE'],
+      ['STARBUCKS COFFEE 13.7OZ 12CT', 'Size differs by 0.2 oz'],
+      ['RED BULL 8.4OZ 24PK', 'more than 0.3 oz'],
+      ['CANADA DRY GINGER ALE 20OZ 24CT', 'does not name the brand'],
+      ['ZEPHYRHILLS 16.9OZ 32CT', 'more than 0.3 oz'],
+      ['MOUNTAIN DEW 2L 2-4PK', 'multi-pack'],
+    ];
+    for (const [d, why] of flagged) {
+      expect(cat(d).matchStatus, d).toBe('review');
+      expect(S.priceOf(cat(d).id), d).toBeNull();
+      expect(cat(d).matchFlags!.join(' '), d).toContain(why);
     }
+    // a different case count is never matched: unmatched, the closest line kept only as information
+    const ba = cat('BODY ARMOUR TROPICAL PUNCH 28OZ 12C');
+    expect(ba.matchStatus).toBe('unmatched');
+    expect(S.priceOf(ba.id)).toBeNull();
+    expect(ba.matchFlags).toContain('Case count differs (12 vs 15)');
+    expect(s.priceItemById.get(ba.suggestedPriceItemId!)!.desc).toBe('28OZ / 15CT');
     // not on the price sheet at all
     expect(cat('ARIZONA CAN-GREEN TEA 22OZ 24CT').matchStatus).toBe('unmatched');
     expect(cat('TOPO CHICO WATER 16.9OZ 18CT').matchStatus).toBe('unmatched');
@@ -82,29 +102,62 @@ describe('real A2Z catalog (bundled update v2)', () => {
     const sheetCoke = s.products.find((p) => p.origin === 'pricesheet' && displayName(p) === 'COKE / FANTA / SPRITE & FLAVORS 20OZ / 24CT')!;
     expect(s.browseIds).not.toContain(sheetCoke.id);
     // the one-time summary notice
-    expect(s.settings.dataNotice?.text).toContain('72 more products now have a price. 406 of 542 catalog products are priced; 67 suggestions below 90% wait for your review and 69 are not on the price sheet.');
+    expect(s.settings.dataNotice?.title).toBe('Prices re-checked with your verification rules');
+    expect(s.settings.dataNotice?.text).toContain('389 catalog products verified (coverage 71.8%). 80 wait for your confirmation and 73 have no price line.');
   });
 
-  it('the 90% rule never overrides a decision made by hand', async () => {
-    // a phone that has v1–v3 (price sheet, catalog, phone) but not yet v4
-    const saved = BUNDLED_DATASETS.splice(3);
+  it('the v5 re-check keeps decisions made by hand, past orders and carts', async () => {
+    // a phone that has v1–v4 but not yet v5, with prices accepted by the old 90% rule
+    const saved = BUNDLED_DATASETS.splice(4);
+    let orderId = '';
     try {
       await fresh();
-      const coke = cat('COKE MEXICO 355ML 24CT');
-      expect(coke.matchStatus).toBe('review');
-      await S.leaveUnmatched(coke.id); // decided by hand
-      const fiji = cat('FIJI WATER 1L 2/6PK');
-      const other = S.getState().priceItems.find((i) => i.brand === 'FIJI WATER' && i.desc === '1.5L / 12CT')!;
-      await S.confirmMatch(fiji.id, other.id); // decided by hand, different line
+      const items = S.getState().priceItems;
+      const line = (b: string, d: string) => items.find((i) => i.brand === b && i.desc === d)!;
+      // what the old 90% rule had accepted on this phone
+      for (const [d, b, l] of [
+        ['SMART WATER ALKLINE 1L 12CT', 'SMART WATER', '1L / 12CT'],
+        ['SMART WATER ALKLINE 1.5L 12CT', 'SMART WATER', '1.5L / 12CT'],
+        ['CELSIUS VRTY PACK 12OZ 12CT', 'CELSIUS', '12OZ / 12CT'],
+      ]) {
+        await db.products.put({ ...cat(d), matchStatus: 'matched', matchMethod: 'rule90', priceItemId: line(b, l).id, suggestedPriceItemId: null });
+      }
+      await S.reload();
+      expect(S.priceOf(cat('SMART WATER ALKLINE 1.5L 12CT').id)).toBe(2999);
+      // decisions made by hand
+      await S.confirmMatch(cat('SMART WATER ALKLINE 1L 12CT').id, line('SMART WATER', '1L / 12CT').id);
+      await S.confirmMatch(cat('FIJI WATER 1L 2/6PK').id, line('FIJI WATER', '1.5L / 12CT').id);
+      await S.leaveUnmatched(cat('CELSIUS DRAGONFRUIT LEMONADE 12OZ 1').id);
+      // an order finalized with a 90%-rule price, and a cart holding it
+      const store = await S.saveStore({ name: 'Corner Mart', address: '5 Elm St' });
+      await S.selectStore(store.id);
+      S.setQty(cat('SMART WATER ALKLINE 1.5L 12CT').id, 2);
+      orderId = (await S.finalizeOrder(store.id)).id;
+      S.setQty(cat('SMART WATER ALKLINE 1.5L 12CT').id, 3);
+      S.setQty(cat('COKE 20OZ 24CT').id, 1);
+      await S.flushDrafts();
     } finally {
       BUNDLED_DATASETS.push(...saved);
     }
-    expect(await syncBundledData()).toEqual([4]);
+    expect(await syncBundledData()).toEqual([5]);
     await S.reload();
-    expect(cat('COKE MEXICO 355ML 24CT').matchStatus).toBe('unmatched');
-    expect(S.priceOf(cat('COKE MEXICO 355ML 24CT').id)).toBeNull();
-    expect(S.priceOf(cat('FIJI WATER 1L 2/6PK').id)).toBe(2549); // kept the hand-picked line
-    expect(cat('FIJI WATER 0.5L 4/6CT').matchMethod).toBe('rule90'); // others accepted
+    // hand decisions untouched
+    expect(S.priceOf(cat('SMART WATER ALKLINE 1L 12CT').id)).toBe(1999);
+    expect(cat('SMART WATER ALKLINE 1L 12CT').matchMethod).toBe('manual');
+    expect(S.priceOf(cat('FIJI WATER 1L 2/6PK').id)).toBe(2549);
+    expect(cat('CELSIUS DRAGONFRUIT LEMONADE 12OZ 1').matchStatus).toBe('unmatched');
+    // 90%-rule prices that fail the new rules are taken back for review
+    for (const d of ['SMART WATER ALKLINE 1.5L 12CT', 'CELSIUS VRTY PACK 12OZ 12CT']) {
+      expect(cat(d).matchStatus).toBe('review');
+      expect(S.priceOf(cat(d).id)).toBeNull();
+    }
+    // the finalized order keeps its value; the cart keeps its lines, the unverified one is now unpriced
+    const o = (await S.getOrder(orderId))!;
+    expect(o.lines.map((l) => [l.name, l.qty, l.priceCents])).toEqual([['SMART WATER ALKLINE 1.5L 12CT', 2, 2999]]);
+    expect(S.currentLines().map((l) => l.qty)).toEqual([3, 1]);
+    const t = S.cartTotals(S.currentLines());
+    expect({ value: t.valueCents, unpriced: t.unpricedLines }).toEqual({ value: 3299, unpriced: 1 });
+    expect(S.getState().settings.dataNotice?.text).toContain('2 prices were taken back for your confirmation');
   });
 
   it('representative phone is filled in only when it is empty', async () => {
