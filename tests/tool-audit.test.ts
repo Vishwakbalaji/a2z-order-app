@@ -57,7 +57,7 @@ it.skipIf(!process.env.OUT)('audit', async () => {
     return {
       dept: p.dept, group: p.category, catalog: p.catalogName,
       old: { status: oldStatus, line: label(oldItem), price: oldItem?.priceCents ?? null },
-      new: { status: r.status, verdict: best?.verdict ?? 'none', line: label(it), price: it?.priceCents ?? null, confidence: r.confidence, basis: r.basis, flags: r.flags, notes: r.notes },
+      new: { brand: it?.brand ?? null, desc: it?.desc ?? null, status: r.status, verdict: best?.verdict ?? 'none', line: label(it), price: it?.priceCents ?? null, confidence: r.confidence, basis: r.basis, flags: r.flags, notes: r.notes },
       others: r.candidates.slice(1, 3).map((c) => `${label(c.item)} (${c.confidence})`),
     };
   });

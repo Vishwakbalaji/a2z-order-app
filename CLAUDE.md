@@ -17,7 +17,10 @@ Live on GitHub Pages; every push to `main` runs `.github/workflows/deploy.yml` (
   Confidence: ≥95 with no flags = verified (priced); 75–94 = suggestion (NOT priced, not in totals);
   <75 = unmatched (closest line shown as info). One brand line with no flavor named (e.g. "CELSIUS 12OZ /
   12CT") prices all flavors at that size+count (`brandLevelFlavors`, the owner can be asked to change it).
-  Hand decisions (Mapping without source) always win. Coverage = (verified + confirmed by owner) ÷ total.
+  Hand decisions (Mapping without source) always win. Owner decision 2026-11-21 (v6): every suggestion
+  ABOVE 80% (81–94) accepted as his confirmation (src/data/acceptedMatches.ts ACCEPTED_80, Mapping.source
+  'owner80', method 'owner80', counted as "confirmed by you"); 80% and below stay for review. Ask him
+  before applying the 80% rule to a future catalog/price sheet. Coverage = (verified + confirmed by owner) ÷ total.
   Audit: `OUT=/tmp/audit npx vitest run tests/tool-audit.test.ts` → /tmp/audit.md (+ .json). Apply the same
   policy to future catalogs/price sheets; report the audit table to the owner.
 - Never delete or overwrite user data (stores, carts, orders, his own matching decisions).
@@ -63,7 +66,9 @@ Goal: products should appear under the catalog's names/departments/categories, p
 - v4 mappings: 72 suggestions ≥90% accepted (src/data/acceptedMatches.ts) — superseded by v5
 - v5 rematch: owner verification policy → 389 verified (71.8%), 80 suggestions for review, 73 unmatched;
   20 of the v4 acceptances taken back (alkaline, variety, sport, multi-pack, count cut off/differs)
-Next free version: 6.
+- v6 mappings: 54 suggestions above 80% accepted by the owner → 443 priced (389 verified + 54 confirmed,
+  coverage 81.7%), 26 review (all at 80%), 73 unmatched
+Next free version: 7.
 
 ## Cloud sync (Cloudflare Worker + D1) — `worker/`
 - `worker/src/index.ts`: /status, /claim (first phone sets the key hash), /sync (push outbox + pull by seq),

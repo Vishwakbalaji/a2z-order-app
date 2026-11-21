@@ -247,8 +247,9 @@ export function catalogSummaryText(s: CatalogSummary): string {
 
 /** Pricing audit counts. Coverage = (verified + confirmed by you) ÷ total; suggestions don't count. */
 export function auditCounts(catalog: Product[]) {
-  const manual = catalog.filter((p) => p.priceOverrideCents != null || (p.matchStatus === 'matched' && p.matchMethod === 'manual')).length;
-  const verified = catalog.filter((p) => p.priceOverrideCents == null && p.matchStatus === 'matched' && p.matchMethod !== 'manual').length;
+  const byOwner = (p: Product) => p.matchMethod === 'manual' || p.matchMethod === 'owner80';
+  const manual = catalog.filter((p) => p.priceOverrideCents != null || (p.matchStatus === 'matched' && byOwner(p))).length;
+  const verified = catalog.filter((p) => p.priceOverrideCents == null && p.matchStatus === 'matched' && !byOwner(p)).length;
   const review = catalog.filter((p) => p.priceOverrideCents == null && p.matchStatus === 'review').length;
   const unmatched = catalog.filter((p) => p.priceOverrideCents == null && p.matchStatus === 'unmatched').length;
   const total = catalog.length;
@@ -348,12 +349,21 @@ export async function syncBundledData(): Promise<number[]> {
         const matched = cat.filter((p) => p.matchStatus === 'matched').length;
         const review = cat.filter((p) => p.matchStatus === 'review').length;
         const unmatched = cat.filter((p) => p.matchStatus === 'unmatched').length;
-        notice = {
-          title: 'Suggested prices accepted (90% or higher)',
-          text: `${matched - before} more products now have a price. ${matched} of ${cat.length} catalog products are priced; ${review} suggestions below 90% wait for your review and ${unmatched} are not on the price sheet. Accepted ones are marked "accepted by your 90% rule" in Review price matching, where you can change any of them.`,
-          at: Date.now(),
-          review: review + unmatched,
-        };
+        const a = auditCounts(cat);
+        notice =
+          ds.mappings[0]?.source === 'owner80'
+            ? {
+                title: 'Your confirmed prices applied (above 80%)',
+                text: `${matched - before} more products now have a price. ${matched} of ${cat.length} catalog products are priced (coverage ${a.coverage}%): ${a.verified} verified and ${a.manual} confirmed by you. ${review} suggestions at 80% or below wait for your review and ${unmatched} have no price line. Accepted ones are marked "accepted by you (above 80%)" in Review price matching, where you can change any of them.`,
+                at: Date.now(),
+                review: review + unmatched,
+              }
+            : {
+                title: 'Suggested prices accepted (90% or higher)',
+                text: `${matched - before} more products now have a price. ${matched} of ${cat.length} catalog products are priced; ${review} suggestions below 90% wait for your review and ${unmatched} are not on the price sheet. Accepted ones are marked "accepted by your 90% rule" in Review price matching, where you can change any of them.`,
+                at: Date.now(),
+                review: review + unmatched,
+              };
       }
       if (ds.kind === 'rematch') {
         const prev = new Map((await db.products.toArray()).map((p) => [p.id, p]));
@@ -421,7 +431,9 @@ async function addBundledMappings(list: BundledMapping[]) {
   const now = Date.now();
   for (const m of list) {
     const key = m.sku ? `SKU:${m.sku.trim().toUpperCase()}` : `N:${normText(m.catalogRaw)}`;
-    if (await db.mappings.get(key)) continue;
+    const cur = await db.mappings.get(key);
+    // a decision made by hand always wins; an old 90%-rule link (ignored since v5) may be replaced
+    if (cur && cur.source !== 'rule90') continue;
     await db.mappings.put({ key, priceItemKey: m.priceBrand == null || m.priceDesc == null ? null : priceItemKey(m.priceBrand, m.priceDesc), updatedAt: now, ...(m.source ? { source: m.source } : {}) });
   }
 }

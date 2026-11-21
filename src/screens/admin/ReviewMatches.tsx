@@ -146,12 +146,12 @@ export function ReviewMatchesScreen() {
                   {tab === 'matched' && linked && (
                     <div className="mt-2 text-sm bg-green-50 rounded-xl p-2">
                       <div className="text-green-800 font-semibold">
-                        Matched ({p.matchMethod === 'manual' ? 'confirmed by you' : p.matchMethod === 'rule90' ? 'accepted by your 90% rule' : (p.matchBasis && BASIS[p.matchBasis]) || (p.matchMethod === 'sku' ? 'same SKU' : 'automatic')})
+                        Matched ({p.matchMethod === 'manual' ? 'confirmed by you' : p.matchMethod === 'rule90' ? 'accepted by your 90% rule' : p.matchMethod === 'owner80' ? 'accepted by you (above 80%)' : (p.matchBasis && BASIS[p.matchBasis]) || (p.matchMethod === 'sku' ? 'same SKU' : 'automatic')})
                       </div>
                       <div>
                         {linked.brand} {linked.desc} — <b>{formatCents(linked.priceCents)}</b>
                       </div>
-                      {p.matchMethod !== 'manual' && p.matchNotes && p.matchNotes.length > 0 && <div className="text-xs text-green-900 mt-1">{p.matchNotes.join(' · ')}</div>}
+                      {p.matchMethod !== 'manual' && p.matchMethod !== 'owner80' && p.matchNotes && p.matchNotes.length > 0 && <div className="text-xs text-green-900 mt-1">{p.matchNotes.join(' · ')}</div>}
                     </div>
                   )}
                   {tab === 'review' && sugg && (

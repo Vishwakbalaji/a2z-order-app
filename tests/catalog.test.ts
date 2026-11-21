@@ -42,9 +42,10 @@ describe('real A2Z catalog (bundled update v2)', () => {
     expect(new Set(catalog.map((p) => p.catalogName)).size).toBe(542);
     expect(catalog.some((p) => p.catalogName === 'RED BULL 20OZ 12CT')).toBe(true);
     const by = (st: string) => catalog.filter((p) => p.matchStatus === st).length;
-    // owner verification policy (v5): brand → type → size → exact case count; material differences are never verified
-    expect({ matched: by('matched'), review: by('review'), unmatched: by('unmatched') }).toEqual({ matched: 389, review: 80, unmatched: 73 });
+    // owner verification policy (v5): 389 verified; plus 54 suggestions above 80% the owner accepted (v6)
+    expect({ matched: by('matched'), review: by('review'), unmatched: by('unmatched') }).toEqual({ matched: 389 + 54, review: 26, unmatched: 73 });
     expect(catalog.filter((p) => p.matchMethod === 'rule90').length).toBe(0);
+    expect(catalog.filter((p) => p.matchMethod === 'owner80').length).toBe(54);
     expect(s.priceItems.length).toBe(131);
     // spot checks against the price sheet
     expect(S.priceOf(cat('COKE DIET 20OZ 24CT').id)).toBe(3299);
@@ -59,21 +60,29 @@ describe('real A2Z catalog (bundled update v2)', () => {
     // case count cut off in the catalog ("…16OZ 12C") but readable
     expect(S.priceOf(cat('BODY ARMOUR TROPICAL PUNCH 16OZ 12C').id)).toBe(2099);
     expect(cat('BODY ARMOUR TROPICAL PUNCH 16OZ 12C').matchBasis).toBe('count-cut-off');
-    // material differences are never verified: they wait for the owner, without a price
+    // suggestions above 80%: accepted by the owner (v6), counted as his confirmations
+    const accepted: [string, number][] = [
+      ['SMART WATER ALKLINE 1L 12CT', 1999],
+      ['CELSIUS VRTY PACK 12OZ 12CT', 2049],
+      ['FIJI WATER 1L 2/6PK', 2449], // was a 90%-rule link (ignored since v5): replaced by the owner's decision
+      ['STARBUCKS COFFEE 13.7OZ 12CT', 3499],
+      ['RED BULL 8.4OZ 24PK', 4099],
+      ['CANADA DRY GINGER ALE 20OZ 24CT', 2599],
+      ['ZEPHYRHILLS 16.9OZ 32CT', 699],
+    ];
+    for (const [d, price] of accepted) {
+      expect(cat(d).matchMethod, d).toBe('owner80');
+      expect(S.priceOf(cat(d).id), d).toBe(price);
+    }
+    // 80% and below: still waiting for the owner, without a price
     const flagged: [string, string][] = [
-      ['SMART WATER ALKLINE 1L 12CT', 'Alkaline'],
-      ['CELSIUS VRTY PACK 12OZ 12CT', 'Variety pack'],
-      ['SMART WATER 700ML 24PK', 'sport-cap'],
-      ['FIJI WATER 1L 2/6PK', 'multi-pack'],
-      ['MINUTE MAID LEMONADE 12OZ 2/12PK', 'MINUTE MAID JUICE'],
-      ['STARBUCKS COFFEE 13.7OZ 12CT', 'Size differs by 0.2 oz'],
-      ['RED BULL 8.4OZ 24PK', 'more than 0.3 oz'],
-      ['CANADA DRY GINGER ALE 20OZ 24CT', 'does not name the brand'],
-      ['ZEPHYRHILLS 16.9OZ 32CT', 'more than 0.3 oz'],
-      ['MOUNTAIN DEW 2L 2-4PK', 'multi-pack'],
+      ['VITAMIN WATER ESSENTIAL-ORANGE 20OZ', 'Catalog does not show the case count'],
+      ['CORE POWER 42GR VANILLA ELITE 14OZ', 'Catalog does not show the case count'],
+      ['OKF RED SMOOTHY 12CT', 'Catalog does not show the size'],
     ];
     for (const [d, why] of flagged) {
       expect(cat(d).matchStatus, d).toBe('review');
+      expect(cat(d).matchScore, d).toBeLessThanOrEqual(0.8);
       expect(S.priceOf(cat(d).id), d).toBeNull();
       expect(cat(d).matchFlags!.join(' '), d).toContain(why);
     }
@@ -102,8 +111,8 @@ describe('real A2Z catalog (bundled update v2)', () => {
     const sheetCoke = s.products.find((p) => p.origin === 'pricesheet' && displayName(p) === 'COKE / FANTA / SPRITE & FLAVORS 20OZ / 24CT')!;
     expect(s.browseIds).not.toContain(sheetCoke.id);
     // the one-time summary notice
-    expect(s.settings.dataNotice?.title).toBe('Prices re-checked with your verification rules');
-    expect(s.settings.dataNotice?.text).toContain('389 catalog products verified (coverage 71.8%). 80 wait for your confirmation and 73 have no price line.');
+    expect(s.settings.dataNotice?.title).toBe('Your confirmed prices applied (above 80%)');
+    expect(s.settings.dataNotice?.text).toContain('54 more products now have a price. 443 of 542 catalog products are priced (coverage 81.7%): 389 verified and 54 confirmed by you. 26 suggestions at 80% or below wait for your review and 73 have no price line.');
   });
 
   it('the v5 re-check keeps decisions made by hand, past orders and carts', async () => {
@@ -137,7 +146,7 @@ describe('real A2Z catalog (bundled update v2)', () => {
       S.setQty(cat('COKE 20OZ 24CT').id, 1);
       await S.flushDrafts();
     } finally {
-      BUNDLED_DATASETS.push(...saved);
+      BUNDLED_DATASETS.push(saved[0]); // v5 only; v6 below
     }
     expect(await syncBundledData()).toEqual([5]);
     await S.reload();
@@ -158,6 +167,19 @@ describe('real A2Z catalog (bundled update v2)', () => {
     const t = S.cartTotals(S.currentLines());
     expect({ value: t.valueCents, unpriced: t.unpricedLines }).toEqual({ value: 3299, unpriced: 1 });
     expect(S.getState().settings.dataNotice?.text).toContain('2 prices were taken back for your confirmation');
+
+    // v6: the owner accepts suggestions above 80% — never over his own decisions
+    BUNDLED_DATASETS.push(...saved.slice(1));
+    expect(await syncBundledData()).toEqual([6]);
+    await S.reload();
+    expect(S.priceOf(cat('SMART WATER ALKLINE 1.5L 12CT').id)).toBe(2999);
+    expect(cat('SMART WATER ALKLINE 1.5L 12CT').matchMethod).toBe('owner80');
+    expect(cat('SMART WATER ALKLINE 1L 12CT').matchMethod).toBe('manual'); // his own confirmation stays
+    expect(S.priceOf(cat('FIJI WATER 1L 2/6PK').id)).toBe(2549); // his hand-picked line, not the 80% suggestion
+    expect(cat('FIJI WATER 1L 2/6PK').matchMethod).toBe('manual');
+    expect(cat('CELSIUS DRAGONFRUIT LEMONADE 12OZ 1').matchStatus).toBe('unmatched');
+    expect((await S.getOrder(orderId))!.lines[0].priceCents).toBe(2999);
+    expect(S.cartTotals(S.currentLines()).valueCents).toBe(3299 + 3 * 2999); // the cart now uses the accepted price
   });
 
   it('representative phone is filled in only when it is empty', async () => {
@@ -175,8 +197,8 @@ describe('real A2Z catalog (bundled update v2)', () => {
     await fresh();
     const store = await S.saveStore({ name: 'Corner Mart', address: '5 Elm St' });
     await S.selectStore(store.id);
-    const sheetZeph = S.getState().products.find((p) => p.origin === 'pricesheet' && displayName(p) === 'ZEPHYRHILLS 16OZ / 32CT')!;
-    expect(S.getState().browseIds).toContain(sheetZeph.id); // not replaced: the catalog's 16.9OZ is only "review"
+    const sheetZeph = S.getState().products.find((p) => p.origin === 'pricesheet' && displayName(p) === 'SMART WATER 20OZ / 24CT')!;
+    expect(S.getState().browseIds).toContain(sheetZeph.id); // not replaced: no catalog product uses this line
     S.setQty(sheetZeph.id, 4);
     const gator = cat('GATORADE COOL BLUE 20OZ 24PK');
     S.setQty(gator.id, 1);
@@ -190,7 +212,7 @@ describe('real A2Z catalog (bundled update v2)', () => {
       fileName: 'next-catalog.pdf',
       rows: [
         ...BUNDLED_DATASETS.filter((d) => d.kind === 'catalog').flatMap((d) => (d.kind === 'catalog' ? d.rows : [])),
-        { department: 'WATER', category: 'Zephyrhills', brand: 'Zephyrhills', name: 'ZEPHYRHILLS', variation: '16OZ 32CT', unitsPerCase: 32, sku: '', raw: 'ZEPHYRHILLS 16OZ 32CT' },
+        { department: 'WATER', category: 'Smart Water', brand: 'Smart Water', name: 'SMART WATER', variation: '20OZ 24CT', unitsPerCase: 24, sku: '', raw: 'SMART WATER 20OZ 24CT' },
       ],
       mappings: [],
     });
@@ -199,12 +221,12 @@ describe('real A2Z catalog (bundled update v2)', () => {
       expect(await syncBundledData()).toEqual([]);
       await S.reload();
       const st = S.getState();
-      const newZeph = cat('ZEPHYRHILLS 16OZ 32CT');
-      expect(S.priceOf(newZeph.id)).toBe(699);
+      const newZeph = cat('SMART WATER 20OZ 24CT');
+      expect(S.priceOf(newZeph.id)).toBe(3099);
       expect(S.currentLines()).toEqual([{ productId: newZeph.id, qty: 4 }]); // cart now uses the catalog name
       expect(st.stores.map((x) => x.name)).toEqual(['Corner Mart']);
       const o = (await S.getOrder(order.id))!;
-      expect(o.lines.map((l) => l.name)).toEqual(['ZEPHYRHILLS 16OZ / 32CT', 'GATORADE COOL BLUE 20OZ 24PK']); // history unchanged
+      expect(o.lines.map((l) => l.name)).toEqual(['SMART WATER 20OZ / 24CT', 'GATORADE COOL BLUE 20OZ 24PK']); // history unchanged
       expect(st.products.filter((p) => p.origin === 'catalog').length).toBe(543);
       expect(await db.priceItems.count()).toBe(131);
     } finally {
