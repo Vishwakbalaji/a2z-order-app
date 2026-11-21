@@ -158,7 +158,7 @@ export function matchProduct(p: ProductLike, items: PriceItem[], mappings: Map<s
   if (saved) {
     if (saved.priceItemKey === null) return { status: 'unmatched', priceItemId: null, suggestedPriceItemId: null, method: 'manual', score: 0, candidates: [] };
     const it = items.find((i) => i.key === saved.priceItemKey);
-    if (it) return { status: 'matched', priceItemId: it.id, suggestedPriceItemId: null, method: 'manual', score: 1, candidates: [] };
+    if (it) return { status: 'matched', priceItemId: it.id, suggestedPriceItemId: null, method: saved.source === 'rule90' ? 'rule90' : 'manual', score: 1, candidates: [] };
     // the mapped line no longer exists — fall through to automatic matching (never silently matched)
   }
   const cands = rankCandidates(p, items);

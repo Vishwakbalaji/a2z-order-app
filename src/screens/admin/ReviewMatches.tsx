@@ -116,7 +116,7 @@ export function ReviewMatchesScreen() {
                   {tab === 'matched' && linked && (
                     <div className="mt-2 text-sm bg-green-50 rounded-xl p-2">
                       <div className="text-green-800 font-semibold">
-                        Matched ({p.matchMethod === 'manual' ? 'confirmed by you' : p.matchMethod === 'sku' ? 'same SKU' : 'automatic'})
+                        Matched ({p.matchMethod === 'manual' ? 'confirmed by you' : p.matchMethod === 'rule90' ? 'accepted by your 90% rule' : p.matchMethod === 'sku' ? 'same SKU' : 'automatic'})
                       </div>
                       <div>
                         {linked.brand} {linked.desc} — <b>{formatCents(linked.priceCents)}</b>

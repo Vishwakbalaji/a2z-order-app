@@ -15,6 +15,7 @@ import { parseMoneyToCents } from '../lib/money';
 import { unitsFromText } from '../lib/products';
 import { A2Z_PRICE_ROWS, A2Z_SOURCE_FILE } from './a2zPriceSheet';
 import { A2Z_CATALOG_FILE, A2Z_CATALOG_ROWS, brandForGroup, splitDescription } from './a2zCatalog';
+import { ACCEPTED_90 } from './acceptedMatches';
 
 /** A verified catalog-product → price-sheet-line link (checked by a person, not guessed). */
 export interface BundledMapping {
@@ -22,11 +23,14 @@ export interface BundledMapping {
   sku?: string;
   priceBrand: string | null; // null = known to have no price line
   priceDesc: string | null;
+  source?: string; // e.g. 'rule90'
 }
 
 export type BundledDataset =
   | { version: number; kind: 'pricesheet'; fileName: string; rows: PriceRowInput[] }
   | { version: number; kind: 'catalog'; fileName: string; rows: CatalogRowInput[]; mappings?: BundledMapping[] }
+  // links between catalog products and price lines (decisions you already made by hand are never overwritten)
+  | { version: number; kind: 'mappings'; fileName: string; mappings: BundledMapping[] }
   // settings values applied only where the setting is still empty (never overwrites what you typed)
   | { version: number; kind: 'settings'; fileName: string; fillEmpty: Partial<Pick<Settings, 'repName' | 'repPhone' | 'companyName' | 'companyAddress' | 'companyPhone'>> };
 
@@ -70,7 +74,13 @@ export const BUNDLED_DATASETS: BundledDataset[] = [
     fileName: 'Representative phone (owner request, 2026-11-21)',
     fillEmpty: { repPhone: '+1 561-552-6556' },
   },
-  // Next: { version: 4, kind: 'catalog' | 'pricesheet' | 'settings', ... }
+  {
+    version: 4,
+    kind: 'mappings',
+    fileName: 'Owner rule 2026-11-21: accept suggested prices scoring 90% or more',
+    mappings: ACCEPTED_90.map(([catalogRaw, priceBrand, priceDesc]) => ({ catalogRaw, priceBrand, priceDesc, source: 'rule90' })),
+  },
+  // Next: { version: 5, kind: 'catalog' | 'pricesheet' | 'settings' | 'mappings', ... }
 ];
 
 export const LATEST_BUNDLED_VERSION = Math.max(...BUNDLED_DATASETS.map((d) => d.version));

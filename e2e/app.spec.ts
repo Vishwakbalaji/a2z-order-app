@@ -73,7 +73,7 @@ test.beforeEach(async ({ page }, info) => {
 
 test('@smoke loads the A2Z catalog with case prices from the price sheet', async ({ page }) => {
   await expect(page.getByText('A2Z Beverage Distributors')).toBeVisible();
-  await expect(page.getByTestId('data-notice')).toContainText('542 catalog products: 334 priced automatically, 139 need review, 69 not on the price sheet.');
+  await expect(page.getByTestId('data-notice')).toContainText('406 of 542 catalog products are priced; 67 suggestions below 90% wait for your review');
   await searchFor(page, 'zephyrhills 8oz');
   const row = page.getByTestId('product-row').first();
   await expect(row).toContainText('ZEPHYRHILLS');

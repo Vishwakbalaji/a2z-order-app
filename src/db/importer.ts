@@ -323,6 +323,21 @@ export async function syncBundledData(): Promise<number[]> {
         const summary = await applyCatalog(ds.rows, ds.fileName, { importId: `imp_bundled_v${ds.version}` });
         await moveDraftsToCatalogNames();
         notice = { title: 'Product catalog updated', text: catalogSummaryText(summary), at: Date.now(), review: summary.review + summary.unmatched };
+      } else if (ds.kind === 'mappings') {
+        const before = (await db.products.toArray()).filter((p) => p.origin === 'catalog' && p.active && p.matchStatus === 'matched').length;
+        await addBundledMappings(ds.mappings);
+        await rematchCatalogProducts();
+        await moveDraftsToCatalogNames();
+        const cat = (await db.products.toArray()).filter((p) => p.origin === 'catalog' && p.active && !p.missingFromCatalog);
+        const matched = cat.filter((p) => p.matchStatus === 'matched').length;
+        const review = cat.filter((p) => p.matchStatus === 'review').length;
+        const unmatched = cat.filter((p) => p.matchStatus === 'unmatched').length;
+        notice = {
+          title: 'Suggested prices accepted (90% or higher)',
+          text: `${matched - before} more products now have a price. ${matched} of ${cat.length} catalog products are priced; ${review} suggestions below 90% wait for your review and ${unmatched} are not on the price sheet. Accepted ones are marked "accepted by your 90% rule" in Review price matching, where you can change any of them.`,
+          at: Date.now(),
+          review: review + unmatched,
+        };
       }
       const cur = (await db.settings.get('app'))!;
       const next: Settings = { ...cur, bundledVersion: ds.version, ...(notice ? { dataNotice: notice } : {}) };
@@ -376,7 +391,7 @@ async function addBundledMappings(list: BundledMapping[]) {
   for (const m of list) {
     const key = m.sku ? `SKU:${m.sku.trim().toUpperCase()}` : `N:${normText(m.catalogRaw)}`;
     if (await db.mappings.get(key)) continue;
-    await db.mappings.put({ key, priceItemKey: m.priceBrand == null || m.priceDesc == null ? null : priceItemKey(m.priceBrand, m.priceDesc), updatedAt: now });
+    await db.mappings.put({ key, priceItemKey: m.priceBrand == null || m.priceDesc == null ? null : priceItemKey(m.priceBrand, m.priceDesc), updatedAt: now, ...(m.source ? { source: m.source } : {}) });
   }
 }
 

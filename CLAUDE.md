@@ -7,6 +7,10 @@ Live on GitHub Pages; every push to `main` runs `.github/workflows/deploy.yml` (
 ## Hard rules (from the owner)
 - Never invent products, sizes or prices. Every value must come from a document he supplied.
 - Never auto-assign an uncertain price. Ambiguous matches stay "Needs review".
+  Owner decision 2026-11-21: review suggestions scoring 90% or more (as shown in the app) ARE
+  accepted (bundled v4, Mapping.source = 'rule90', labelled "accepted by your 90% rule"); below
+  90% stays for his manual review. Apply the same 90% rule to future catalogs/price sheets unless he
+  says otherwise, and list the accepted ones that look like a different pack/product for him.
 - Never delete or overwrite user data (stores, carts, orders, his own matching decisions).
 - Completed orders are immutable snapshots.
 - The distributor PDF ("Order PDF") must never contain prices.
@@ -47,7 +51,9 @@ Goal: products should appear under the catalog's names/departments/categories, p
 - v2 catalog `A2Z_Beverages_Product_List_11.20.26_.pdf` (543 printed rows → 542 products; 334 auto-priced,
   139 review, 69 not on the price sheet)
 - v3 settings: rep phone +1 561-552-6556 (fills an empty field only)
-Next free version: 4.
+- v4 mappings: 72 suggestions ≥90% accepted (src/data/acceptedMatches.ts, made with
+  tests/tool-accept90.test.ts) → 406 priced, 67 review, 69 not on the price sheet
+Next free version: 5.
 
 ## Cloud sync (Cloudflare Worker + D1) — `worker/`
 - `worker/src/index.ts`: /status, /claim (first phone sets the key hash), /sync (push outbox + pull by seq),

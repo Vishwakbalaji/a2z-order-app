@@ -42,7 +42,8 @@ describe('real A2Z catalog (bundled update v2)', () => {
     expect(new Set(catalog.map((p) => p.catalogName)).size).toBe(542);
     expect(catalog.some((p) => p.catalogName === 'RED BULL 20OZ 12CT')).toBe(true);
     const by = (st: string) => catalog.filter((p) => p.matchStatus === st).length;
-    expect({ matched: by('matched'), review: by('review'), unmatched: by('unmatched') }).toEqual({ matched: 334, review: 139, unmatched: 69 });
+    expect({ matched: by('matched'), review: by('review'), unmatched: by('unmatched') }).toEqual({ matched: 334 + 72, review: 67, unmatched: 69 }); // 334 strict + 72 accepted by the 90% rule (v4)
+    expect(catalog.filter((p) => p.matchMethod === 'rule90').length).toBe(72);
     expect(s.priceItems.length).toBe(131);
     // spot checks against the price sheet
     expect(S.priceOf(cat('COKE DIET 20OZ 24CT').id)).toBe(3299);
@@ -53,7 +54,12 @@ describe('real A2Z catalog (bundled update v2)', () => {
     expect(S.priceOf(cat('SAN PELLEGRINO .5L 24PK PLASTIC').id)).toBe(2499);
     expect(S.priceOf(cat('VITA COCO 1L 12CT').id)).toBe(4999);
     // uncertain → no price, but a suggestion for review
-    for (const d of ['RED BULL 8.4OZ 24PK', 'COKE MEXICO 355ML 24CT', 'SMART WATER ALKLINE 1L 12CT', 'FIJI WATER 1L 2/6PK', 'CANADA DRY GINGER ALE 20OZ 24CT']) {
+    // accepted by the owner's 90% rule
+    expect(S.priceOf(cat('COKE MEXICO 355ML 24CT').id)).toBe(4099);
+    expect(cat('COKE MEXICO 355ML 24CT').matchMethod).toBe('rule90');
+    expect(S.priceOf(cat('BODY ARMOUR TROPICAL PUNCH 16OZ 12C').id)).toBe(2099);
+    // below 90%: still waiting for review, no price
+    for (const d of ['RED BULL 8.4OZ 24PK', 'CANADA DRY GINGER ALE 20OZ 24CT', 'ZEPHYRHILLS 16.9OZ 32CT', 'MOUNTAIN DEW 2L 2-4PK']) {
       expect(cat(d).matchStatus).toBe('review');
       expect(S.priceOf(cat(d).id)).toBeNull();
     }
@@ -76,7 +82,29 @@ describe('real A2Z catalog (bundled update v2)', () => {
     const sheetCoke = s.products.find((p) => p.origin === 'pricesheet' && displayName(p) === 'COKE / FANTA / SPRITE & FLAVORS 20OZ / 24CT')!;
     expect(s.browseIds).not.toContain(sheetCoke.id);
     // the one-time summary notice
-    expect(s.settings.dataNotice?.text).toContain('542 catalog products: 334 priced automatically, 139 need review, 69 not on the price sheet.');
+    expect(s.settings.dataNotice?.text).toContain('72 more products now have a price. 406 of 542 catalog products are priced; 67 suggestions below 90% wait for your review and 69 are not on the price sheet.');
+  });
+
+  it('the 90% rule never overrides a decision made by hand', async () => {
+    // a phone that has v1–v3 (price sheet, catalog, phone) but not yet v4
+    const saved = BUNDLED_DATASETS.splice(3);
+    try {
+      await fresh();
+      const coke = cat('COKE MEXICO 355ML 24CT');
+      expect(coke.matchStatus).toBe('review');
+      await S.leaveUnmatched(coke.id); // decided by hand
+      const fiji = cat('FIJI WATER 1L 2/6PK');
+      const other = S.getState().priceItems.find((i) => i.brand === 'FIJI WATER' && i.desc === '1.5L / 12CT')!;
+      await S.confirmMatch(fiji.id, other.id); // decided by hand, different line
+    } finally {
+      BUNDLED_DATASETS.push(...saved);
+    }
+    expect(await syncBundledData()).toEqual([4]);
+    await S.reload();
+    expect(cat('COKE MEXICO 355ML 24CT').matchStatus).toBe('unmatched');
+    expect(S.priceOf(cat('COKE MEXICO 355ML 24CT').id)).toBeNull();
+    expect(S.priceOf(cat('FIJI WATER 1L 2/6PK').id)).toBe(2549); // kept the hand-picked line
+    expect(cat('FIJI WATER 0.5L 4/6CT').matchMethod).toBe('rule90'); // others accepted
   });
 
   it('representative phone is filled in only when it is empty', async () => {

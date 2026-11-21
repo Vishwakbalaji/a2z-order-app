@@ -177,6 +177,8 @@ export interface Mapping {
   key: string; // 'SKU:xxx' or 'N:normalized product name'
   priceItemKey: string | null; // null = user chose "leave unmatched"
   updatedAt: number;
+  /** 'rule90' = accepted by the owner's 90%-or-higher rule (bundled update v4); absent = decided by hand. */
+  source?: string;
 }
 
 export interface ImportLog {
