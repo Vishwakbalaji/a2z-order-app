@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Badge, Card, Field, Icon, PageHeader, btnPrimary, btnSecondary, inputCls, toast } from '../components/ui';
 import { useApp, updateSettings } from '../state/store';
+import { CloudSyncCard } from '../components/CloudSyncCard';
 
 function resizeImage(file: File, max = 600): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -85,6 +86,8 @@ export function SettingsScreen() {
             </button>
           </form>
         </Card>
+
+        <CloudSyncCard />
 
         <Card className="overflow-hidden">
           <h2 className="font-bold px-4 pt-4 pb-2">Products, Prices & Data</h2>

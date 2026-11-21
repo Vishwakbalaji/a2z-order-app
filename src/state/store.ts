@@ -124,6 +124,12 @@ export async function init() {
   }
 }
 
+/** After cloud data arrives: reload everything and refresh report screens. */
+export async function reloadFromCloud() {
+  await reload();
+  set({ reportsVersion: state.reportsVersion + 1 });
+}
+
 export async function reload() {
   const [products, priceItems, stores, drafts, settings] = await Promise.all([
     db.products.toArray(),
@@ -435,8 +441,14 @@ export async function resolveOrderPrice(orderId: string, lineIndex: number, pric
 /* ------------------------- weekly reports ------------------------- */
 
 /** Bumped whenever orders, stores or reports change, so the reports screen can refresh. */
+let beforeReports: (() => Promise<void>) | null = null;
+/** Cloud sync registers itself here so weekly reports include other phones' orders. */
+export function setBeforeReports(fn: (() => Promise<void>) | null) {
+  beforeReports = fn;
+}
 export async function refreshReports() {
   try {
+    if (beforeReports) await beforeReports();
     await ensureWeeklyReports();
   } catch (e) {
     console.error(e);

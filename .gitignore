@@ -4,3 +4,6 @@ test-results
 playwright-report
 deploy
 *.log
+.wrangler
+worker/.wrangler
+worker/.wrangler-e2e

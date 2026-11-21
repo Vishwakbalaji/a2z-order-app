@@ -2,7 +2,7 @@
  * Database-level import / matching operations. Nothing here ever deletes stores,
  * orders or drafts, and every import takes an automatic snapshot first.
  */
-import { db, uid } from './db';
+import { db, stableId, uid } from './db';
 import { takeSnapshot } from './backup';
 import type { DraftLine, Mapping, PriceItem, Product, Settings } from '../types';
 import { matchProduct } from '../lib/matching';
@@ -55,7 +55,7 @@ export async function diffPriceSheet(rows: PriceRowInput[]): Promise<PriceDiff> 
 
 function newPriceSheetProduct(item: PriceItem, now: number): Product {
   return {
-    id: uid('p_'),
+    id: stableId('p_ps_', item.key),
     origin: 'pricesheet',
     department: item.section,
     category: '',
@@ -79,7 +79,7 @@ function newPriceSheetProduct(item: PriceItem, now: number): Product {
 }
 
 /** Add / update price lines. Existing lines not in the sheet are kept and flagged, never deleted. */
-export async function applyPriceSheet(rows: PriceRowInput[], fileName: string, opts: { snapshot?: boolean } = {}) {
+export async function applyPriceSheet(rows: PriceRowInput[], fileName: string, opts: { snapshot?: boolean; importId?: string } = {}) {
   if (opts.snapshot !== false) await takeSnapshot(`Before price sheet import: ${fileName}`);
   const now = Date.now();
   const summary = { added: 0, changed: 0, same: 0, missing: 0 };
@@ -111,7 +111,7 @@ export async function applyPriceSheet(rows: PriceRowInput[], fileName: string, o
       } else {
         summary.added++;
         const item: PriceItem = {
-          id: uid('pi_'),
+          id: stableId('pi_', key),
           key,
           section: r.section,
           brand: r.brand,
@@ -135,8 +135,8 @@ export async function applyPriceSheet(rows: PriceRowInput[], fileName: string, o
         if (!old.missingFromLatest) await db.priceItems.put({ ...old, missingFromLatest: true });
       }
     }
-    await db.imports.add({
-      id: uid('imp_'),
+    await db.imports.put({
+      id: opts.importId ?? uid('imp_'),
       kind: 'pricesheet',
       fileName,
       at: now,
@@ -150,7 +150,7 @@ export async function applyPriceSheet(rows: PriceRowInput[], fileName: string, o
 
 /** Add / update catalog products and match them to price lines. Nothing is deleted. */
 /** `complete` = the file is the whole catalog, so products missing from it are flagged (never deleted). */
-export async function applyCatalog(rows: CatalogRowInput[], fileName: string, opts: { complete?: boolean } = {}) {
+export async function applyCatalog(rows: CatalogRowInput[], fileName: string, opts: { complete?: boolean; importId?: string } = {}) {
   const complete = opts.complete ?? true;
   await takeSnapshot(`Before catalog import: ${fileName}`);
   const now = Date.now();
@@ -187,7 +187,7 @@ export async function applyCatalog(rows: CatalogRowInput[], fileName: string, op
       } else {
         summary.added++;
         const p: Product = {
-          id: uid('p_'),
+          id: stableId('p_c_', key),
           origin: 'catalog',
           ...base,
           priceItemId: null,
@@ -215,8 +215,8 @@ export async function applyCatalog(rows: CatalogRowInput[], fileName: string, op
     const after = (await db.products.where('origin').equals('catalog').toArray()).filter((p) => p.active && !p.missingFromCatalog);
     summary.total = after.length;
     for (const p of after) summary[p.matchStatus]++;
-    await db.imports.add({
-      id: uid('imp_'),
+    await db.imports.put({
+      id: opts.importId ?? uid('imp_'),
       kind: 'catalog',
       fileName,
       at: now,
@@ -317,10 +317,10 @@ export async function syncBundledData(): Promise<number[]> {
       if (ds.version <= done) continue;
       let notice: Settings['dataNotice'] | undefined;
       if (ds.kind === 'pricesheet') {
-        await applyPriceSheet(ds.rows, ds.fileName, { snapshot: done > 0 });
+        await applyPriceSheet(ds.rows, ds.fileName, { snapshot: done > 0, importId: `imp_bundled_v${ds.version}` });
       } else if (ds.kind === 'catalog') {
         await addBundledMappings(ds.mappings || []);
-        const summary = await applyCatalog(ds.rows, ds.fileName);
+        const summary = await applyCatalog(ds.rows, ds.fileName, { importId: `imp_bundled_v${ds.version}` });
         await moveDraftsToCatalogNames();
         notice = { title: 'Product catalog updated', text: catalogSummaryText(summary), at: Date.now(), review: summary.review + summary.unmatched };
       }

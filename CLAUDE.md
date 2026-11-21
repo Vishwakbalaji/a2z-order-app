@@ -49,6 +49,16 @@ Goal: products should appear under the catalog's names/departments/categories, p
 - v3 settings: rep phone +1 561-552-6556 (fills an empty field only)
 Next free version: 4.
 
+## Cloud sync (Cloudflare Worker + D1) — `worker/`
+- `worker/src/index.ts`: /status, /claim (first phone sets the key hash), /sync (push outbox + pull by seq),
+  /rotate, /run-reports; cron "2 4,5 * * 6" + daily catch-up finalizes weekly reports (same
+  `buildReportRecord` as the phone). Merge rules: `src/sync/protocol.ts` (`mergeRecord`).
+- Phone: `src/sync/client.ts`; outbox written atomically by Dexie middleware in `src/db/db.ts`.
+  Records from documents use `stableId` so every phone creates the same ids.
+- Deploy: `cd worker && npx wrangler d1 migrations apply a2z-order-sync --remote && npx wrangler deploy`
+  (token = network secret for api.cloudflare.com; set CLOUDFLARE_API_TOKEN=proxy-injected).
+  The Worker URL goes in `src/config.ts` (SYNC_URL). Tests: `e2e/sync.spec.ts` runs a local Worker.
+
 ## Useful commands
 - `npm test` — unit tests (parser vs real PDF, matching, totals, backups, bundled updates)
 - `npm run e2e` — Playwright, mobile Chrome, against a production build

@@ -132,7 +132,20 @@ All stores, carts, orders, products, prices, matches and settings are stored **i
 - To move to a new phone: open the app there, then **Restore from backup file**.
 - Before every import or restore, the app keeps an automatic **safety snapshot** on the phone (the last 6), which you can roll back to.
 
-**Cloud storage and server-side Friday reports (optional upgrade, not set up yet).** Automatic cloud saving and a true server-side Friday job need a small online database. A suitable free setup is a Cloudflare Worker with a D1 database and a scheduled trigger every Friday night. It would need your own free Cloudflare account and a private device key stored on your phones, so it still needs no login, but strangers couldn't read or change your data. No secrets would be in the website. It isn't included yet because it needs that account. Backup files cover moving between phones today.
+**Cloud sync (Cloudflare, free plan).** Turn it on in **Settings → Cloud sync → Turn on cloud sync**.
+
+- **What it does:**
+  - Saves stores, orders, carts, prices, matches, settings and weekly reports in your own Cloudflare D1 database.
+  - Keeps your phones in sync: each phone keeps working offline and syncs in the background.
+  - A scheduled job in the cloud finalizes the weekly report after Friday 11:59:59 PM New York time, even when no phone is open.
+- **No login:** the first phone creates a long private key. The cloud stores only a fingerprint (hash) of it, and every request needs the key, so strangers can't read or change anything. No secret is in the website.
+- **Second phone:** on the first phone use **Add another phone** and open that link on the second phone. Its data is replaced by your cloud data, and a safety copy is kept.
+- **Save your sync key** (Settings → Cloud sync → Your sync key). If every phone is lost, that key reconnects a new phone. **Change sync key** locks out a lost phone.
+- **Merge rules:**
+  - Finalized orders, voids and resolved prices are never overwritten.
+  - A finalized weekly report can only be marked as replaced by a revision.
+  - A store's first-order record can't be undone.
+  - Everything else: the latest change wins.
 
 ---
 

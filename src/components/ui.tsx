@@ -211,8 +211,12 @@ export function ToastHost() {
 }
 
 /* ------------------------------ small pieces ------------------------------ */
-export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={`bg-white rounded-2xl border border-gray-200 ${className}`}>{children}</div>;
+export function Card({ children, className = '', ...rest }: { children: ReactNode; className?: string } & Omit<React.HTMLAttributes<HTMLDivElement>, 'className' | 'children'>) {
+  return (
+    <div {...rest} className={`bg-white rounded-2xl border border-gray-200 ${className}`}>
+      {children}
+    </div>
+  );
 }
 export function Field({ label, children, hint }: { label: string; children: ReactNode; hint?: string }) {
   return (

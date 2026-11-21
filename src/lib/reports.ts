@@ -13,7 +13,7 @@
  *  - Commission = 1% of confirmed sales, rounded to the cent (half-up).
  *  - All money in integer cents.
  */
-import type { Order, OrderAdjustment, Store, WeeklyReportData } from '../types';
+import type { Order, OrderAdjustment, Settings, Store, WeeklyReport, WeeklyReportData } from '../types';
 import type { Week } from './week';
 
 export const COMMISSION_RATE_BPS = 100; // 1%
@@ -129,4 +129,44 @@ export function reportChanged(a: WeeklyReportData, b: WeeklyReportData): boolean
   const sig = (d: WeeklyReportData) =>
     JSON.stringify([d.ordersCount, d.distinctStores, d.totalCases, d.salesCents, d.newStores.map((s) => s.storeId), d.orders.map((o) => [o.orderId, o.valueCents]), d.flaggedOrders.length, d.nonOrdering?.map((s) => s.storeId) ?? null]);
   return sig(a) !== sig(b);
+}
+
+export function reportId(periodKey: string, revision: number) {
+  return revision ? `WR-${periodKey}-R${revision}` : `WR-${periodKey}`;
+}
+
+/** The complete weekly report record — used by the phone and by the Friday job in the cloud. */
+export function buildReportRecord(input: {
+  week: Week;
+  stores: Store[];
+  orders: Order[];
+  adjustments: OrderAdjustment[];
+  settings: Pick<Settings, 'repName' | 'repPhone' | 'companyName' | 'companyAddress' | 'companyPhone'> | undefined | null;
+  revision: number;
+  generatedBy: 'auto' | 'manual';
+  status: WeeklyReport['status'];
+  now: number;
+  reason?: string;
+  supersedes?: string | null;
+}): WeeklyReport {
+  const { week, settings: st } = input;
+  return {
+    id: input.status === 'provisional' ? `PROVISIONAL-${week.key}` : reportId(week.key, input.revision),
+    periodKey: week.key,
+    revision: input.revision,
+    weekNumber: week.number,
+    start: week.start,
+    end: week.end,
+    startUtc: week.startUtc,
+    endUtc: week.endUtc,
+    status: input.status,
+    supersedes: input.supersedes ?? null,
+    supersededBy: null,
+    revisionReason: input.reason,
+    createdAt: input.now,
+    generatedBy: input.generatedBy,
+    rep: { name: st?.repName ?? '', phone: st?.repPhone ?? '' },
+    company: { companyName: st?.companyName ?? '', companyAddress: st?.companyAddress ?? '', companyPhone: st?.companyPhone ?? '' },
+    data: computeWeeklyReport({ week: input.week, stores: input.stores, orders: input.orders, adjustments: input.adjustments, asOf: input.now }),
+  };
 }

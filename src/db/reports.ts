@@ -9,33 +9,13 @@
 import { db } from './db';
 import type { WeeklyReport } from '../types';
 import { closedWeeks, weekFromKey, weekOf, REPORT_START, type Week } from '../lib/week';
-import { computeWeeklyReport, reportChanged } from '../lib/reports';
+import { buildReportRecord, reportChanged, reportId } from '../lib/reports';
 
-export function reportId(periodKey: string, revision: number) {
-  return revision ? `WR-${periodKey}-R${revision}` : `WR-${periodKey}`;
-}
+export { reportId };
 
 async function build(week: Week, opts: { revision: number; generatedBy: 'auto' | 'manual'; status: WeeklyReport['status']; now: number; reason?: string; supersedes?: string | null }): Promise<WeeklyReport> {
   const [stores, orders, adjustments, settings] = await Promise.all([db.stores.toArray(), db.orders.toArray(), db.adjustments.toArray(), db.settings.get('app')]);
-  return {
-    id: opts.status === 'provisional' ? `PROVISIONAL-${week.key}` : reportId(week.key, opts.revision),
-    periodKey: week.key,
-    revision: opts.revision,
-    weekNumber: week.number,
-    start: week.start,
-    end: week.end,
-    startUtc: week.startUtc,
-    endUtc: week.endUtc,
-    status: opts.status,
-    supersedes: opts.supersedes ?? null,
-    supersededBy: null,
-    revisionReason: opts.reason,
-    createdAt: opts.now,
-    generatedBy: opts.generatedBy,
-    rep: { name: settings?.repName ?? '', phone: settings?.repPhone ?? '' },
-    company: { companyName: settings?.companyName ?? '', companyAddress: settings?.companyAddress ?? '', companyPhone: settings?.companyPhone ?? '' },
-    data: computeWeeklyReport({ week, stores, orders, adjustments, asOf: opts.now }),
-  };
+  return buildReportRecord({ week, stores, orders, adjustments, settings, ...opts });
 }
 
 /**
