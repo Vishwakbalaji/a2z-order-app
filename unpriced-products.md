@@ -1,14 +1,11 @@
 # Products without a price — grouped by brand and size
 
-99 catalog products have no price in the app (2026-11-21).
+86 catalog products show "Price not added" in the app (after your matched-prices list, 2026-11-21).
 
 - **Needs review (80%)** — the app has a suggested line; confirm it or enter a price.
 - **Not on price sheet** — no line on the price sheet for this brand/size/case count.
 
 ## Energy Enhancer / Drinks
-
-### Bloom (size not shown in catalog) — 1
-- BLOOM ENERGY STRAWBERRY WATERMELON — needs review → suggested BLOOM 12OZ / 12CT $24.99
 
 ### Celsius 12OZ — 1
 - CELSIUS VRTY PACK 12OZ 18CT — not on price sheet (closest: CELSIUS 12OZ / 12CT $20.49 — Case count differs (18 vs 12))
@@ -18,6 +15,9 @@
 
 ### NOS 16OZ — 1
 - NOS ORIGINAL 16 FL OZ — not on price sheet
+
+### Red Bull 8.4OZ — 1
+- RED BULL VARIETY PK IVB WP CS 8.4OZ — not on price sheet
 
 ### Red Bull (size not shown in catalog) — 1
 - RED BULL AMBER STRAWBERRY APPRICOT — needs review → suggested RED BULL 16OZ / 12CT $40.99
@@ -59,9 +59,6 @@
 ### Brisk (size not shown in catalog) — 1
 - BRISK LEMON ICE TEA 2/12PK — not on price sheet
 
-### Foco Coco (size not shown in catalog) — 1
-- FOCO COCO 24CT — needs review → suggested COCONUT WATER FOCO 17.6OZ / 24CT $39.95
-
 ### Mistic 15.9OZ — 3
 - MISTIC JUICE TROPICAL CARROT 15.9OZ — not on price sheet
 - MISTIC JUICE MANGO CARROT 15.9OZ 12 — not on price sheet
@@ -71,15 +68,8 @@
 - MISTIC JUICE TROPICAL KIWI STRAWBER — not on price sheet
 - MISTIC JUICE TROPICAL FRUIT PUNCH 1 — not on price sheet
 
-### OKF (size not shown in catalog) — 2
-- OKF SMOOTHY PURPLE 12CT — needs review → suggested OKF 16.9OZ / 12CT $15.99
-- OKF RED SMOOTHY 12CT — needs review → suggested OKF 16.9OZ / 12CT $15.99
-
 ### Pure Leaf 18.5OZ — 1
 - PURE LEAF UNSWEETEN TEA 18.5OZ 15CT — not on price sheet (closest: PURE LEAF TEA 18.5OZ / 12CT $17.99 — Case count differs (15 vs 12))
-
-### Snapple (size not shown in catalog) — 1
-- SNAPPLE DIET LEMONADE TEA 12CT — needs review → suggested SNAPPLE 16OZ / 12CT $12.99
 
 ### Tropicana 12OZ — 3
 - TROPICANA PREMIUM OJ CALCIUM 12OZ 1 — not on price sheet
@@ -99,19 +89,8 @@
 
 ## Milk
 
-### Core Power 26G — 1
-- CORE POWER 26GR STRAWBERRY BANANA 1 — needs review → suggested CORE POWER 26G / 12CT $34.99
-
-### Core Power 42G — 3
-- CORE POWER 42GR VANILLA ELITE 14OZ — needs review → suggested CORE POWER 42G / 12CT $49.99
-- CORE POWER 42GR CHOCOLATE ELITE 14O — needs review → suggested CORE POWER 42G / 12CT $49.99
+### Core Power 42G — 1
 - CORE POWER 42GR STRAWBERRY ELITE 14 — needs review → suggested CORE POWER 42G / 12CT $49.99
-
-### Starbucks 15OZ — 1
-- STARBUCKS DOUBLE CHOT CAREMAL 15OZ — needs review → suggested STARBUCKS 15.7OZ / 12CT $35.99
-
-### Starbucks 9.5OZ — 1
-- STARBUCKS FRAPPUCHINE VANILA 9.5OZ — needs review → suggested STARBUCKS 9.5OZ / 15CT $22.99
 
 ## Shopping Bags
 
@@ -125,10 +104,6 @@
 
 ### 7UP 12OZ — 1
 - 7UP 12OZ 36CT — not on price sheet (closest: GINGER ALE / 7UP / A&W 12OZ / 2-12CT $12.99 — Case count differs (36 vs 24))
-
-### Canada Dry 12OZ — 2
-- CANADA DRY CAN CRANBERRY 12OZ 24CT — not on price sheet
-- CANADA DRY CAN BLACKBERRY 12OZ 24CT — not on price sheet
 
 ### Canada Dry 1L — 1
 - CANADA DRY GINGER ALE 1L 15CT — not on price sheet
@@ -145,6 +120,14 @@
 
 ### Dr Pepper 12OZ — 1
 - DR PEPPER 12OZ 36CT — not on price sheet (closest: PEPSI / DEW / DR PEPPER 12OZ / 2-12CT $14.99 — Case count differs (36 vs 24))
+
+### Fanta 335ML — 2
+- FANTA PINEAPPLE MEXICO 335ML 24CT — not on price sheet
+- FANTA STRAWBERRY MEXICO 335ML 24CT — not on price sheet
+
+### Fanta 355ML — 2
+- FANTA GRAPE MEXICO 355ML 24CT — not on price sheet
+- FANTA MEXICO 355ML 24CT — not on price sheet
 
 ### Mountain Dew 12OZ — 1
 - MOUNTAIN DEW 12OZ 36CT — not on price sheet (closest: PEPSI / DEW / DR PEPPER 12OZ / 2-12CT $14.99 — Case count differs (36 vs 24))
@@ -181,16 +164,8 @@
 ### Gatorade 16OZ — 1
 - GATORADE FROST GLACIER CHERRY 16OZ — not on price sheet
 
-### Vitamin Water 20OZ — 2
-- VITAMIN WATER ESSENTIAL-ORANGE 20OZ — needs review → suggested VITAMIN WATER 20OZ / 12CT $19.99
-- VITAMIN WATER POWER-DRAGONFRUIT 20O — needs review → suggested VITAMIN WATER 20OZ / 12CT $19.99
-
-### Vitamin Water (size not shown in catalog) — 5
-- VITAMIN WATER XXX-ACAI-BLUEBERRY-PO — needs review → suggested VITAMIN WATER 20OZ / 12CT $19.99
-- VITAMIN WATER SHINE ZERO SUGAR-STRA — needs review → suggested VITAMIN WATER 20OZ / 12CT $19.99
-- VITAMIN WATER REFRESH-TROPICAL MANG — needs review → suggested VITAMIN WATER 20OZ / 12CT $19.99
-- VITAMIN WATER ENERGY-TROPICAL CITRU — needs review → suggested VITAMIN WATER 20OZ / 12CT $19.99
-- VITAMIN WATER FOCUS-KIWI STRAWBERRY — needs review → suggested VITAMIN WATER 20OZ / 12CT $19.99
+### Gatorade 20OZ — 1
+- GATORADE FUTURE USE 20OZ 24CT — not on price sheet
 
 ## Water
 
@@ -203,8 +178,8 @@
 ### Fiji 330ML — 1
 - FIJI WATER 330ML 24CT — not on price sheet
 
-### Perrier 16.9OZ — 1
-- MAISON PERRIER SPARKLING LIME 16.9O — needs review → suggested MAISON PERRIER 16OZ / 24CT (PLASTIC) $25.99
+### Perrier 330ML — 1
+- MAISON PERRIER GLASS 330ML 24PK — not on price sheet
 
 ### San Pellegrino 11OZ — 1
 - SAN PELLEGRINO GLASS 11OZ 24CT — not on price sheet
