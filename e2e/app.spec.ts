@@ -152,6 +152,37 @@ test('product pictures: shown left of the name, tap to enlarge, cart unchanged, 
   await page.screenshot({ path: `${OUT}/${test.info().project.name}-images-manage.png` });
 });
 
+test('pictures show on a phone whose catalog products have older random ids, also from the cache after a reload', async ({ page }) => {
+  // recreate a phone that loaded the catalog before products had permanent ids
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve, reject) => {
+        const req = indexedDB.open('a2z-order-app');
+        req.onsuccess = () => {
+          const tx = req.result.transaction('products', 'readwrite');
+          const st = tx.objectStore('products');
+          const all = st.getAll();
+          all.onsuccess = () => {
+            const p = (all.result as { id: string; catalogName: string }[]).find((x) => x.catalogName === 'GATORADE COOL BLUE 20OZ 24PK')!;
+            st.delete(p.id);
+            st.put({ ...p, id: 'p_oldrandom1' });
+          };
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+        };
+        req.onerror = () => reject(req.error);
+      }),
+  );
+  for (let i = 0; i < 2; i++) {
+    await page.reload();
+    await searchFor(page, 'gatorade cool blue 20');
+    await expect(page.getByTestId('product-row')).toHaveCount(1);
+    const img = page.locator('[data-testid=product-row] [data-has-image=true] img');
+    await expect(img).toHaveJSProperty('complete', true);
+    await expect(img).toHaveCSS('opacity', '1'); // actually visible, not just downloaded
+  }
+});
+
 test('QA 1-9: +/- quantities, auto cart add/remove, sync, totals', async ({ page }) => {
   await addStore(page, 'ABC Convenience Store', '123 Main St, Fort Lauderdale, FL', { phone: '(954) 555-0101', manager: 'Maria' });
   await searchFor(page, 'evian');

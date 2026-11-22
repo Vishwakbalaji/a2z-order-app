@@ -1,4 +1,4 @@
-import { memo, useEffect, useState, useSyncExternalStore } from 'react';
+import { memo, useCallback, useEffect, useState, useSyncExternalStore } from 'react';
 import { useApp } from '../state/store';
 import { resolveImage, type ResolvedImage } from '../lib/images';
 import { titleName } from '../lib/products';
@@ -16,14 +16,19 @@ export function BeveragePlaceholder({ className = 'w-7 h-7' }: { className?: str
   );
 }
 
+/** Remounted (key) for each picture. A picture that is already in the cache can finish loading before React
+ * runs effects, so "loaded" is also read straight from the element (never reset to loading afterwards). */
 function Img({ img, alt, size }: { img: ResolvedImage | null; alt: string; size: number }) {
   const [state, setState] = useState<'loading' | 'ok' | 'error'>('loading');
-  useEffect(() => setState('loading'), [img?.thumb]);
+  const ref = useCallback((el: HTMLImageElement | null) => {
+    if (el?.complete) setState(el.naturalWidth > 0 ? 'ok' : 'error');
+  }, []);
   return (
     <span className="relative flex items-center justify-center w-full h-full">
       {(!img || state !== 'ok') && <BeveragePlaceholder />}
       {img && state !== 'error' && (
         <img
+          ref={ref}
           src={img.thumb}
           alt={alt}
           width={size}
@@ -66,7 +71,7 @@ export const ProductThumb = memo(function ProductThumb({ p, size = 64 }: { p: Pr
       data-testid="product-thumb"
       data-has-image="true"
     >
-      <Img img={img} alt={name} size={size} />
+      <Img key={img.thumb} img={img} alt={name} size={size} />
     </button>
   );
 });
@@ -85,8 +90,7 @@ export function ImagePreviewHost() {
   const p = useSyncExternalStore(subscribe, () => previewing);
   const overrides = useApp((s) => s.imageOverrides);
   const img = p ? resolveImage(p, overrides) : null;
-  const [loaded, setLoaded] = useState(false);
-  useEffect(() => setLoaded(false), [p?.id]);
+  const [loaded, setLoaded] = useState<string | null>(null); // url of the large picture that finished loading
   useEffect(() => {
     if (!p) return;
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && openImagePreview(null);
@@ -100,8 +104,17 @@ export function ImagePreviewHost() {
       <button type="button" className="absolute inset-0 bg-black/60" aria-label="Close picture" onClick={() => openImagePreview(null)} />
       <div className="relative bg-white rounded-2xl w-full max-w-sm shadow-xl overflow-hidden">
         <div className="relative bg-white flex items-center justify-center" style={{ height: 'min(60vh, 380px)' }}>
-          {!loaded && <img src={img.thumb} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-contain p-4 blur-[1px]" />}
-          <img src={img.large} alt={name} onLoad={() => setLoaded(true)} className={`relative w-full h-full object-contain p-4 ${loaded ? '' : 'opacity-0'}`} />
+          {loaded !== img.large && <img src={img.thumb} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-contain p-4 blur-[1px]" />}
+          <img
+            key={img.large}
+            src={img.large}
+            alt={name}
+            ref={(el) => {
+              if (el?.complete && el.naturalWidth > 0 && loaded !== img.large) setLoaded(img.large);
+            }}
+            onLoad={() => setLoaded(img.large)}
+            className={`relative w-full h-full object-contain p-4 ${loaded === img.large ? '' : 'opacity-0'}`}
+          />
         </div>
         <div className="px-4 pt-3 pb-4 border-t border-gray-100">
           <div className="font-semibold leading-snug break-words">{name}</div>

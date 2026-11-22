@@ -39,6 +39,9 @@ Live on GitHub Pages; every push to `main` runs `.github/workflows/deploy.yml` (
   `src/data/productImages.ts` + `public/products/t/<id>.webp` (160px thumb, precached) and `l/<id>.webp`
   (480px preview, cached on first open). Logic: `src/lib/images.ts`; UI: `src/components/ProductImage.tsx`,
   Settings → Manage Product Images (`src/screens/admin/ManageImages.tsx`).
+- Lookup: product id first, else the product's exact original catalog line (`shipped()` in images.ts) —
+  the owner's devices loaded the catalog before permanent ids (stableId) existed, so their catalog products
+  have older random ids. Never change those ids (carts/orders reference them).
 - Owner decisions (approve / reject / his own photo) live in the synced `productImages` table and ALWAYS win;
   never overwrite them. Pictures with status 'review' are NOT shown until he approves. No picture > wrong picture.
 - Source: Open Food Facts (CC BY-SA 3.0, credited in the preview and Image credits). Retailer/manufacturer

@@ -50,6 +50,21 @@ describe('product pictures', () => {
     }
   });
 
+  it('phones whose catalog products have older random ids still get the right picture (exact catalog line)', async () => {
+    useDb(new AppDB('images-old-ids'));
+    await S.init();
+    const [id, e] = Object.entries(PRODUCT_IMAGES).find(([, x]) => x.status !== 'review')!;
+    const p = S.getState().productById.get(id)!;
+    // same product as created before permanent ids existed: random id, same catalog text
+    const old = { ...p, id: 'p_m1x9old42', catalogName: `  ${p.catalogName.toLowerCase()} ` };
+    expect(resolveImage(old, new Map())?.thumb).toMatch(new RegExp(`products/t/${e.file}$`));
+    // a different product never borrows it, and price-sheet products are never matched by text
+    expect(resolveImage({ ...old, catalogName: `${p.catalogName} X` }, new Map())).toBeNull();
+    expect(resolveImage({ ...old, origin: 'pricesheet' }, new Map())).toBeNull();
+    // the owner's decision is stored under the id his phone uses
+    expect(resolveImage(old, new Map([[old.id, { id: old.id, status: 'rejected', catalogName: p.catalogName, updatedAt: 1 }]]))).toBeNull();
+  });
+
   it("the owner's decisions are saved, survive a reload and are in backups", async () => {
     useDb(new AppDB('images-owner'));
     await S.init();

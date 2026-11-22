@@ -31,9 +31,33 @@ export interface ResolvedImage {
   sourceUrl: string | null;
 }
 
+type ProductKey = Pick<Product, 'id'> & Partial<Pick<Product, 'catalogName' | 'origin'>>;
+
+// Phones that loaded the catalog before products had permanent ids (Nov 2026) keep older random ids, so a
+// picture is found by product id first and otherwise by the product's exact original catalog line (each of the
+// catalog's lines is unique). Never by a similar-looking name.
+const normLine = (s: string) => s.trim().replace(/\s+/g, ' ').toUpperCase();
+let byLine: Map<string, BundledImage> | null = null;
+let byLineSize = -1;
+function lineIndex() {
+  const n = Object.keys(PRODUCT_IMAGES).length;
+  if (!byLine || n !== byLineSize) {
+    byLine = new Map();
+    for (const e of Object.values(PRODUCT_IMAGES)) byLine.set(normLine(e.name), e);
+    byLineSize = n;
+  }
+  return byLine;
+}
+function shipped(p: ProductKey): BundledImage | undefined {
+  const b = PRODUCT_IMAGES[p.id];
+  if (b) return b;
+  if (p.origin === 'pricesheet' || !p.catalogName) return undefined;
+  return lineIndex().get(normLine(p.catalogName));
+}
+
 const base = () => (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || './';
-export function bundledImage(productId: string): BundledImage | undefined {
-  return PRODUCT_IMAGES[productId];
+export function bundledImage(p: ProductKey): BundledImage | undefined {
+  return shipped(p);
 }
 export function bundledUrls(b: BundledImage) {
   return { thumb: `${base()}products/t/${b.file}`, large: `${base()}products/l/${b.file}` };
@@ -43,11 +67,11 @@ export function bundledUrls(b: BundledImage) {
  * The picture to show for a product, or null (placeholder). Pictures that still need review are NOT
  * shown until the owner approves them — no picture is better than a wrong one.
  */
-export function resolveImage(p: Pick<Product, 'id'>, overrides: Map<string, ProductImageOverride>): ResolvedImage | null {
+export function resolveImage(p: ProductKey, overrides: Map<string, ProductImageOverride>): ResolvedImage | null {
   const o = overrides.get(p.id);
   if (o?.status === 'rejected') return null;
   if (o?.status === 'manual' && o.dataUrl) return { thumb: o.dataUrl, large: o.dataUrl, kind: 'manual', credit: null, sourceUrl: null };
-  const b = PRODUCT_IMAGES[p.id];
+  const b = shipped(p);
   if (!b) return null;
   if (o?.status === 'approved') return { ...bundledUrls(b), kind: 'approved', credit: b.credit, sourceUrl: b.sourceUrl };
   if (b.status === 'review') return null;
@@ -55,18 +79,18 @@ export function resolveImage(p: Pick<Product, 'id'>, overrides: Map<string, Prod
 }
 
 /** Status for the "Manage product images" screen. */
-export function imageState(p: Pick<Product, 'id'>, overrides: Map<string, ProductImageOverride>): ImageStatus | 'approved' | 'manual' | 'rejected' {
+export function imageState(p: ProductKey, overrides: Map<string, ProductImageOverride>): ImageStatus | 'approved' | 'manual' | 'rejected' {
   const o = overrides.get(p.id);
   if (o?.status === 'rejected') return 'rejected';
   if (o?.status === 'manual' && o.dataUrl) return 'manual';
-  const b = PRODUCT_IMAGES[p.id];
+  const b = shipped(p);
   if (!b) return 'none';
   if (o?.status === 'approved') return 'approved';
   return b.status;
 }
 
 /** Image coverage: products with an accepted picture (verified, approximate, approved or his photo). */
-export function imageCounts(products: Pick<Product, 'id'>[], overrides: Map<string, ProductImageOverride>) {
+export function imageCounts(products: ProductKey[], overrides: Map<string, ProductImageOverride>) {
   const c = { total: products.length, verified: 0, approx: 0, approved: 0, manual: 0, review: 0, none: 0, rejected: 0, coverage: 0 };
   for (const p of products) c[imageState(p, overrides)]++;
   const accepted = c.verified + c.approx + c.approved + c.manual;

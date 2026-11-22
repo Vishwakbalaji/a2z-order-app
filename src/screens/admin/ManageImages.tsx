@@ -102,7 +102,7 @@ export function ManageImagesScreen() {
         <ul className="space-y-2">
           {list.slice(0, limit).map((p) => {
             const st = imageState(p, overrides);
-            const b = bundledImage(p.id);
+            const b = bundledImage(p);
             const shown = resolveImage(p, overrides);
             const reviewUrl = st === 'review' && b ? bundledUrls(b).thumb : null;
             const thumb = shown?.thumb ?? reviewUrl;
