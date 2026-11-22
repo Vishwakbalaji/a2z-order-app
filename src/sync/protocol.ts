@@ -10,7 +10,9 @@
  *   - settings keep the highest order number counter;
  *   - everything else: the most recent change wins.
  */
-export const SYNCED_TABLES = ['products', 'priceItems', 'stores', 'drafts', 'orders', 'settings', 'mappings', 'imports', 'reports', 'adjustments', 'productImages'] as const;
+export const SYNCED_TABLES = ['products', 'priceItems', 'stores', 'drafts', 'orders', 'settings', 'mappings', 'imports', 'reports', 'adjustments'] as const;
+/** Tables older app versions may still send (accepted by the cloud, ignored by current phones). */
+export const LEGACY_SYNCED_TABLES = ['productImages'] as const;
 export type SyncedTable = (typeof SYNCED_TABLES)[number];
 
 /** A change sent by a phone. `at` = when it was changed on that phone (ms). */

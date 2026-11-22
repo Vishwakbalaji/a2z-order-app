@@ -14,6 +14,7 @@ export interface PdfLine {
   qty: number;
   priceCents: number | null;
   note?: string;
+  approx?: boolean; // approximate price (closest price-sheet item) — marked "≈" in the detailed PDF
 }
 export interface PdfOrder {
   company: CompanyInfo;
@@ -185,7 +186,7 @@ export async function buildOrderPdf(o: PdfOrder, kind: 'order' | 'detailed'): Pr
   const head = kind === 'detailed' ? [['S.No', 'Product Name', 'Price/Case', 'Cases', 'Line Total']] : [['S.No', 'Product Name', 'Quantity (Cases)']];
   const body =
     kind === 'detailed'
-      ? lines.map((l, i) => [String(i + 1), nameCell(l), l.priceCents == null ? 'N/A' : formatCents(l.priceCents), String(l.qty), l.priceCents == null ? 'N/A' : formatCents(l.priceCents * l.qty)])
+      ? lines.map((l, i) => [String(i + 1), nameCell(l), l.priceCents == null ? 'N/A' : `${l.approx ? '~ ' : ''}${formatCents(l.priceCents)}`, String(l.qty), l.priceCents == null ? 'N/A' : `${l.approx ? '~ ' : ''}${formatCents(l.priceCents * l.qty)}`])
       : lines.map((l, i) => [String(i + 1), nameCell(l), String(l.qty)]);
   const columnStyles: Record<string, Partial<Styles>> =
     kind === 'detailed'
@@ -243,6 +244,16 @@ export async function buildOrderPdf(o: PdfOrder, kind: 'order' | 'detailed'): Pr
     doc.setFontSize(9.5);
     doc.setTextColor(180, 83, 9);
     const msg = `Note: ${o.totals.unpricedLines} product(s) (${o.totals.unpricedCases} case(s)) have no price available and are NOT included in the Total Order Value.`;
+    const ls = doc.splitTextToSize(msg, W - 2 * M) as string[];
+    ls.forEach((l, i) => doc.text(l, M, y + 6 + i * 12));
+    y += ls.length * 12 + 4;
+  }
+  const approxCount = lines.filter((l) => l.approx && l.priceCents != null).length;
+  if (kind === 'detailed' && approxCount) {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(194, 65, 12);
+    const msg = `~ Approximate price (closest item on the price sheet) for ${approxCount} product(s); included in the Total Order Value.`;
     (doc.splitTextToSize(msg, W - 2 * M) as string[]).forEach((l, i) => doc.text(l, M, y + 6 + i * 12));
   }
 

@@ -25,7 +25,6 @@ export async function exportBackup(): Promise<BackupFile> {
 
 const KEY_OF: Record<DataTable, string> = {
   products: 'id',
-  productImages: 'id',
   priceItems: 'id',
   stores: 'id',
   drafts: 'storeId',

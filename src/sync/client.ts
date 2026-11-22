@@ -10,7 +10,9 @@
 import { useSyncExternalStore } from 'react';
 import { db, DATA_TABLES, REMOTE_TAG, setLocalChangeListener } from '../db/db';
 import { takeSnapshot } from '../db/backup';
-import { DEVICE_LOCAL_SETTINGS, MAX_PUSH, type SyncChange, type SyncRecord, type SyncResponse } from './protocol';
+import { DEVICE_LOCAL_SETTINGS, MAX_PUSH, SYNCED_TABLES, type SyncChange, type SyncRecord, type SyncResponse } from './protocol';
+
+const KNOWN = new Set<string>(SYNCED_TABLES); // records of removed features (e.g. old product pictures) are skipped
 import { SYNC_URL } from '../config';
 
 const KEY_LS = 'a2z-sync-key';
@@ -127,6 +129,7 @@ async function applyRemote(records: SyncRecord[]): Promise<number> {
     (tx.idbtrans as unknown as Record<string, unknown>)[REMOTE_TAG] = true; // don't send these back
     const pending = new Set((await db.syncOutbox.toCollection().primaryKeys()) as string[]);
     for (const r of records) {
+      if (!KNOWN.has(r.tbl)) continue; // a table this app version no longer has
       if (pending.has(`${r.tbl}\u0001${r.id}`)) continue; // a newer local change will be uploaded
       const table = db.table(r.tbl);
       if (r.deleted || !r.data) {
@@ -183,6 +186,8 @@ async function syncOnce() {
   try {
     let changedLocally = 0;
     for (let round = 0; round < 200; round++) {
+      const stale = (await db.syncOutbox.toArray()).filter((o) => !KNOWN.has(o.tbl)).map((o) => o.k);
+      if (stale.length) await db.syncOutbox.bulkDelete(stale); // changes to removed tables are not sent
       const outbox = await db.syncOutbox.orderBy('at').limit(MAX_PUSH).toArray();
       const changes: SyncChange[] = [];
       for (const o of outbox) {

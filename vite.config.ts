@@ -29,18 +29,10 @@ export default defineConfig({
       },
       workbox: {
         // precache everything, including the lazily loaded PDF tools, so the app works offline
-        // product thumbnails (≈6 KB each) are precached too, so pictures show in stores without signal;
-        // the larger preview pictures are cached when first opened
-        globPatterns: ['**/*.{js,mjs,css,html,png,svg,ico,webmanifest}', 'products/t/*.webp'],
-        runtimeCaching: [
-          {
-            urlPattern: ({ url }) => url.pathname.includes('/products/l/'),
-            handler: 'CacheFirst',
-            options: { cacheName: 'product-previews', expiration: { maxEntries: 800, maxAgeSeconds: 60 * 60 * 24 * 365 } },
-          },
-        ],
+        globPatterns: ['**/*.{js,mjs,css,html,png,svg,ico,webmanifest}'],
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
         navigateFallback: 'index.html',
+        cleanupOutdatedCaches: true,
         // optional jsPDF helpers that this app never uses
         globIgnores: ['**/html2canvas-*.js', '**/purify.es-*.js'],
       },

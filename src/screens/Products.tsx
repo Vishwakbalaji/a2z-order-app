@@ -4,10 +4,9 @@ import { Icon, Stepper, promptDialog } from '../components/ui';
 import { pickStore } from '../components/StorePicker';
 import { useApp, changeQty, setQty, updateSettings } from '../state/store';
 import { search } from '../lib/search';
-import { effectivePrice, titleName } from '../lib/products';
-import { formatCents } from '../lib/money';
+import { priceInfo, sizeLabel, titleName, type PriceInfo } from '../lib/products';
+import { PriceLabel } from '../components/PriceLabel';
 import type { Product } from '../types';
-import { ProductThumb } from '../components/ProductImage';
 
 const PAGE = 60;
 
@@ -18,34 +17,27 @@ async function ensureStoreThen(fn: () => boolean) {
 }
 
 export async function askQty(p: Product, current: number) {
-  const v = await promptDialog(`Cases: ${titleName(p)} ${p.variation}`, current ? String(current) : '', { inputMode: 'numeric', okText: 'Set', message: 'Number of cases' });
+  const v = await promptDialog(`Cases: ${titleName(p)} ${sizeLabel(p)}`, current ? String(current) : '', { inputMode: 'numeric', okText: 'Set', message: 'Number of cases' });
   if (v == null) return;
   const n = parseInt(v.replace(/\D/g, '') || '0', 10);
   await ensureStoreThen(() => setQty(p.id, n));
 }
 
-const ProductRow = memo(function ProductRow({ p, qty, price }: { p: Product; qty: number; price: number | null }) {
+const ProductRow = memo(function ProductRow({ p, qty, info }: { p: Product; qty: number; info: PriceInfo }) {
   const inc = useCallback(() => ensureStoreThen(() => changeQty(p.id, 1)), [p.id]);
   const dec = useCallback(() => {
     changeQty(p.id, -1);
   }, [p.id]);
   const tap = useCallback(() => askQty(p, qty), [p, qty]);
-  const label = `${titleName(p)} ${p.variation}`.trim();
+  const size = sizeLabel(p);
+  const label = `${titleName(p)} ${size}`.trim();
   return (
-    <li className={`row-cv flex items-center gap-2.5 px-3 py-2.5 border-b border-gray-100 ${qty > 0 ? 'bg-brand-light/60' : 'bg-white'}`} data-testid="product-row">
-      <ProductThumb p={p} size={72} />
+    <li className={`row-cv flex items-center gap-2 px-3 py-2 border-b border-gray-100 ${qty > 0 ? 'bg-brand-light/60' : 'bg-white'}`} data-testid="product-row">
       <div className="flex-1 min-w-0">
-        <div className="font-semibold leading-snug text-[15px] break-words">{titleName(p) || p.variation}</div>
-        {titleName(p) && p.variation && <div className="text-[15px] text-gray-800 leading-snug break-words">{p.variation}</div>}
+        <div className="font-semibold leading-snug text-[15px] break-words">{titleName(p) || size}</div>
+        {titleName(p) && size && <div className="text-sm text-gray-700 leading-snug break-words">{size}</div>}
         <div className="mt-0.5 text-[15px]">
-          {price != null ? (
-            <span className="font-bold text-gray-900 tabular-nums">
-              {formatCents(price)}
-              <span className="font-normal text-gray-500 text-sm"> / case</span>
-            </span>
-          ) : (
-            <span className="text-amber-700 font-semibold text-sm">Price Not Listed</span>
-          )}
+          <PriceLabel info={info} />
         </div>
       </div>
       <Stepper qty={qty} onInc={inc} onDec={dec} onTapQty={tap} label={label} />
@@ -107,7 +99,7 @@ export function ProductsScreen() {
       );
       lastDept = d;
     }
-    rows.push(<ProductRow key={id} p={p} qty={qtyMap.get(id) || 0} price={effectivePrice(p, priceItemById)} />);
+    rows.push(<ProductRow key={id} p={p} qty={qtyMap.get(id) || 0} info={priceInfo(p, priceItemById)} />);
   }
 
   return (

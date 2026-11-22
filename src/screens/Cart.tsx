@@ -1,4 +1,3 @@
-import { ProductThumb } from '../components/ProductImage';
 import { memo, useCallback } from 'react';
 import { TopBar } from '../components/TopBar';
 import { Badge, Card, Icon, Stepper, btnDanger, btnSecondary, confirmDialog, promptDialog, toast } from '../components/ui';
@@ -6,13 +5,15 @@ import { PdfActions } from '../components/PdfActions';
 import { pickStore } from '../components/StorePicker';
 import { askQty } from './Products';
 import { useApp, changeQty, setQty, setNote, clearDraft, finalizeOrder, cartTotals, getState, isFirstOrderPending } from '../state/store';
-import { displayName, effectivePrice, titleName } from '../lib/products';
+import { displayName, priceInfo, sizeLabel, titleName, type PriceInfo } from '../lib/products';
+import { PriceLabel } from '../components/PriceLabel';
 import { formatCents } from '../lib/money';
 import type { DraftLine, Product } from '../types';
 import type { PdfOrder } from '../lib/pdfExport';
 import { go } from '../lib/router';
 
-const CartRow = memo(function CartRow({ line, p, price }: { line: DraftLine; p: Product | undefined; price: number | null }) {
+const CartRow = memo(function CartRow({ line, p, info }: { line: DraftLine; p: Product | undefined; info: PriceInfo }) {
+  const price = info.cents;
   const inc = useCallback(() => changeQty(line.productId, 1), [line.productId]);
   const dec = useCallback(() => changeQty(line.productId, -1), [line.productId]);
   if (!p) {
@@ -25,20 +26,16 @@ const CartRow = memo(function CartRow({ line, p, price }: { line: DraftLine; p: 
       </li>
     );
   }
-  const name = `${titleName(p)} ${p.variation}`.trim();
+  const size = sizeLabel(p);
+  const name = `${titleName(p)} ${size}`.trim();
   return (
     <li className="px-3 py-3 border-b border-gray-100" data-testid="cart-row">
       <div className="flex items-start gap-2.5">
-        <ProductThumb p={p} size={48} />
         <div className="flex-1 min-w-0">
-          <div className="font-semibold leading-snug break-words">{titleName(p) || p.variation}</div>
-          {titleName(p) && p.variation && <div className="text-gray-800 leading-snug break-words">{p.variation}</div>}
+          <div className="font-semibold leading-snug break-words">{titleName(p) || size}</div>
+          {titleName(p) && size && <div className="text-sm text-gray-700 leading-snug break-words">{size}</div>}
           <div className="text-sm mt-0.5">
-            {price != null ? (
-              <span className="text-gray-600 tabular-nums">{formatCents(price)} per case</span>
-            ) : (
-              <span className="text-amber-700 font-semibold">Price Not Listed</span>
-            )}
+            <PriceLabel info={info} perCase="per case" />
           </div>
         </div>
         <button
@@ -58,7 +55,7 @@ const CartRow = memo(function CartRow({ line, p, price }: { line: DraftLine; p: 
         <div className="flex-1 text-right">
           <div className="text-xs text-gray-500">Line total</div>
           <div className="font-bold tabular-nums" data-testid="line-total">
-            {price != null ? formatCents(price * line.qty) : '—'}
+            {price != null ? (info.status === 'approximate' ? `≈ ${formatCents(price * line.qty)}` : formatCents(price * line.qty)) : '—'}
           </div>
         </div>
       </div>
@@ -99,7 +96,8 @@ export function CartScreen() {
       date: new Date(),
       lines: lines.map((l) => {
         const p = s.productById.get(l.productId);
-        return { name: p ? displayName(p) : '(deleted product)', qty: l.qty, priceCents: p ? effectivePrice(p, s.priceItemById) : null, note: l.note };
+        const info = p ? priceInfo(p, s.priceItemById) : null;
+        return { name: p ? displayName(p) : '(deleted product)', qty: l.qty, priceCents: info?.cents ?? null, note: l.note, approx: info?.status === 'approximate' };
       }),
       totals: cartTotals(lines, s),
       // shown (not used up) while this new store's first order is still a draft
@@ -150,7 +148,7 @@ export function CartScreen() {
             <ul className="bg-white mt-3 border-y border-gray-200">
               {lines.map((l) => {
                 const p = productById.get(l.productId);
-                return <CartRow key={l.productId} line={l} p={p} price={p ? effectivePrice(p, priceItemById) : null} />;
+                return <CartRow key={l.productId} line={l} p={p} info={p ? priceInfo(p, priceItemById) : { cents: null, status: 'none', source: '' }} />;
               })}
             </ul>
           )}
@@ -173,6 +171,11 @@ export function CartScreen() {
                   </div>
                 </div>
                 {totals.unpricedLines > 0 && <p className="text-xs text-amber-800 mt-2 text-center">Excludes {totals.unpricedLines} unpriced product(s) — total is incomplete.</p>}
+                {(totals.approxLines ?? 0) > 0 && (
+                  <p className="text-xs text-orange-700 mt-1 text-center" data-testid="approx-note">
+                    Includes {totals.approxLines} approximate price{totals.approxLines === 1 ? '' : 's'} (orange).
+                  </p>
+                )}
               </Card>
               {!settings.repPhone && (
                 <p className="text-sm text-gray-600 px-1">

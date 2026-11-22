@@ -50,7 +50,7 @@ describe('money & normalization', () => {
       ],
       (id) => prices[id],
     );
-    expect(t).toEqual({ products: 3, cases: 7, valueCents: 8250, unpricedLines: 0, unpricedCases: 0 });
+    expect(t).toEqual({ products: 3, cases: 7, valueCents: 8250, unpricedLines: 0, unpricedCases: 0, approxLines: 0 });
     // 0.1 + 0.2 style cases stay exact
     const t2 = computeTotals(Array.from({ length: 10 }, (_, i) => ({ productId: 'x' + i, qty: 3 })), () => 1999);
     expect(t2.valueCents).toBe(59970);

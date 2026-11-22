@@ -42,11 +42,33 @@ export interface Product {
   matchFlags?: string[];
   /** Non-blocking observations (e.g. "0.5L = 500ML"). */
   matchNotes?: string[];
+  /** Price from the owner's supplemental price list (A2Z_Mismatch_With_Prices.pdf, bundled v8). */
+  supplement?: SupplementPrice | null;
+  /** When the owner confirmed an approximate price or picked one of several (stored in priceOverrideCents). */
+  priceConfirmedAt?: number | null;
   active: boolean; // false = discontinued / hidden
   missingFromCatalog?: boolean; // was in an earlier catalog but not in the latest one (kept, flagged)
   order: number;
   createdAt: number;
   updatedAt: number;
+}
+
+/** Price status shown in the app: green = confirmed, orange = approximate, gray = not listed. */
+export type PriceStatus = 'confirmed' | 'approximate' | 'review' | 'none';
+export interface PriceOption {
+  cents: number;
+  label: string; // e.g. "16 oz / 12 ct"
+}
+/** One row of the owner's supplemental price list, as applied to a catalog product. */
+export interface SupplementPrice {
+  cents: number | null; // null when a choice between options is needed, or not on the sheet
+  status: 'confirmed' | 'approximate' | 'select' | 'none'; // red → confirmed, orange → approximate
+  options?: PriceOption[];
+  sheetRef?: string; // the price-sheet line it refers to, as printed ("Sheet: 12 oz / 2-12 ct")
+  row: string; // the list's own row text ("7UP — 12 OZ / 36 CT")
+  source: string; // file name
+  note?: string; // e.g. size/count discrepancy kept for the audit
+  at: number;
 }
 
 export interface Store {
@@ -82,6 +104,7 @@ export interface OrderLine {
   name: string; // full product name at the time of the order
   unitsPerCase: number | null;
   priceCents: number | null; // case price at the time of the order (null = not available)
+  priceStatus?: 'approximate'; // set when the price was approximate at the time of the order
   qty: number;
   note: string;
   lineTotalCents: number | null;
@@ -92,6 +115,7 @@ export interface Totals {
   valueCents: number; // sum of priced lines only
   unpricedLines: number;
   unpricedCases: number;
+  approxLines?: number; // lines priced with an approximate price (included in the value, labelled)
 }
 export interface CompanyInfo {
   companyName: string;
@@ -201,17 +225,4 @@ export interface Snapshot {
   at: number;
   reason: string;
   json: string;
-}
-
-/**
- * The owner's own decision about a product's picture (wins over the picture shipped with the app):
- * 'approved' = the shipped picture is confirmed, 'rejected' = show no picture, 'manual' = his own photo.
- * Kept across app updates and synced between phones.
- */
-export interface ProductImageOverride {
-  id: string; // product id
-  status: 'approved' | 'rejected' | 'manual';
-  dataUrl?: string | null; // 'manual': the photo, resized to ≤ 400px (WebP/JPEG data URL)
-  catalogName: string;
-  updatedAt: number;
 }

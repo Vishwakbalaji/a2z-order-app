@@ -7,10 +7,10 @@ import { useSyncExternalStore } from 'react';
 import { db, uid } from '../db/db';
 import * as importer from '../db/importer';
 import { exportBackup, restoreBackup, restoreSnapshot, type BackupFile } from '../db/backup';
-import type { Draft, DraftLine, Order, OrderAdjustment, PriceItem, Product, ProductImageOverride, Settings, Store } from '../types';
+import type { Draft, DraftLine, Order, OrderAdjustment, PriceItem, Product, Settings, Store } from '../types';
 import { ensureWeeklyReports } from '../db/reports';
 import { buildIndex, type IndexEntry } from '../lib/search';
-import { computeTotals, displayName, effectivePrice, supersededPriceItemIds } from '../lib/products';
+import { computeTotals, displayName, effectivePrice, priceInfo, supersededPriceItemIds, type PriceInfo } from '../lib/products';
 
 export interface AppState {
   ready: boolean;
@@ -27,7 +27,6 @@ export interface AppState {
   departments: string[];
   reviewCount: number;
   reportsVersion: number;
-  imageOverrides: Map<string, ProductImageOverride>; // the owner's picture decisions, by product id
 }
 
 const emptySettings: Settings = {
@@ -58,7 +57,6 @@ let state: AppState = {
   departments: [],
   reviewCount: 0,
   reportsVersion: 0,
-  imageOverrides: new Map(),
 };
 
 const listeners = new Set<() => void>();
@@ -133,13 +131,12 @@ export async function reloadFromCloud() {
 }
 
 export async function reload() {
-  const [products, priceItems, stores, drafts, settings, images] = await Promise.all([
+  const [products, priceItems, stores, drafts, settings] = await Promise.all([
     db.products.toArray(),
     db.priceItems.toArray(),
     db.stores.toArray(),
     db.drafts.toArray(),
     db.settings.get('app'),
-    db.productImages.toArray(),
   ]);
   stores.sort((a, b) => a.name.localeCompare(b.name));
   // replay cart changes that did not reach IndexedDB before the page was closed
@@ -156,7 +153,7 @@ export async function reload() {
   lastStamp = Math.max(lastStamp, ...drafts.map((d) => d.updatedAt || 0));
   const draftMap = new Map<string, DraftLine[]>();
   for (const d of drafts) draftMap.set(d.storeId, d.lines.filter((l) => l.qty > 0));
-  set({ ...deriveCatalog(products, priceItems), stores, drafts: draftMap, settings: settings || emptySettings, imageOverrides: new Map(images.map((i) => [i.id, i])), ready: true, error: null });
+  set({ ...deriveCatalog(products, priceItems), stores, drafts: draftMap, settings: settings || emptySettings, ready: true, error: null });
 }
 
 /* ------------------------- prices & totals ------------------------- */
@@ -165,8 +162,27 @@ export function priceOf(productId: string, s: AppState = state): number | null {
   const p = s.productById.get(productId);
   return p ? effectivePrice(p, s.priceItemById) : null;
 }
+export function priceInfoOf(productId: string, s: AppState = state): PriceInfo {
+  const p = s.productById.get(productId);
+  return p ? priceInfo(p, s.priceItemById) : { cents: null, status: 'none', source: 'Product not found' };
+}
 export function cartTotals(lines: DraftLine[], s: AppState = state) {
-  return computeTotals(lines, (id) => priceOf(id, s));
+  return computeTotals(lines, (id) => priceOf(id, s), (id) => priceInfoOf(id, s).status === 'approximate');
+}
+
+/** Confirm an approximate price, or choose one of several possible prices: it becomes a confirmed (green) price. */
+export async function confirmPrice(productId: string, cents: number) {
+  const p = await db.products.get(productId);
+  if (!p) throw new Error('Product not found');
+  await db.products.put({ ...p, priceOverrideCents: cents, priceConfirmedAt: Date.now(), updatedAt: Date.now() });
+  await reload();
+}
+/** Undo a confirmation: back to the price list's status (approximate / needs selection). */
+export async function undoPriceConfirmation(productId: string) {
+  const p = await db.products.get(productId);
+  if (!p) return;
+  await db.products.put({ ...p, priceOverrideCents: null, priceConfirmedAt: null, updatedAt: Date.now() });
+  await reload();
 }
 
 /* ------------------------- drafts (carts) ------------------------- */
@@ -376,12 +392,14 @@ export async function finalizeOrder(storeId: string): Promise<Order> {
     company: { companyName: state.settings.companyName, companyAddress: state.settings.companyAddress, companyPhone: state.settings.companyPhone },
     lines: lines.map((l) => {
       const p = state.productById.get(l.productId);
-      const price = priceOf(l.productId);
+      const info = priceInfoOf(l.productId);
+      const price = info.cents;
       return {
         productId: l.productId,
         name: p ? displayName(p) : '(deleted product)',
         unitsPerCase: p?.unitsPerCase ?? null,
         priceCents: price,
+        ...(info.status === 'approximate' && price != null ? { priceStatus: 'approximate' as const } : {}),
         qty: l.qty,
         note: l.note || '',
         lineTotalCents: price == null ? null : price * l.qty,
@@ -488,22 +506,6 @@ export async function copyOrderToDraft(order: Order): Promise<{ skipped: string[
 }
 
 /* ------------------------- catalog admin ------------------------- */
-
-/* ------------------------- product pictures ------------------------- */
-
-/** The owner's picture decision for one product: approve the shipped picture, reject it, or use his own photo. */
-export async function setProductImage(p: Product, status: ProductImageOverride['status'], dataUrl: string | null = null) {
-  const o: ProductImageOverride = { id: p.id, status, dataUrl: status === 'manual' ? dataUrl : null, catalogName: p.catalogName || displayName(p), updatedAt: Date.now() };
-  await db.productImages.put(o);
-  set({ imageOverrides: new Map(state.imageOverrides).set(p.id, o) });
-}
-/** Undo the owner's decision: back to the picture shipped with the app (if any). */
-export async function clearProductImage(productId: string) {
-  await db.productImages.delete(productId);
-  const m = new Map(state.imageOverrides);
-  m.delete(productId);
-  set({ imageOverrides: m });
-}
 
 export async function saveProduct(p: Product) {
   await db.products.put({ ...p, updatedAt: Date.now() });

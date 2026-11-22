@@ -3,7 +3,8 @@ import { Badge, Card, Empty, PageHeader, btnPrimary, btnSecondary, confirmDialog
 import { PriceItemPicker } from '../../components/PriceItemPicker';
 import { useApp, confirmMatch, leaveUnmatched, saveProduct } from '../../state/store';
 import { formatCents, parseMoneyToCents } from '../../lib/money';
-import { displayName } from '../../lib/products';
+import { displayName, priceInfo } from '../../lib/products';
+import { PriceLabel } from '../../components/PriceLabel';
 import { rankCandidates } from '../../lib/matching';
 import { auditCounts } from '../../db/importer';
 import type { MatchStatus, Product } from '../../types';
@@ -45,6 +46,7 @@ export function ReviewMatchesScreen() {
     <div>
       <PageHeader title="Review Price Matching" back="#/settings" />
       <div className="p-3 space-y-3">
+        <a href="#/settings/prices" className="block text-sm text-brand font-semibold underline">Prices to check (approximate, choose price, not listed) →</a>
         <div className="flex gap-2">
           {(
             [
@@ -138,6 +140,11 @@ export function ReviewMatchesScreen() {
                 <Card className="p-3">
                   <div className="text-xs text-gray-500">{[p.department, p.category].filter(Boolean).join(' › ')}</div>
                   <div className="font-semibold break-words">{displayName(p)}</div>
+                  <div className="text-sm mt-0.5" data-testid="app-price">
+                    <span className="text-gray-500">In the app: </span>
+                    <PriceLabel info={priceInfo(p, priceItemById)} />
+                    <div className="text-xs text-gray-500 break-words">{priceInfo(p, priceItemById).source}</div>
+                  </div>
                   {p.priceOverrideCents != null && (
                     <div className="mt-1">
                       <Badge tone="blue">Manual price {formatCents(p.priceOverrideCents)}</Badge>

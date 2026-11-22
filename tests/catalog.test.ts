@@ -51,15 +51,18 @@ describe('real A2Z catalog (bundled update v2)', () => {
     expect(catalog.filter((p) => p.matchMethod === 'ownerdoc').length).toBe(27);
     // his list, priced: each price is exactly the price-sheet line's price
     for (const [raw, , , cents] of OWNER_DOC_MATCHES) {
-      expect(S.priceOf(cat(raw).id), raw).toBe(cents);
+      // v8 (his later price list) may price a product his matched list had as NO PRICE — never the other way
+      const sup = cat(raw).supplement;
+      expect(S.priceOf(cat(raw).id), raw).toBe(cents ?? (sup && sup.status !== 'none' && sup.status !== 'select' ? sup.cents : null));
       expect(cat(raw).matchMethod, raw).toBe('ownerdoc');
     }
     expect(S.priceOf(cat('VITAMIN WATER ESSENTIAL-ORANGE 20OZ').id)).toBe(1999);
     expect(S.priceOf(cat('CANADA DRY CAN CRANBERRY 12OZ 24CT').id)).toBe(1299);
-    // NO PRICE in his list → no price, even where the app had one before
+    // NO PRICE in his matched list (v7) → no price-sheet match; his later price list (v8) prices them (red = confirmed, orange = approximate)
     for (const d of ['FANTA MEXICO 355ML 24CT', 'FANTA GRAPE MEXICO 355ML 24CT', 'GATORADE FUTURE USE 20OZ 24CT', 'MAISON PERRIER GLASS 330ML 24PK', 'RED BULL VARIETY PK IVB WP CS 8.4OZ']) {
-      expect(S.priceOf(cat(d).id), d).toBeNull();
       expect(cat(d).matchStatus, d).toBe('unmatched');
+      expect(['confirmed', 'approximate'], d).toContain(cat(d).supplement?.status);
+      expect(S.priceOf(cat(d).id), d).toBe(cat(d).supplement!.cents);
     }
     // prices in his list that the price sheet does not support are not applied
     expect(S.priceOf(cat('SAN PELLEGRINO GLASS 11OZ 24CT').id)).toBeNull();
@@ -104,13 +107,15 @@ describe('real A2Z catalog (bundled update v2)', () => {
     for (const [d, why] of flagged) {
       expect(cat(d).matchStatus, d).toBe('review');
       expect(cat(d).matchScore, d).toBeLessThanOrEqual(0.8);
-      expect(S.priceOf(cat(d).id), d).toBeNull();
+      const sup = cat(d).supplement; // v8: his later price list can price it; otherwise no price
+      expect(S.priceOf(cat(d).id), d).toBe(sup && (sup.status === 'confirmed' || sup.status === 'approximate') ? sup.cents : null);
       expect(cat(d).matchFlags!.join(' '), d).toContain(why);
     }
     // a different case count is never matched: unmatched, the closest line kept only as information
     const ba = cat('BODY ARMOUR TROPICAL PUNCH 28OZ 12C');
     expect(ba.matchStatus).toBe('unmatched');
-    expect(S.priceOf(ba.id)).toBeNull();
+    expect(ba.priceItemId ?? null).toBeNull(); // no price-sheet line; only his later price list (v8) can price it
+    expect(S.priceOf(ba.id)).toBe(ba.supplement && ba.supplement.status !== 'none' && ba.supplement.status !== 'select' ? ba.supplement.cents : null);
     expect(ba.matchFlags).toContain('Case count differs (12 vs 15)');
     expect(s.priceItemById.get(ba.suggestedPriceItemId!)!.desc).toBe('28OZ / 15CT');
     // not on the price sheet at all
@@ -121,19 +126,20 @@ describe('real A2Z catalog (bundled update v2)', () => {
     expect(rbw.matchStatus).toBe('matched');
     expect(s.priceItemById.get(rbw.priceItemId!)!.brand).toBe('RED BULL');
     expect(S.priceOf(rbw.id)).toBe(5499);
-    // catalog names are used exactly as printed (every one of them) and are searchable
-    expect(displayName(cat('COKE CAN 12OZ 2/12CT'))).toBe('COKE CAN 12OZ 2/12CT');
-    for (const p of catalog) expect(displayName(p)).toBe(p.catalogName);
-    const names = (q: string) => search(q, s.browseIds, s.index).map((id) => displayName(s.productById.get(id)!));
+    // catalog names are shown standardized (OZ / ML / L / CT, typos fixed); the printed text stays the key and stays searchable
+    expect(displayName(cat('COKE CAN 12OZ 2/12CT'))).toBe('COKE CAN — 12 OZ / 24 CT (2 × 12)');
+    for (const p of catalog) expect(p.catalogName).toBeTruthy();
+    const names = (q: string) => search(q, s.browseIds, s.index).map((id) => s.productById.get(id)!.catalogName || displayName(s.productById.get(id)!));
     expect(names('coke zero 20')).toContain('COKE ZERO 20OZ 24CT');
     expect(names('celsius peach')).toContain('CELSIUS PEACH MANGO 12OZ 12CT');
     expect(names('electrolit')).toHaveLength(17);
+    expect(names('vanilla').length).toBeGreaterThanOrEqual(names('vanila').length); // corrected spelling finds it too
     // the price-sheet product that a catalog product replaces is hidden (no duplicate entries)
     const sheetCoke = s.products.find((p) => p.origin === 'pricesheet' && displayName(p) === 'COKE / FANTA / SPRITE & FLAVORS 20OZ / 24CT')!;
     expect(s.browseIds).not.toContain(sheetCoke.id);
     // the one-time summary notice
-    expect(s.settings.dataNotice?.title).toBe('Your matched-prices list applied');
-    expect(s.settings.dataNotice?.text).toContain('20 products added from your list, 7 marked "Price not added" as in your list. 456 of 542 catalog products are priced (coverage 84.1%); 86 show "Price not added".');
+    expect(s.settings.dataNotice?.title).toBe('New prices from your price list');
+    expect(s.settings.dataNotice?.text).toContain('A safety copy of your data was saved first');
   });
 
   it('the v5 re-check keeps decisions made by hand, past orders and carts', async () => {
@@ -183,7 +189,7 @@ describe('real A2Z catalog (bundled update v2)', () => {
     }
     // the finalized order keeps its value; the cart keeps its lines, the unverified one is now unpriced
     const o = (await S.getOrder(orderId))!;
-    expect(o.lines.map((l) => [l.name, l.qty, l.priceCents])).toEqual([['SMART WATER ALKLINE 1.5L 12CT', 2, 2999]]);
+    expect(o.lines.map((l) => [l.name, l.qty, l.priceCents])).toEqual([['SMART WATER ALKALINE — 1.5 L / 12 CT', 2, 2999]]); // name as shown when it was finalized
     expect(S.currentLines().map((l) => l.qty)).toEqual([3, 1]);
     const t = S.cartTotals(S.currentLines());
     expect({ value: t.valueCents, unpriced: t.unpricedLines }).toEqual({ value: 3299, unpriced: 1 });
@@ -191,7 +197,7 @@ describe('real A2Z catalog (bundled update v2)', () => {
 
     // v6: the owner accepts suggestions above 80% — never over his own decisions
     BUNDLED_DATASETS.push(...saved.slice(1));
-    expect(await syncBundledData()).toEqual([6, 7]);
+    expect(await syncBundledData()).toEqual([6, 7, 8]);
     await S.reload();
     expect(S.priceOf(cat('SMART WATER ALKLINE 1.5L 12CT').id)).toBe(2999);
     expect(cat('SMART WATER ALKLINE 1.5L 12CT').matchMethod).toBe('owner80');
@@ -247,7 +253,7 @@ describe('real A2Z catalog (bundled update v2)', () => {
       expect(S.currentLines()).toEqual([{ productId: newZeph.id, qty: 4 }]); // cart now uses the catalog name
       expect(st.stores.map((x) => x.name)).toEqual(['Corner Mart']);
       const o = (await S.getOrder(order.id))!;
-      expect(o.lines.map((l) => l.name)).toEqual(['SMART WATER 20OZ / 24CT', 'GATORADE COOL BLUE 20OZ 24PK']); // history unchanged
+      expect(o.lines.map((l) => l.name)).toEqual(['SMART WATER 20OZ / 24CT', 'GATORADE COOL BLUE — 20 OZ / 24 CT']); // history unchanged
       expect(st.products.filter((p) => p.origin === 'catalog').length).toBe(543);
       expect(await db.priceItems.count()).toBe(131);
     } finally {

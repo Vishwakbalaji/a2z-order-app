@@ -4,6 +4,7 @@
  * and "smartwater" all work. Index building is O(n); a query over 1,000+ products
  * takes well under a few milliseconds.
  */
+import { displayName } from './products';
 import type { Product } from '../types';
 import { editDistance, normText, parseSize, tokens } from './normalize';
 import { canon } from './matching';
@@ -19,7 +20,7 @@ export interface IndexEntry {
 export function buildIndex(products: Product[]): Map<string, IndexEntry> {
   const idx = new Map<string, IndexEntry>();
   for (const p of products) {
-    const text = canon([p.brand, p.name, p.variation, p.department, p.category, p.sku, p.catalogName].join(' '));
+    const text = canon([p.brand, p.name, p.variation, p.department, p.category, p.sku, p.catalogName, p.origin === 'catalog' ? displayName(p) : ''].join(' '));
     const words = new Set(tokens(text));
     // also index sizes in mL so "500" finds 16.9OZ / 0.5L bottles
     const sz = parseSize(text);

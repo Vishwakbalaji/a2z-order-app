@@ -29,3 +29,5 @@ document.addEventListener('visibilitychange', () => {
 
 // Offline support + automatic updates when a new version is deployed.
 if ('serviceWorker' in navigator && import.meta.env.PROD) registerSW({ immediate: true });
+// product pictures were removed (2026-11-22): drop their browser cache once
+if (typeof caches !== 'undefined') caches.delete('product-previews').catch(() => {});

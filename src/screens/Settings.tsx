@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Badge, Card, Field, Icon, PageHeader, btnPrimary, btnSecondary, inputCls, toast } from '../components/ui';
 import { useApp, updateSettings } from '../state/store';
+import { priceInfo } from '../lib/products';
 import { CloudSyncCard } from '../components/CloudSyncCard';
 
 function resizeImage(file: File, max = 600): Promise<string> {
@@ -61,6 +62,8 @@ export function SettingsScreen() {
   }, []);
   const unmatched = products.filter((p) => p.active && p.origin !== 'pricesheet' && p.matchStatus === 'unmatched').length;
   const catalogCount = products.filter((p) => p.origin === 'catalog').length;
+  const priceItemById = useApp((s) => s.priceItemById);
+  const priceToCheck = products.filter((p) => p.active && p.origin !== 'pricesheet' && priceInfo(p, priceItemById).status === 'review').length;
 
   return (
     <div>
@@ -94,6 +97,13 @@ export function SettingsScreen() {
           <LinkRow href="#/settings/import-prices" icon="upload" title="Upload price sheet" sub={`${priceItems.length} price lines loaded · PDF or CSV`} />
           <LinkRow href="#/settings/import-catalog" icon="upload" title="Upload product catalog" sub={catalogCount ? `${catalogCount} catalog products` : 'Not uploaded yet · PDF or CSV'} />
           <LinkRow
+            href="#/settings/prices"
+            icon="check"
+            title="Prices to check"
+            sub="Confirm orange prices · choose between two prices · enter missing ones"
+            badge={priceToCheck > 0 ? <Badge tone="amber">{priceToCheck}</Badge> : undefined}
+          />
+          <LinkRow
             href="#/settings/review"
             icon="link"
             title="Review price matching"
@@ -101,7 +111,6 @@ export function SettingsScreen() {
             badge={reviewCount + unmatched > 0 ? <Badge tone="amber">{reviewCount + unmatched}</Badge> : undefined}
           />
           <LinkRow href="#/settings/products" icon="edit" title="Products & prices" sub="Edit, add, disable products · change prices" />
-          <LinkRow href="#/settings/images" icon="image" title="Manage product images" sub="Check, approve, replace or add product pictures" />
           <LinkRow href="#/settings/backup" icon="download" title="Backup & restore" sub="Save all data to a file · restore it on any phone" />
         </Card>
 

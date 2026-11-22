@@ -5,7 +5,7 @@
  * key that only exists on your phones; the database stores only its SHA-256 hash. Every request
  * must carry that key (Authorization: Bearer <key>). No secret is ever part of the website.
  */
-import { MAX_PULL, MAX_PUSH, SYNCED_TABLES, mergeRecord, type SyncChange, type SyncRecord, type SyncRequest, type SyncResponse } from '../../src/sync/protocol';
+import { LEGACY_SYNCED_TABLES, MAX_PULL, MAX_PUSH, SYNCED_TABLES, mergeRecord, type SyncChange, type SyncRecord, type SyncRequest, type SyncResponse } from '../../src/sync/protocol';
 import { buildReportRecord } from '../../src/lib/reports';
 import { closedWeeks } from '../../src/lib/week';
 import type { Order, OrderAdjustment, Settings, Store, WeeklyReport } from '../../src/types';
@@ -16,7 +16,7 @@ export interface Env {
   TEST_MODE?: string; // only set by the local test server
 }
 
-const TABLES = new Set<string>(SYNCED_TABLES);
+const TABLES = new Set<string>([...SYNCED_TABLES, ...LEGACY_SYNCED_TABLES]); // older app versions may still send these
 
 async function sha256(s: string): Promise<string> {
   const d = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));

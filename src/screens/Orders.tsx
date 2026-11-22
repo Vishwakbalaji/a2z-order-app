@@ -149,6 +149,7 @@ export function OrderDetailScreen({ id }: { id: string }) {
                       {l.name}
                       {l.note && <div className="text-xs text-gray-500">Note: {l.note}</div>}
                       {l.priceCents == null && fixed.has(i) && <div className="text-xs text-green-700">Price added after finalizing</div>}
+                      {l.priceStatus === 'approximate' && <div className="text-xs text-orange-700 font-semibold">Approximate price</div>}
                     </td>
                     <td className="p-2 text-right tabular-nums">
                       {price == null ? (
@@ -206,7 +207,7 @@ export function OrderDetailScreen({ id }: { id: string }) {
             rep: o.rep,
             date: new Date(o.createdAt),
             orderNo: o.orderNo,
-            lines: o.lines.map((l) => ({ name: l.name, qty: l.qty, priceCents: l.priceCents, note: l.note })),
+            lines: o.lines.map((l) => ({ name: l.name, qty: l.qty, priceCents: l.priceCents, note: l.note, approx: l.priceStatus === 'approximate' })),
             totals: o.totals,
             newStoreFirstOrder: !!o.newStoreFirstOrder, // historical: kept forever on that order
           })}

@@ -34,31 +34,23 @@ Live on GitHub Pages; every push to `main` runs `.github/workflows/deploy.yml` (
   snapshots with unique ids (WR-YYYY-MM-DD, revisions -R1…); corrections = new revision, never edits.
 - Commission = 1% of confirmed sales (orders with missing prices / voided orders excluded).
 
-## Product pictures (owner request 2026-11-22)
-- One picture of the single retail unit (bottle/can), keyed by PRODUCT ID (never by name):
-  `src/data/productImages.ts` + `public/products/t/<id>.webp` (160px thumb, precached) and `l/<id>.webp`
-  (480px preview, cached on first open). Logic: `src/lib/images.ts`; UI: `src/components/ProductImage.tsx`,
-  Settings → Manage Product Images (`src/screens/admin/ManageImages.tsx`).
-- Lookup: product id first, else the product's exact original catalog line (`shipped()` in images.ts) —
-  the owner's devices loaded the catalog before permanent ids (stableId) existed, so their catalog products
-  have older random ids. Never change those ids (carts/orders reference them).
-- Owner decisions (approve / reject / his own photo) live in the synced `productImages` table and ALWAYS win;
-  never overwrite them. Pictures with status 'review' are NOT shown until he approves. No picture > wrong picture.
-- Source: Open Food Facts (CC BY-SA 3.0, credited in the preview and Image credits). Retailer/manufacturer
-  photos are not copied (licence/terms). Every picture was checked by eye: brand, flavor, packaging, size.
-  Statuses: verified (size confirmed) · approx (size not confirmed, identity/packaging consistent) · review.
-- Pipeline (scripts/product-images/): `search.mjs run` (NODE_USE_ENV_PROXY=1) → `rank.py` → `sheets.py`
-  (contact sheets to LOOK at) → notes → `decide.py` → `node scripts/build-product-images.mjs decisions.json <dir>`.
-  Do not apply EXIF rotation (OFF pixels are already upright but often tagged rotate-90).
-- PDFs (order, detailed, weekly reports) NEVER contain product pictures.
-- Owner request 2026-11-22 (2nd): official U.S. brand photos first, clean/white background, single unit, consistent;
-  hand-held/dark/cluttered shopper photos are hidden (status review). Official sources used: kdpproductfacts.com
-  (Scene7 renders; matched by URL slug = brand+flavor+size, scripts/product-images/kdp_*.{py,cjs}) and the brands'
-  Shopify stores (/products.json: AriZona, Alani Nu, Cellucor/C4). Blocked (bot protection — do not circumvent):
-  PepsiCo, Monster, Red Bull. Merge: `merge_official.py` (official replaces the earlier photo for that product).
-  Missing price label in the UI: "Price Not Listed" (owner's latest wording).
-- 2026-11-22 (after official photos): 542 products → 153 accepted pictures (66 official brand photos, 110 verified,
-  43 approximate), 82 need review, 307 no picture (coverage 28.2%).
+## Product pictures — REMOVED (owner request 2026-11-22, 3rd)
+- The owner asked to remove product images entirely: text-only compact rows (name, size / count, price, − qty +).
+  Keep the A2Z logo (header + PDFs). Do not re-add pictures unless he asks. The Dexie table `productImages` is
+  dropped (db v5); the Worker still accepts it (LEGACY_SYNCED_TABLES in src/sync/protocol.ts) so old outboxes drain.
+
+## Price statuses (owner request 2026-11-22, bundled v8)
+- `priceInfo(p)` in src/lib/products.ts: owner's own price/confirmation (priceOverrideCents) → green Confirmed;
+  his price list `p.supplement` (src/data/supplementPrices.ts, from A2Z_Mismatch_With_Prices.pdf: red text =
+  confirmed, orange = approximate, grey = not listed, a range = 'select' → "Needs price selection" with options);
+  verified price-sheet match → Confirmed; suggestion → Needs review; else gray "Price Not Listed".
+- UI: `src/components/PriceLabel.tsx` (color AND words). Settings → Prices to check (`src/screens/admin/PriceStatus.tsx`):
+  confirm orange prices, choose between prices, enter missing ones, undo. Never auto-upgrade orange to green.
+- Approximate prices ARE in totals, marked: cart note, "≈" line totals, "~" in the detailed PDF, `OrderLine.priceStatus`.
+  Unpriced lines are never counted as $0.
+- Standardized display names: `src/lib/naming.ts` (`standardName`) from the original catalog line (typos, OZ/ML/L/CT,
+  "(2 × 12)" multipacks; 36CT stays 36). The printed catalog text stays the key (mappingKey) and stays searchable.
+  Size/count corrections with evidence: `src/data/catalogCorrections.ts` (Red Bull Amber = 8.4 oz, redbull.com).
 
 ## When the owner uploads a CATALOG (or an updated PRICE SHEET) in chat
 Goal: products should appear under the catalog's names/departments/categories, priced from the price sheet.
@@ -101,7 +93,10 @@ Goal: products should appear under the catalog's names/departments/categories, p
   (source 'ownerdoc'); NOT applied: San Pellegrino Glass 11OZ ($26.99 = Perrier line) and Saratoga Sparkling
   Glass 12OZ (STILL line). → 456 priced (coverage 84.1%), 86 show "Price not added" (owner's wording for
   every product without a price). His list skipped 7 catalog products (left as they were).
-Next free version: 8.
+- v8 supplement: owner's "A2Z_Mismatch_With_Prices.pdf" (50 rows → exact catalog lines, tests/supplement.test.ts;
+  safety snapshot first; his own prices win) → 482 confirmed, 44 approximate, 5 needs review (3 price selection),
+  11 Price Not Listed.
+Next free version: 9.
 
 ## Cloud sync (Cloudflare Worker + D1) — `worker/`
 - `worker/src/index.ts`: /status, /claim (first phone sets the key hash), /sync (push outbox + pull by seq),

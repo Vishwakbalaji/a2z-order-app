@@ -17,6 +17,7 @@ import { A2Z_PRICE_ROWS, A2Z_SOURCE_FILE } from './a2zPriceSheet';
 import { A2Z_CATALOG_FILE, A2Z_CATALOG_ROWS, brandForGroup, splitDescription } from './a2zCatalog';
 import { ACCEPTED_80, ACCEPTED_90 } from './acceptedMatches';
 import { OWNER_DOC_FILE, OWNER_DOC_MATCHES } from './ownerMatchedPrices';
+import { SUPPLEMENT_FILE, SUPPLEMENT_ROWS, type SupplementRow } from './supplementPrices';
 
 /** A verified catalog-product → price-sheet-line link (checked by a person, not guessed). */
 export interface BundledMapping {
@@ -32,6 +33,8 @@ export type BundledDataset =
   | { version: number; kind: 'catalog'; fileName: string; rows: CatalogRowInput[]; mappings?: BundledMapping[] }
   // links between catalog products and price lines (decisions you already made by hand are never overwritten)
   | { version: number; kind: 'mappings'; fileName: string; mappings: BundledMapping[] }
+  // the owner's supplemental price list (red = confirmed, orange = approximate) applied to exact catalog lines
+  | { version: number; kind: 'supplement'; fileName: string; rows: SupplementRow[] }
   // re-run price matching for every catalog product with the current rules (hand decisions are kept)
   | { version: number; kind: 'rematch'; fileName: string }
   // settings values applied only where the setting is still empty (never overwrites what you typed)
@@ -108,7 +111,14 @@ export const BUNDLED_DATASETS: BundledDataset[] = [
     fileName: OWNER_DOC_FILE,
     mappings: OWNER_DOC_MATCHES.map(([catalogRaw, priceBrand, priceDesc]) => ({ catalogRaw, priceBrand, priceDesc, source: 'ownerdoc' })),
   },
-  // Next: { version: 8, kind: 'catalog' | 'pricesheet' | 'settings' | 'mappings' | 'rematch', ... }
+  {
+    // Owner's "A2Z_Mismatch_With_Prices.pdf" (2026-11-22): remaining prices, red = confirmed, orange = approximate.
+    version: 8,
+    kind: 'supplement',
+    fileName: SUPPLEMENT_FILE,
+    rows: SUPPLEMENT_ROWS,
+  },
+  // Next: { version: 9, kind: 'catalog' | 'pricesheet' | 'settings' | 'mappings' | 'rematch' | 'supplement', ... }
 ];
 
 export const LATEST_BUNDLED_VERSION = Math.max(...BUNDLED_DATASETS.map((d) => d.version));

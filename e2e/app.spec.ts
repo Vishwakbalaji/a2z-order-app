@@ -73,12 +73,15 @@ test.beforeEach(async ({ page }, info) => {
 
 test('@smoke loads the A2Z catalog with case prices from the price sheet', async ({ page }) => {
   await expect(page.getByText('A2Z Beverage Distributors')).toBeVisible();
-  await expect(page.getByTestId('data-notice')).toContainText('456 of 542 catalog products are priced (coverage 84.1%); 86 show "Price not added".');
+  await expect(page.getByTestId('data-notice')).toContainText('New prices from your price list');
+  await expect(page.getByTestId('data-notice')).toContainText('A safety copy of your data was saved first');
   await searchFor(page, 'zephyrhills 8oz');
   const row = page.getByTestId('product-row').first();
   await expect(row).toContainText('ZEPHYRHILLS');
-  await expect(row).toContainText('8OZ 48CT');
+  await expect(row).toContainText('8 OZ / 48 CT');
   await expect(row).toContainText('$8.49');
+  await expect(row.getByTestId('price')).toHaveAttribute('data-status', 'confirmed');
+  await expect(row).toContainText('Confirmed');
   await searchFor(page, '');
   await page.screenshot({ path: `${OUT}/${test.info().project.name}-products.png` });
 });
@@ -89,7 +92,11 @@ test('pricing audit: verified prices used, flagged ones wait for review, unmatch
   await searchFor(page, 'fanta grape mexico');
   const fm = page.getByTestId('product-row').first();
   await expect(fm).toContainText('FANTA GRAPE MEXICO');
-  await expect(fm).toContainText('Price Not Listed'); // NO PRICE in his list
+  await expect(fm).toContainText('$40.99'); // NO PRICE in his matched list (v7); orange in his later price list (v8)
+  await expect(fm).toContainText('Approximate');
+  await expect(fm.getByTestId('price')).toHaveClass(/text-orange-600/);
+  await searchFor(page, 'topo chico');
+  await expect(page.getByTestId('product-row').first()).toContainText('Price Not Listed');
   await searchFor(page, 'smart water alkline 1l');
   await expect(page.getByTestId('product-row').first()).toContainText('$19.99'); // above 80%: accepted by the owner
   await page.goto('/#/settings/review');
@@ -100,102 +107,86 @@ test('pricing audit: verified prices used, flagged ones wait for review, unmatch
   const li = page.locator('li', { hasText: 'TROPICANA PREMIUM LIVELY LEMONADE' });
   await expect(li).toContainText('Catalog does not show the size');
   await page.getByRole('button', { name: /^Unmatched/ }).click();
-  const ba = page.locator('li', { hasText: 'BODY ARMOUR TROPICAL PUNCH 28OZ 12C' });
+  const ba = page.locator('li', { hasText: 'BODYARMOR TROPICAL PUNCH — 28 OZ / 12 CT' });
   await expect(ba.getByTestId('closest-line')).toContainText('Case count differs (12 vs 15)');
-  await expect(page.locator('li', { hasText: 'GATORADE FUTURE USE 20OZ 24CT' }).getByTestId('closest-line')).toContainText('Price Not Listed (NO PRICE in your matched-prices list)');
+  const gfu = page.locator('li', { hasText: 'GATORADE FUTURE USE — 20 OZ / 24 CT' });
+  await expect(gfu.getByTestId('closest-line')).toContainText('Price Not Listed (NO PRICE in your matched-prices list)');
+  await expect(gfu.getByTestId('app-price')).toContainText('$23.99'); // priced (red) by his later price list
   await page.getByRole('button', { name: /^Matched/ }).click();
-  await expect(page.locator('li', { hasText: 'COKE MEXICO 355ML 24CT' })).toContainText('$40.99');
-  await expect(page.locator('li', { hasText: 'VITAMIN WATER ESSENTIAL-ORANGE 20OZ' })).toContainText('from your matched-prices list');
-  await expect(page.locator('li', { hasText: 'SMART WATER ALKLINE 1L 12CT' })).toContainText('accepted by you (above 80%)');
+  await expect(page.locator('li', { hasText: 'COKE MEXICO — 355 ML / 24 CT' })).toContainText('$40.99');
+  await expect(page.locator('li', { hasText: 'VITAMIN WATER ESSENTIAL-ORANGE — 20 OZ' })).toContainText('from your matched-prices list');
+  await expect(page.locator('li', { hasText: 'SMART WATER ALKALINE — 1 L / 12 CT' })).toContainText('accepted by you (above 80%)');
   await page.screenshot({ path: `${OUT}/${test.info().project.name}-audit.png`, fullPage: false });
 });
 
-test('product pictures: shown left of the name, tap to enlarge, cart unchanged, never in PDFs, manageable in Settings', async ({ page }) => {
-  await addStore(page, 'Picture Store');
+test('text-only product list: no product images anywhere (list, cart, settings, PDFs); logo kept', async ({ page }) => {
+  await addStore(page, 'Text Store');
   await searchFor(page, 'gatorade cool blue 20');
   await expect(page.getByTestId('product-row')).toHaveCount(1);
-  const row = page.locator('[data-testid=product-row]:has([data-has-image=true])').first();
-  await expect(row).toContainText('GATORADE COOL BLUE');
-  // layout: picture | name + price | quantity controls, without overlap
-  const img = await row.getByTestId('product-thumb').boundingBox();
-  const name = await row.locator('div.flex-1').boundingBox();
-  const plus = await row.getByRole('button', { name: /^Increase / }).boundingBox();
-  expect(img!.x + img!.width).toBeLessThanOrEqual(name!.x + 1);
-  expect(name!.x + name!.width).toBeLessThanOrEqual(plus!.x + 1);
-  expect(img!.width).toBeGreaterThanOrEqual(56);
-  expect(img!.width).toBeLessThanOrEqual(80);
-  await expect(row.locator('img')).toHaveJSProperty('complete', true);
-  await row.getByRole('button', { name: /^Increase / }).click();
-  await row.getByTestId('product-thumb').click();
-  const pv = page.getByTestId('image-preview');
-  await expect(pv).toBeVisible();
-  await expect(pv.locator('img').last()).toHaveJSProperty('complete', true);
-  await pv.getByRole('button', { name: 'Close', exact: true }).click();
-  await expect(pv).toBeHidden();
-  await expect(row.getByTestId('qty')).toHaveText('1'); // preview never changes the cart
-  // products without a picture show a placeholder and stay orderable
-  await searchFor(page, 'plastic bag');
-  await expect(page.locator('[data-testid=product-row] [data-has-image=false]').first()).toBeVisible();
-  // cart shows small pictures; PDFs contain no product pictures
+  await expect(page.locator('[data-testid=product-row] img')).toHaveCount(0);
+  await page.getByRole('button', { name: /^Increase / }).first().click();
   await page.click('[data-testid=nav-cart]');
-  await expect(page.locator('[data-testid=cart-row] [data-has-image=true]')).toHaveCount(1);
+  await expect(page.locator('[data-testid=cart-row] img')).toHaveCount(0);
   for (const b of ['Download Order PDF', 'Download Detailed Order PDF']) {
-    const d = await download(page, b, 'img-');
+    const d = await download(page, b, 'noimg-');
     const raw = fs.readFileSync(d.file, 'latin1');
     expect((raw.match(/\/Subtype\s*\/Image/g) || []).length, b).toBeLessThanOrEqual(1); // the company logo only
   }
-  // Settings → Manage Product Images
-  await page.goto('/#/settings/images');
-  await expect(page.getByTestId('image-summary')).toContainText('Total catalog products542');
-  await page.getByRole('button', { name: /^With image/ }).click();
-  await expect(page.getByTestId('image-row').first()).toBeVisible();
-  await expect(page.getByTestId('image-summary')).toContainText('Official brand photos');
-  await page.getByRole('button', { name: /^Needs official/ }).click();
-  await expect(page.getByTestId('image-row').first()).toBeVisible();
-  // an official brand photo is shown for a Keurig Dr Pepper product, credited to the brand
-  await searchFor(page, 'dr pepper 20oz 24ct');
-  const dp = page.locator('[data-testid=product-row]', { hasText: /^DR PEPPER\s*20OZ 24CT/ }).first();
-  await dp.getByTestId('product-thumb').click();
-  await expect(page.getByTestId('image-preview')).toContainText('Keurig Dr Pepper');
-  await page.getByTestId('image-preview').getByRole('button', { name: 'Close', exact: true }).click();
-  await page.screenshot({ path: `${OUT}/${test.info().project.name}-images-manage.png` });
+  await page.click('[data-testid=nav-settings]');
+  await expect(page.getByText('Manage product images')).toHaveCount(0);
+  await expect(page.getByAltText('Logo')).toBeVisible(); // the company logo stays
+  const productFiles = await page.evaluate(async () => (await caches.keys()).join(','));
+  expect(productFiles).not.toContain('product-previews');
 });
 
-test('pictures show on a phone whose catalog products have older random ids, also from the cache after a reload', async ({ page }) => {
-  // recreate a phone that loaded the catalog before products had permanent ids
-  await page.evaluate(
-    () =>
-      new Promise<void>((resolve, reject) => {
-        const req = indexedDB.open('a2z-order-app');
-        req.onsuccess = () => {
-          const tx = req.result.transaction('products', 'readwrite');
-          const st = tx.objectStore('products');
-          const all = st.getAll();
-          all.onsuccess = () => {
-            const p = (all.result as { id: string; catalogName: string }[]).find((x) => x.catalogName === 'GATORADE COOL BLUE 20OZ 24PK')!;
-            st.delete(p.id);
-            st.put({ ...p, id: 'p_oldrandom1' });
-          };
-          tx.oncomplete = () => resolve();
-          tx.onerror = () => reject(tx.error);
-        };
-        req.onerror = () => reject(req.error);
-      }),
-  );
-  for (let i = 0; i < 2; i++) {
-    await page.reload();
-    await searchFor(page, 'gatorade cool blue 20');
-    await expect(page.getByTestId('product-row')).toHaveCount(1);
-    const img = page.locator('[data-testid=product-row] [data-has-image=true] img');
-    await expect(img).toHaveJSProperty('complete', true);
-    await expect(img).toHaveCSS('opacity', '1'); // actually visible, not just downloaded
-  }
+test('price statuses: orange approximate counted and marked, owner confirms it (green), chooses between two prices', async ({ page }) => {
+  await addStore(page, 'Price Store');
+  await searchFor(page, 'monster java');
+  const java = page.getByTestId('product-row').filter({ hasText: 'MONSTER JAVA VARIETY' }).first();
+  await expect(java).toContainText('$38.50');
+  await expect(java).toContainText('Approximate');
+  await java.getByRole('button', { name: /^Increase / }).click();
+  await java.getByRole('button', { name: /^Increase / }).click();
+  await searchFor(page, 'topo chico');
+  await page.getByTestId('product-row').first().getByRole('button', { name: /^Increase / }).click();
+  await page.click('[data-testid=nav-cart]');
+  await expect(page.getByTestId('total-value')).toHaveText('$77.00'); // 2 × 38.50; Topo Chico (no price) not counted as $0
+  await expect(page.getByTestId('approx-note')).toContainText('Includes 1 approximate price');
+  await expect(page.getByTestId('cart-row').filter({ hasText: 'MONSTER JAVA' }).getByTestId('line-total')).toHaveText('≈ $77.00');
+  const d = await download(page, 'Download Detailed Order PDF', 'approx-');
+  expect(d.text).toContain('~ $38.50');
+  expect(d.text).toContain('Approximate price');
+  const o = await download(page, 'Download Order PDF', 'approx-');
+  expect(o.text).not.toContain('$38.50'); // distributor PDF: never prices
+  // Settings › Prices to check
+  await page.goto('/#/settings/prices');
+  await expect(page.getByTestId('price-summary')).toContainText('Approximate44');
+  await expect(page.getByTestId('price-summary')).toContainText('Price Not Listed11');
+  await page.getByRole('button', { name: /^Choose price/ }).click();
+  const tonic = page.getByTestId('price-row').filter({ hasText: 'CANADA DRY TONIC WATER ZERO SUGAR' });
+  await expect(tonic).toContainText('Needs price selection');
+  await tonic.getByRole('button', { name: '$24.99 · 1 L / 15 ct' }).click();
+  await expect(page.getByTestId('price-row').filter({ hasText: 'CANADA DRY TONIC WATER ZERO SUGAR' })).toHaveCount(0);
+  await page.getByRole('button', { name: /^Approximate/ }).click();
+  await page.getByLabel('Search prices').fill('monster java');
+  await page.getByTestId('price-row').first().getByRole('button', { name: 'Confirm $38.50' }).click();
+  await page.getByLabel('Search prices').fill('');
+  await page.getByRole('button', { name: /^Confirmed by you/ }).click();
+  await expect(page.getByTestId('price-row')).toHaveCount(2);
+  await page.click('[data-testid=nav-cart]');
+  await expect(page.getByTestId('approx-note')).toHaveCount(0);
+  await searchFor(page, 'monster java');
+  await expect(page.getByTestId('product-row').filter({ hasText: 'MONSTER JAVA VARIETY' }).first().getByTestId('price')).toHaveAttribute('data-status', 'confirmed');
+  await searchFor(page, 'tonic water zero');
+  await expect(page.getByTestId('product-row').first()).toContainText('$24.99');
+  await expect(page.getByTestId('product-row').first()).toContainText('Confirmed');
+  await page.screenshot({ path: `${OUT}/${test.info().project.name}-prices.png` });
 });
 
 test('QA 1-9: +/- quantities, auto cart add/remove, sync, totals', async ({ page }) => {
   await addStore(page, 'ABC Convenience Store', '123 Main St, Fort Lauderdale, FL', { phone: '(954) 555-0101', manager: 'Maria' });
   await searchFor(page, 'evian');
-  const evian = 'EVIAN WATER 0.5L 24CT';
+  const evian = 'EVIAN WATER 0.5 L / 24 CT';
   for (let i = 0; i < 3; i++) await inc(page, evian).click();
   await expect(qty(page, evian)).toHaveText('3');
   await expect(page.getByTestId('cart-badge')).toHaveText('3');
@@ -207,7 +198,7 @@ test('QA 1-9: +/- quantities, auto cart add/remove, sync, totals', async ({ page
   await expect(dec(page, evian)).toBeDisabled(); // never negative
   await expect(page.getByTestId('cart-badge')).toHaveCount(0);
   for (let i = 0; i < 3; i++) await inc(page, evian).click();
-  const rb = 'RED BULL COCONUT 12OZ 24CT';
+  const rb = 'RED BULL COCONUT 12 OZ / 24 CT';
   await addCases(page, 'red bull coconut 12', rb, 2);
   await page.click('[data-testid=nav-cart]');
   await expect(page.getByTestId('cart-row')).toHaveCount(2);
@@ -228,7 +219,7 @@ test('QA 1-9: +/- quantities, auto cart add/remove, sync, totals', async ({ page
 
 test('rapid tapping is counted exactly, with no duplicate cart lines, and survives a reload', async ({ page }) => {
   await addStore(page, 'Fast Store');
-  const m = 'MONSTER GREEN 16OZ 24CT';
+  const m = 'MONSTER GREEN 16 OZ / 24 CT';
   await searchFor(page, 'monster green');
   const btn = inc(page, m);
   for (let i = 0; i < 25; i++) await btn.click({ delay: 0 });
@@ -245,12 +236,12 @@ test('QA 10-11, 17: independent drafts per store, persisted after reload; simila
   await addStore(page, 'Store Two', '2 Second Ave');
   await selectStore(page, 'Store One');
   await searchFor(page, 'pellegrino');
-  await inc(page, 'SAN PELLEGRINO CAN 330ML 24PK').click();
-  await inc(page, 'SAN PELLEGRINO PET 1L 12CT').click();
-  await inc(page, 'SAN PELLEGRINO PET 1L 12CT').click();
+  await inc(page, 'SAN PELLEGRINO CAN 330 ML / 24 CT').click();
+  await inc(page, 'SAN PELLEGRINO PET 1 L / 12 CT').click();
+  await inc(page, 'SAN PELLEGRINO PET 1 L / 12 CT').click();
   await selectStore(page, 'Store Two');
   await expect(page.getByTestId('cart-badge')).toHaveCount(0);
-  await addCases(page, 'gatorade cool blue 28', 'GATORADE COOL BLUE 28OZ 15PK', 1);
+  await addCases(page, 'gatorade cool blue 28', 'GATORADE COOL BLUE 28 OZ / 15 CT', 1);
   await page.reload();
   await expect(page.getByTestId('store-selector')).toContainText('Store Two');
   await page.click('[data-testid=nav-cart]');
@@ -311,7 +302,7 @@ test('NEW STORE — FIRST ORDER appears only on the first finalized order of a n
   await page.click('[data-testid=nav-stores]');
   await expect(page.getByText('NEW · first order pending')).toHaveCount(1);
   await selectStore(page, 'Sunrise Mini Mart');
-  await addCases(page, 'coke 20oz', 'COKE 20OZ 24CT', 3);
+  await addCases(page, 'coke 20oz', 'COKE 20 OZ / 24 CT', 3);
   await page.click('[data-testid=nav-cart]');
   await expect(page.getByTestId('new-store-banner')).toBeVisible();
   // downloading from the cart (a draft) shows the label but does not use it up
@@ -325,14 +316,14 @@ test('NEW STORE — FIRST ORDER appears only on the first finalized order of a n
   const firstUrl = page.url();
   // second order for the same store: no label
   await selectStore(page, 'Sunrise Mini Mart');
-  await addCases(page, 'sprite 20oz', 'SPRITE 20OZ 24CT', 1);
+  await addCases(page, 'sprite 20oz', 'SPRITE 20 OZ / 24 CT', 1);
   await page.click('[data-testid=nav-cart]');
   await expect(page.getByTestId('new-store-banner')).toHaveCount(0);
   await finalize(page);
   expect((await download(page, 'Download Order PDF', 'second-')).text).not.toContain('NEW STORE');
   // existing store never gets the label
   await selectStore(page, 'Old Friend Market');
-  await addCases(page, 'sprite 20oz', 'SPRITE 20OZ 24CT', 1);
+  await addCases(page, 'sprite 20oz', 'SPRITE 20 OZ / 24 CT', 1);
   await finalize(page);
   expect((await download(page, 'Download Order PDF', 'existing-')).text).not.toContain('NEW STORE');
   // re-downloading the original first order (after a reload) keeps its historical label
@@ -343,7 +334,7 @@ test('NEW STORE — FIRST ORDER appears only on the first finalized order of a n
 
 test('QA 18: completed orders keep their prices after a price change; reopen and re-download', async ({ page }) => {
   await addStore(page, 'History Store');
-  await addCases(page, 'celsius orange', 'CELSIUS ORANGE 12OZ 12CT', 2);
+  await addCases(page, 'celsius orange', 'CELSIUS ORANGE 12 OZ / 12 CT', 2);
   await finalize(page);
   await expect(page.getByText('$40.98').first()).toBeVisible();
   await page.goto('/#/settings/products');
@@ -449,7 +440,7 @@ test('QA 19: stays responsive with 1,700+ products (CPU throttled 4x like a budg
 
 test('QA 20: backup and restore round-trip without data loss', async ({ page, browser }) => {
   await addStore(page, 'Backup Store', '9 Backup Rd', { phone: '111', manager: 'Bob' });
-  await addCases(page, 'bang orange', 'BANG ORANGE 16OZ 12PK', 2);
+  await addCases(page, 'bang orange', 'BANG ORANGE 16 OZ / 12 CT', 2);
   await page.goto('/#/settings/backup');
   const [d] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Download backup file' }).click()]);
   const file = `${OUT}/${d.suggestedFilename()}`;
@@ -485,13 +476,13 @@ test('weekly report: auto-finalized after Friday, multiple orders per store, 1% 
   await addStore(page, 'XYZ Market', 'Pompano Beach, FL');
   await addStore(page, 'Regular Customer', 'Hollywood, FL', { isNew: false });
   await selectStore(page, 'ABC Convenience');
-  await addCases(page, 'gatorade cool blue 20', 'GATORADE COOL BLUE 20OZ 24PK', 2); // 2 × 23.99
+  await addCases(page, 'gatorade cool blue 20', 'GATORADE COOL BLUE 20 OZ / 24 CT', 2); // 2 × 23.99
   await finalize(page);
   await selectStore(page, 'ABC Convenience');
-  await addCases(page, 'monster green', 'MONSTER GREEN 16OZ 24CT', 3); // 3 × 38.50
+  await addCases(page, 'monster green', 'MONSTER GREEN 16 OZ / 24 CT', 3); // 3 × 38.50
   await finalize(page);
   await selectStore(page, 'XYZ Market');
-  await addCases(page, 'coke 20oz', 'COKE 20OZ 24CT', 4); // 4 × 32.99
+  await addCases(page, 'coke 20oz', 'COKE 20 OZ / 24 CT', 4); // 4 × 32.99
   await finalize(page);
   // provisional report during the week
   await page.goto('/#/reports');
@@ -524,7 +515,7 @@ test('weekly report: auto-finalized after Friday, multiple orders per store, 1% 
   await page.clock.setFixedTime(nyTime('2026-12-01T15:00:00Z')); // Tue Dec 1, 10:00 AM
   await page.goto('/');
   await selectStore(page, 'XYZ Market');
-  await addCases(page, 'sprite 20oz', 'SPRITE 20OZ 24CT', 1);
+  await addCases(page, 'sprite 20oz', 'SPRITE 20 OZ / 24 CT', 1);
   await finalize(page);
   await page.clock.setFixedTime(nyTime('2026-12-05T05:00:30Z')); // Sat Dec 5, 12:00:30 AM
   await page.goto('/#/reports');
@@ -549,7 +540,7 @@ test('@smoke works offline after the first visit (installed PWA)', async ({ page
   await page.reload();
   await expect(page.getByTestId('product-row').first()).toBeVisible();
   await addStore(page, 'Offline Store');
-  await addCases(page, 'arizona sweet tea 20', 'ARIZONA SWEET TEA 20OZ 24CT', 1);
+  await addCases(page, 'arizona sweet tea 20', 'ARIZONA SWEET TEA 20 OZ / 24 CT', 1);
   await page.click('[data-testid=nav-cart]');
   await expect(page.getByTestId('total-value')).toHaveText('$18.49');
   const [d] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Download Order PDF' }).click()]);

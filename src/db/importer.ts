@@ -10,6 +10,7 @@ import { displayName, mappingKey, priceItemKey, unitsFromText } from '../lib/pro
 import { A2Z_COMPANY } from '../data/a2zPriceSheet';
 import { BUNDLED_DATASETS, type BundledMapping } from '../data/bundled';
 import { normText } from '../lib/normalize';
+import { SUPPLEMENT_RESOLVED, type SupplementRow } from '../data/supplementPrices';
 
 export interface PriceRowInput {
   section: string;
@@ -372,6 +373,15 @@ export async function syncBundledData(): Promise<number[]> {
                 review: review + unmatched,
               };
       }
+      if (ds.kind === 'supplement') {
+        const r = await applySupplement(ds.rows, ds.fileName);
+        notice = {
+          title: 'New prices from your price list',
+          text: `${r.confirmed} confirmed (green), ${r.approximate} approximate (orange), ${r.select} need you to choose the right price, ${r.none} not on the sheet.${r.skipped ? ` ${r.skipped} products you priced yourself were left as they are.` : ''} A safety copy of your data was saved first (Settings › Backup & restore).`,
+          at: Date.now(),
+          review: r.select,
+        };
+      }
       if (ds.kind === 'rematch') {
         const prev = new Map((await db.products.toArray()).map((p) => [p.id, p]));
         await rematchCatalogProducts();
@@ -431,6 +441,55 @@ export async function moveDraftsToCatalogNames() {
     }
     await db.drafts.put({ ...d, lines: [...merged.values()], updatedAt: d.updatedAt + 1 });
   }
+}
+
+/**
+ * The owner's supplemental price list (bundled v8): red → confirmed, orange → approximate, two prices → he
+ * chooses, grey → not on the sheet. Applied to the exact catalog lines each row names. Prices he entered or
+ * confirmed himself are never changed. A safety snapshot of all data is taken first.
+ */
+export async function applySupplement(rows: SupplementRow[], fileName: string) {
+  await takeSnapshot('Before the new price list (A2Z_Mismatch_With_Prices)');
+  const res = { confirmed: 0, approximate: 0, select: 0, none: 0, skipped: 0, missing: [] as string[] };
+  const products = (await db.products.toArray()).filter((p) => p.origin === 'catalog');
+  const byLine = new Map<string, Product[]>();
+  for (const p of products) {
+    const k = normText(p.catalogName || '');
+    byLine.set(k, [...(byLine.get(k) || []), p]);
+  }
+  const now = Date.now();
+  for (const row of rows) {
+    for (const line of row.products) {
+      const found = byLine.get(normText(line)) || [];
+      if (!found.length) res.missing.push(line);
+      for (const p of found) {
+        if (p.priceOverrideCents != null || p.matchMethod === 'manual') {
+          res.skipped++; // his own decision wins
+          continue;
+        }
+        const resolved = SUPPLEMENT_RESOLVED[line];
+        const base = row.color === 'red' ? 'confirmed' : row.color === 'orange' ? 'approximate' : 'none';
+        const cents = row.cents ?? resolved?.cents ?? null;
+        const status = base === 'none' ? 'none' : cents == null ? 'select' : base;
+        await db.products.put({
+          ...p,
+          supplement: {
+            cents: status === 'select' || status === 'none' ? null : cents,
+            status,
+            ...(row.options ? { options: row.options } : {}),
+            ...(row.sheet ? { sheetRef: row.sheet } : {}),
+            row: row.row,
+            source: fileName,
+            ...(row.note || resolved ? { note: [row.note, resolved?.why].filter(Boolean).join(' · ') } : {}),
+            at: now,
+          },
+          updatedAt: now,
+        });
+        res[status]++;
+      }
+    }
+  }
+  return res;
 }
 
 /** Verified mappings shipped with a catalog. Decisions you made in the app are never overwritten. */
