@@ -4,7 +4,7 @@
  *
  *   node scripts/build-product-images.mjs <decisions.json> <downloaded-originals-dir>
  *
- * decisions.json: [{ id, name, code, status: 'verified'|'approx'|'review', confidence, note? }]
+ * decisions.json: [{ id, name, code | file, status: 'verified'|'approx'|'review', confidence, note?, official?, source?, sourceUrl?, credit?, license? }]
  *   (one entry per catalog product that got a picture after checking it by eye; see src/lib/images.ts)
  * For each entry it reads <dir>/<code>.full.jpg (or <code>.jpg), trims plain borders, and writes
  *   public/products/t/<id>.webp  (fits 160×160, thumbnail for the lists)
@@ -33,11 +33,12 @@ let bytesT = 0, bytesL = 0;
 for (const d of decisions) {
   const full = path.join(srcDir, `${d.code}.full.jpg`), small = path.join(srcDir, `${d.code}.jpg`);
   const have = (f) => fs.existsSync(f) && fs.statSync(f).size > 500;
-  const src = have(full) ? full : have(small) ? small : null;
-  if (!src) throw new Error(`missing original for ${d.name} (${d.code})`);
+  // official brand photos carry their own downloaded file; Open Food Facts photos are found by barcode
+  const src = d.file ? (have(d.file) ? d.file : null) : have(full) ? full : have(small) ? small : null;
+  if (!src) throw new Error(`missing original for ${d.name} (${d.code || d.file})`);
   // Note: Open Food Facts stores many pictures already upright but still tagged "rotate 90°" (EXIF 6), so the
   // tag is NOT applied — pixels are used as stored (exactly as they were checked by eye). Output has no EXIF.
-  const base = sharp(src, { failOn: 'none' }).flatten({ background: '#ffffff' }).trim({ background: '#ffffff', threshold: 18 });
+  const base = sharp(src, { failOn: 'none' }).flatten({ background: '#ffffff' }).trim({ background: '#ffffff', threshold: d.official ? (/cellucor/.test(d.sourceUrl || '') ? 70 : 40) : 18 }); // official renders: also trim their light-grey studio backdrop
   const buf = await base.toBuffer();
   const file = `${d.id}.webp`;
   const t = await sharp(buf).resize(160, 160, { fit: 'inside', withoutEnlargement: true }).webp({ quality: 74, effort: 5 }).toBuffer();
@@ -51,10 +52,11 @@ for (const d of decisions) {
     name: d.name,
     status: d.status,
     confidence: d.confidence,
-    source: 'Open Food Facts',
-    sourceUrl: `https://world.openfoodfacts.org/product/${d.code}`,
-    credit: 'Open Food Facts contributors, CC BY-SA 3.0',
-    license: 'CC BY-SA 3.0',
+    source: d.source || 'Open Food Facts',
+    sourceUrl: d.sourceUrl || `https://world.openfoodfacts.org/product/${d.code}`,
+    credit: d.credit || 'Open Food Facts contributors, CC BY-SA 3.0',
+    license: d.license || 'CC BY-SA 3.0',
+    ...(d.official ? { official: true } : {}),
     verifiedAt: d.verifiedAt || today,
     ...(d.note ? { note: d.note } : {}),
   };

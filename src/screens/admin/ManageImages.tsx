@@ -2,12 +2,12 @@ import { useMemo, useRef, useState } from 'react';
 import { Badge, Card, Empty, Icon, PageHeader, confirmDialog, inputCls, toast } from '../../components/ui';
 import { BeveragePlaceholder, openImagePreview } from '../../components/ProductImage';
 import { useApp, setProductImage, clearProductImage } from '../../state/store';
-import { IMAGE_STATUS_LABEL, bundledImage, bundledUrls, imageCounts, imageState, photoToDataUrl, resolveImage } from '../../lib/images';
+import { IMAGE_STATUS_LABEL, bundledImage, bundledUrls, hasOfficialImage, imageCounts, imageState, photoToDataUrl, resolveImage } from '../../lib/images';
 import { displayName } from '../../lib/products';
 import { tokens } from '../../lib/normalize';
 import type { Product } from '../../types';
 
-type Tab = 'review' | 'none' | 'with' | 'all';
+type Tab = 'review' | 'none' | 'with' | 'official' | 'all';
 const TONE: Record<string, 'green' | 'amber' | 'red' | 'blue' | 'gray'> = { verified: 'green', approx: 'green', approved: 'green', manual: 'blue', review: 'amber', none: 'gray', rejected: 'red' };
 const PAGE = 40;
 
@@ -26,7 +26,7 @@ export function ManageImagesScreen() {
     const qt = tokens(q);
     return catalog.filter((p) => {
       const st = imageState(p, overrides);
-      const inTab = tab === 'all' || (tab === 'review' && st === 'review') || (tab === 'none' && (st === 'none' || st === 'rejected')) || (tab === 'with' && ['verified', 'approx', 'approved', 'manual'].includes(st));
+      const inTab = tab === 'all' || (tab === 'review' && st === 'review') || (tab === 'none' && (st === 'none' || st === 'rejected')) || (tab === 'with' && ['verified', 'approx', 'approved', 'manual'].includes(st)) || (tab === 'official' && st !== 'manual' && !hasOfficialImage(p, overrides));
       if (!inTab) return false;
       if (!qt.length) return true;
       const t = tokens(`${displayName(p)} ${p.category} ${p.department}`);
@@ -55,6 +55,7 @@ export function ManageImagesScreen() {
     ['review', 'Needs review', counts.review],
     ['none', 'No image', counts.none + counts.rejected],
     ['with', 'With image', counts.verified + counts.approx + counts.approved + counts.manual],
+    ['official', 'Needs official', counts.total - counts.official - counts.manual],
     ['all', 'All', counts.total],
   ];
 
@@ -68,6 +69,8 @@ export function ManageImagesScreen() {
           <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 mt-1">
             <span>Total catalog products</span>
             <b className="text-right">{counts.total}</b>
+            <span>Official brand photos</span>
+            <b className="text-right">{counts.official}</b>
             <span>Verified images</span>
             <b className="text-right">{counts.verified}</b>
             <span>Accepted approximate</span>
@@ -84,7 +87,7 @@ export function ManageImagesScreen() {
           <p className="text-xs text-gray-500 mt-1">Coverage counts only accepted pictures. Pictures that need review are not shown to customers until you approve them. Your decisions are kept through app updates.</p>
         </Card>
 
-        <div className="grid grid-cols-4 gap-1.5">
+        <div className="grid grid-cols-5 gap-1">
           {tabs.map(([k, label, n]) => (
             <button
               key={k}
@@ -96,7 +99,7 @@ export function ManageImagesScreen() {
             </button>
           ))}
         </div>
-        <input className={inputCls} placeholder="Search products" aria-label="Search products" value={q} onChange={(e) => (setQ(e.target.value), setLimit(PAGE))} />
+        <input className={inputCls} placeholder="Search products" aria-label="Search product images" value={q} onChange={(e) => (setQ(e.target.value), setLimit(PAGE))} />
 
         {!list.length && <Empty title="Nothing here" />}
         <ul className="space-y-2">
@@ -123,6 +126,7 @@ export function ManageImagesScreen() {
                       <div className="font-semibold break-words leading-snug">{displayName(p)}</div>
                       <div className="mt-1 flex flex-wrap gap-1 items-center">
                         <Badge tone={TONE[st]}>{IMAGE_STATUS_LABEL[st]}</Badge>
+                        {b?.official && st !== 'manual' && st !== 'rejected' && <Badge tone="blue">Official</Badge>}
                         {b && st !== 'manual' && st !== 'rejected' && <span className="text-xs text-gray-500">{b.confidence}%</span>}
                       </div>
                       {b?.note && st !== 'manual' && <div className="text-xs text-amber-800 mt-1">{b.note}</div>}
@@ -180,8 +184,8 @@ export function ManageImagesScreen() {
         <details className="text-xs text-gray-500 px-1">
           <summary className="cursor-pointer">Image credits</summary>
           <p className="mt-1">
-            Product photos come from Open Food Facts (openfoodfacts.org), contributed by its users and licensed under CC BY-SA 3.0 (creativecommons.org/licenses/by-sa/3.0). Each picture links to its source page above. Brand names and
-            labels belong to their owners; pictures are shown only to identify the products.
+            Official product photos are the brands' own (Keurig Dr Pepper, AriZona, Alani Nu, Cellucor/C4) and remain theirs; they are shown only to identify the products you order. Other photos come from Open Food Facts
+            (openfoodfacts.org), contributed by its users under CC BY-SA 3.0. Each picture links to its source page above.
           </p>
         </details>
       </div>

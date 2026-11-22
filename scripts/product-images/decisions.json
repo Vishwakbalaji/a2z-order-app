@@ -70,11 +70,14 @@
  {
   "id": "p_c_14pww0kujwb",
   "name": "AW 12OZ CAN 2-12PK",
-  "code": "0059531000027",
-  "img": "https://images.openfoodfacts.org/images/products/005/953/100/0027/front_en.11.400.jpg",
-  "status": "review",
-  "confidence": 90,
-  "note": "Canadian (bilingual) can label"
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/6762b1eff5fc36fc.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LJuJAAW/aw-root-beer-12-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_162bpho2arj",
@@ -90,8 +93,9 @@
   "name": "SMART WATER 700ML 24PK",
   "code": "6115124798901",
   "img": "https://images.openfoodfacts.org/images/products/611/512/479/8901/front_en.4.400.jpg",
-  "status": "verified",
-  "confidence": 97
+  "status": "review",
+  "confidence": 92,
+  "note": "right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
  },
  {
   "id": "p_c_166bty5ferk",
@@ -113,10 +117,14 @@
  {
   "id": "p_c_16ew3pry19u",
   "name": "ALANI CHERRY SLUSH 12OZ 12PK",
-  "code": "0810030511267",
-  "img": "https://images.openfoodfacts.org/images/products/081/003/051/1267/front_en.7.400.jpg",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/c80d9367f1d27c27.img",
   "status": "verified",
-  "confidence": 98
+  "confidence": 98,
+  "official": true,
+  "source": "alaninu.com",
+  "sourceUrl": "https://www.alaninu.com/products/energy-drink-cherry-slush",
+  "credit": "\u00a9 Alani Nu (alaninu.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_16gjw3ay652",
@@ -145,11 +153,14 @@
  {
   "id": "p_c_1894f7ney0s",
   "name": "C4 COSMIC RAINBOW 16OZ 12PK",
-  "code": "0842595119145",
-  "img": "https://images.openfoodfacts.org/images/products/084/259/511/9145/front_en.21.400.jpg",
-  "status": "review",
-  "confidence": 90,
-  "note": "500 ml (European) can, catalog is 16 oz"
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/69df00605d54e149.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "cellucor.com",
+  "sourceUrl": "https://www.cellucor.com/products/c4-original-carbonated",
+  "credit": "\u00a9 Cellucor / C4 (cellucor.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_18f8yjf1s5q",
@@ -179,10 +190,14 @@
  {
   "id": "p_c_19wk8j0nla8",
   "name": "DR PEPPER 2L 8CT",
-  "code": "5000112547542",
-  "img": "https://images.openfoodfacts.org/images/products/500/011/254/7542/front_en.24.400.jpg",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/ec33ffc8a97beeb6.img",
   "status": "verified",
-  "confidence": 98
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LJziAAG/dr-pepper-2-liter-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_1b3koyjpqb2",
@@ -215,8 +230,9 @@
   "name": "STARBUCKS FRAPPUCINO MOCHA 9.5OZ 15",
   "code": "01264904",
   "img": "https://images.openfoodfacts.org/images/products/01264904/front_en.39.400.jpg",
-  "status": "verified",
-  "confidence": 98
+  "status": "review",
+  "confidence": 92,
+  "note": "right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
  },
  {
   "id": "p_c_1clws7yqqlq",
@@ -301,8 +317,9 @@
   "name": "CELSIUS COSMIC VIBE 12OZ 12CT",
   "code": "0889392001204",
   "img": "https://images.openfoodfacts.org/images/products/088/939/200/1204/front_en.3.400.jpg",
-  "status": "verified",
-  "confidence": 97
+  "status": "review",
+  "confidence": 92,
+  "note": "right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
  },
  {
   "id": "p_c_1hkd6z50ke2",
@@ -316,11 +333,14 @@
  {
   "id": "p_c_1ipjml3pk3w",
   "name": "SUNKIST ORANGE 2L 8CT",
-  "code": "0078000113464",
-  "img": "https://images.openfoodfacts.org/images/products/007/800/011/3464/front_en.17.400.jpg",
-  "status": "review",
-  "confidence": 90,
-  "note": "may be a non-US label"
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/ced1ccc17dca3201.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LKAHAA4/sunkist-orange-flavored-soda-2-liter-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_1iua8290yid",
@@ -368,10 +388,15 @@
  {
   "id": "p_c_1jdi3p6u6g8",
   "name": "BAI ZAMBIA BING CHERRY 18OZ 12CT",
-  "code": "0813694025569",
-  "img": "https://images.openfoodfacts.org/images/products/081/369/402/5569/front_en.24.400.jpg",
-  "status": "approx",
-  "confidence": 96
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/960c7ff092ad8fef.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0eDo000006jKSVIA2/bai-wonderwater-infusion-zambia-bing-cherry-18-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image",
+  "note": "current U.S. \"WonderWater\" label"
  },
  {
   "id": "p_c_1kq4mp6xj0g",
@@ -394,26 +419,35 @@
  {
   "id": "p_c_1lattm0cvh8",
   "name": "CRUSH GRAPE 20OZ 24CT",
-  "code": "05654406",
-  "img": "https://images.openfoodfacts.org/images/products/05654406/front_en.10.400.jpg",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/0f0acbcdf3412ba0.img",
   "status": "verified",
-  "confidence": 97
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LJyTAAW/crush-grape-flavored-soda-20-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_1ltizj7nnv9",
   "name": "SNAPPLE MANGO MADNESS 16OZ 12CT",
-  "code": "0076183202043",
-  "img": "https://images.openfoodfacts.org/images/products/007/618/320/2043/front_fr.12.400.jpg",
-  "status": "approx",
-  "confidence": 95
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/3af034e347a16549.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LK7zAAG/snapple-mango-madness-flavored-juice-drink-16-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_1ltv6fbjhpy",
   "name": "DUNKIN FRENCH VANILA 13.7OZ 12CT",
   "code": "0000202000552",
   "img": "https://images.openfoodfacts.org/images/products/000/020/200/0552/front_en.3.400.jpg",
-  "status": "approx",
-  "confidence": 95
+  "status": "review",
+  "confidence": 92,
+  "note": "right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
  },
  {
   "id": "p_c_1lx1po6h64g",
@@ -521,8 +555,9 @@
   "name": "CELSIUS ARTIC VIBE 12OZ 12CT",
   "code": "9816832021417",
   "img": "https://images.openfoodfacts.org/images/products/981/683/202/1417/front_en.3.400.jpg",
-  "status": "approx",
-  "confidence": 96
+  "status": "review",
+  "confidence": 92,
+  "note": "right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
  },
  {
   "id": "p_c_1sxngkouk8a",
@@ -536,11 +571,14 @@
  {
   "id": "p_c_1tf0msvye9g",
   "name": "ARIZONA CAN KIWI STRAWBERRY 22OZ 24",
-  "code": "0613008735432",
-  "img": "https://images.openfoodfacts.org/images/products/061/300/873/5432/front_en.23.400.jpg",
-  "status": "review",
-  "confidence": 91,
-  "note": "can held in hand; size not confirmed"
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/4a18d93329549907.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/kiwi-strawberry-juice-cocktail-22-oz-big-can",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_1tfani6jxrk",
@@ -565,8 +603,9 @@
   "name": "SAN PELLEGRINO 8.4OZ 24CT",
   "code": "8002270000225",
   "img": "https://images.openfoodfacts.org/images/products/800/227/000/0225/front.3.400.jpg",
-  "status": "verified",
-  "confidence": 97
+  "status": "review",
+  "confidence": 92,
+  "note": "right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
  },
  {
   "id": "p_c_1txp5ydbhoo",
@@ -590,8 +629,9 @@
   "name": "FANTA 20OZ 24CT",
   "code": "0049000019162",
   "img": "https://images.openfoodfacts.org/images/products/004/900/001/9162/front_en.12.400.jpg",
-  "status": "verified",
-  "confidence": 97
+  "status": "review",
+  "confidence": 92,
+  "note": "right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
  },
  {
   "id": "p_c_1uww26d4x2q",
@@ -656,10 +696,14 @@
  {
   "id": "p_c_1wej2zsi754",
   "name": "SNAPPLE LEMON TEA 16OZ 12CT",
-  "code": "7016724164747",
-  "img": "https://images.openfoodfacts.org/images/products/701/672/416/4747/front_en.4.400.jpg",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/98a1f7bcab4446f3.img",
   "status": "verified",
-  "confidence": 97
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LK7rAAG/snapple-lemon-tea-16-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_1wx68rtlfmt",
@@ -725,10 +769,14 @@
  {
   "id": "p_c_1z2f8v8okzp",
   "name": "SNAPPLE PEACH TEA 16OZ 12CT",
-  "code": "0076183004821",
-  "img": "https://images.openfoodfacts.org/images/products/007/618/300/4821/front_en.3.400.jpg",
-  "status": "approx",
-  "confidence": 95
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/c77726e35cfa70cb.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LK8CAAW/snapple-peach-tea-16-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_1z8kq8smkpk",
@@ -768,16 +816,18 @@
   "name": "GATORADE ARTIC BLITZ 28OZ 15CT",
   "code": "0052000010220",
   "img": "https://images.openfoodfacts.org/images/products/005/200/001/0220/front_en.3.400.jpg",
-  "status": "verified",
-  "confidence": 98
+  "status": "review",
+  "confidence": 92,
+  "note": "right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
  },
  {
   "id": "p_c_23hlrqnu6w2",
   "name": "CRUSH GRAPE 2/12 12OZ",
   "code": "07891205",
   "img": "https://images.openfoodfacts.org/images/products/07891205/front_en.17.400.jpg",
-  "status": "verified",
-  "confidence": 97
+  "status": "review",
+  "confidence": 92,
+  "note": "right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
  },
  {
   "id": "p_c_246ysq7e842",
@@ -816,17 +866,18 @@
   "name": "RED BULL WATERMELON 8.4OZ 24CT",
   "code": "90435768",
   "img": "https://images.openfoodfacts.org/images/products/90435768/front_en.4.400.jpg",
-  "status": "verified",
-  "confidence": 97
+  "status": "review",
+  "confidence": 92,
+  "note": "right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
  },
  {
   "id": "p_c_266phtlmlgt",
   "name": "ELECTROLIT COCONUT 21OZ 12CT",
   "code": "0887725000047",
   "img": "https://images.openfoodfacts.org/images/products/088/772/500/0047/front_en.3.400.jpg",
-  "status": "approx",
-  "confidence": 95,
-  "note": "size not confirmed from the photo"
+  "status": "review",
+  "confidence": 92,
+  "note": "size not confirmed from the photo; right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
  },
  {
   "id": "p_c_269loabxpsv",
@@ -858,8 +909,9 @@
   "name": "SPRITE 2L 8CT",
   "code": "5000112575071",
   "img": "https://images.openfoodfacts.org/images/products/500/011/257/5071/front_en.3.400.jpg",
-  "status": "verified",
-  "confidence": 96
+  "status": "review",
+  "confidence": 92,
+  "note": "right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
  },
  {
   "id": "p_c_28x9r9p9sht",
@@ -872,19 +924,23 @@
  {
   "id": "p_c_28xt5bumfkk",
   "name": "CRUSH STARWBERRY 20OZ 24CT",
-  "code": "0078000027587",
-  "img": "https://images.openfoodfacts.org/images/products/007/800/002/7587/front_en.4.400.jpg",
-  "status": "review",
-  "confidence": 90,
-  "note": "may be a glass (non-US) bottle"
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/d4997044822cfd5e.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LJz8AAG/crush-strawberry-flavored-soda-20-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_2953c8lomj2",
   "name": "GATORADE FRUIT PUNCH 20OZ 24PK",
   "code": "0052000328660",
   "img": "https://images.openfoodfacts.org/images/products/005/200/032/8660/front_en.20.400.jpg",
-  "status": "verified",
-  "confidence": 97
+  "status": "review",
+  "confidence": 92,
+  "note": "right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
  },
  {
   "id": "p_c_29duj7q8hny",
@@ -983,20 +1039,26 @@
  {
   "id": "p_c_2dyskxhzch4",
   "name": "7UP 2L 8CT",
-  "code": "06547436",
-  "img": "https://images.openfoodfacts.org/images/products/06547436/front_en.12.400.jpg",
-  "status": "review",
-  "confidence": 91,
-  "note": "dark photo; check the label"
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/78fce866dab2f888.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LJtrAAG/7up-limelemon-flavored-soda-2-liter-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_2e12wqbocnr",
   "name": "CRUSH ORANGE 20OZ 24CT",
-  "code": "0078000013207",
-  "img": "https://images.openfoodfacts.org/images/products/007/800/001/3207/front_en.3.400.jpg",
-  "status": "review",
-  "confidence": 90,
-  "note": "bottle held in hand; size not confirmed"
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/8265768b0741ba87.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LJycAAG/crush-orange-flavored-soda-20-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_2e2x27t8v2j",
@@ -1034,19 +1096,26 @@
  {
   "id": "p_c_2ffq2pdjw5d",
   "name": "DR PEPPER 20OZ 24CT",
-  "code": "05490733",
-  "img": "https://images.openfoodfacts.org/images/products/05490733/front_en.8.400.jpg",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/cb2d628e686bca37.img",
   "status": "verified",
-  "confidence": 97
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LJzfAAG/dr-pepper-20-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_2g4u8nnfrg1",
   "name": "7UP 12OZ 2/12CT",
-  "code": "5285000320388",
-  "img": "https://images.openfoodfacts.org/images/products/528/500/032/0388/front.5.400.jpg",
-  "status": "review",
-  "confidence": 90,
-  "note": "can size not confirmed"
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/adddb5d3aa0e306c.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LJtmAAG/7up-limelemon-flavored-soda-12-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_2gmgc87hl2r",
@@ -1076,10 +1145,14 @@
  {
   "id": "p_c_3j7usnlhjm",
   "name": "DR PEPPER DIET 20OZ 24PK",
-  "code": "0078000083408",
-  "img": "https://images.openfoodfacts.org/images/products/007/800/008/3408/front.7.400.jpg",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/882ac62d8c534414.img",
   "status": "verified",
-  "confidence": 97
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LK0FAAW/diet-dr-pepper-20-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_3l79wxr14f",
@@ -1101,10 +1174,14 @@
  {
   "id": "p_c_49i3nsrhov",
   "name": "ALANI ORANGE KISS 12OZ 12PK",
-  "code": "0810030514619",
-  "img": "https://images.openfoodfacts.org/images/products/081/003/051/4619/front_en.3.400.jpg",
-  "status": "approx",
-  "confidence": 96
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/666c161d682e12aa.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "alaninu.com",
+  "sourceUrl": "https://www.alaninu.com/products/energy-drink-orange-kiss",
+  "credit": "\u00a9 Alani Nu (alaninu.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_4ax0laf9zt",
@@ -1127,10 +1204,14 @@
  {
   "id": "p_c_5arh04sxfh",
   "name": "BAI COCONUT PINEAPPLE PUNA 18OZ 12C",
-  "code": "13690267",
-  "img": "https://images.openfoodfacts.org/images/products/13690267/front_en.3.400.jpg",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/0b75927eb4c08319.img",
   "status": "verified",
-  "confidence": 98
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0eDo000006jMzqIAE/bai-wonderwater-infusion-puna-coconut-pineapple-18-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_5hxrdrjsp0",
@@ -1144,11 +1225,14 @@
  {
   "id": "p_c_5x038slufn",
   "name": "ARIZONA CAN-GREEN TEA 22OZ 24CT",
-  "code": "05258284",
-  "img": "https://images.openfoodfacts.org/images/products/05258284/front_en.3.400.jpg",
-  "status": "review",
-  "confidence": 91,
-  "note": "can size not confirmed"
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/aedec08adeae7332.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/green-tea-22-oz-big-can",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_5ydl5n87i1",
@@ -1202,10 +1286,14 @@
  {
   "id": "p_c_7uwjup54w8",
   "name": "BAI COCONUT MOLOKAI 18OZ 12CT",
-  "code": "0852311004273",
-  "img": "https://images.openfoodfacts.org/images/products/085/231/100/4273/front_en.23.400.jpg",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/352adb7019f5d369.img",
   "status": "verified",
-  "confidence": 98
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0eDo000006jMzfIAE/bai-wonderwater-infusion-molokai-coconut-18-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_7y175zvd1k",
@@ -1227,11 +1315,14 @@
  {
   "id": "p_c_88ixc51aia",
   "name": "SNAPPLE RASBERRY TEA 16OZ 12CT",
-  "code": "0076183323786",
-  "img": "https://images.openfoodfacts.org/images/products/007/618/332/3786/front_en.3.400.jpg",
-  "status": "approx",
-  "confidence": 95,
-  "note": "size not confirmed from the photo"
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/2843a9b43479c11c.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LK8KAAW/snapple-raspberry-tea-16-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_9knfaewy1b",
@@ -1263,10 +1354,14 @@
  {
   "id": "p_c_aq81mv12x4",
   "name": "ARIZONA CAN-MUCHO MANGO 22OZ 24CT",
-  "code": "0613008756482",
-  "img": "https://images.openfoodfacts.org/images/products/061/300/875/6482/front_en.3.400.jpg",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/98a1cabd9b9b849e.img",
   "status": "verified",
-  "confidence": 98
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/mucho-mango-juice-cocktail-22-oz-big-can",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_bab1rpd8gt",
@@ -1296,11 +1391,14 @@
  {
   "id": "p_c_c1v7lb3g35",
   "name": "AW 20OZ 24PK",
-  "code": "0078000052404",
-  "img": "https://images.openfoodfacts.org/images/products/007/800/005/2404/front.3.400.jpg",
-  "status": "review",
-  "confidence": 90,
-  "note": "blurry photo"
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/d31d31bd988b0cdd.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LJuMAAW/aw-root-beer-20-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_d2ktirkkuf",
@@ -1323,9 +1421,9 @@
   "name": "C4 STRAWBERRY WATERMELON 16OZ 12CT",
   "code": "0842595117769",
   "img": "https://images.openfoodfacts.org/images/products/084/259/511/7769/front_en.3.400.jpg",
-  "status": "approx",
-  "confidence": 95,
-  "note": "can held in hand"
+  "status": "review",
+  "confidence": 92,
+  "note": "can held in hand; right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
  },
  {
   "id": "p_c_fo76o98m3w",
@@ -1375,11 +1473,14 @@
  {
   "id": "p_c_k5d789hqe9",
   "name": "SNAPPLE APPLE 16OZ 12CT",
-  "code": "0076183202081",
-  "img": "https://images.openfoodfacts.org/images/products/007/618/320/2081/front_en.12.400.jpg",
-  "status": "approx",
-  "confidence": 95,
-  "note": "size not confirmed from the photo"
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/28b5efa295d02a0a.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LK7BAAW/snapple-apple-flavored-juice-drink-16-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_l95i7js19q",
@@ -1447,17 +1548,21 @@
   "name": "PEPSI ZERO 20OZ 24CT",
   "code": "1918066018800",
   "img": "https://images.openfoodfacts.org/images/products/191/806/601/8800/front_en.3.400.jpg",
-  "status": "verified",
-  "confidence": 96
+  "status": "review",
+  "confidence": 92,
+  "note": "right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
  },
  {
   "id": "p_c_ne99j7kzsd",
   "name": "ARIZONA CAN WATERMELON 22OZ 24CT",
-  "code": "0613008745370",
-  "img": "https://images.openfoodfacts.org/images/products/061/300/874/5370/front_en.3.400.jpg",
-  "status": "review",
-  "confidence": 91,
-  "note": "can size not confirmed"
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/9c23a70b77b660f4.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/watermelon-juice-cocktail-22-oz-big-can",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_np2ela4ebi",
@@ -1471,10 +1576,14 @@
  {
   "id": "p_c_o7x694zx2",
   "name": "CRUSH STRAWBERRY 2/12 12OZ",
-  "code": "0078000009132",
-  "img": "https://images.openfoodfacts.org/images/products/007/800/000/9132/front_en.15.400.jpg",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/0da3144a40d82499.img",
   "status": "verified",
-  "confidence": 97
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LJz4AAG/crush-strawberry-flavored-soda-12-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_omgph8j715",
@@ -1531,18 +1640,23 @@
  {
   "id": "p_c_rcckoazf1p",
   "name": "ALANI PINK SLUSH 12OZ 12PK",
-  "code": "0810030518501",
-  "img": "https://images.openfoodfacts.org/images/products/081/003/051/8501/front_en.3.400.jpg",
-  "status": "approx",
-  "confidence": 96
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/bbefd3cdf24115e8.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "alaninu.com",
+  "sourceUrl": "https://www.alaninu.com/products/energy-drink-pink-slush",
+  "credit": "\u00a9 Alani Nu (alaninu.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_sglu25cah3",
   "name": "CORE POWER 26GR CHOCOLATE 14OZ 12CT",
   "code": "0811620022217",
   "img": "https://images.openfoodfacts.org/images/products/081/162/002/2217/front_en.3.400.jpg",
-  "status": "verified",
-  "confidence": 97
+  "status": "review",
+  "confidence": 92,
+  "note": "right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
  },
  {
   "id": "p_c_t2aewwlpv",
@@ -1571,10 +1685,14 @@
  {
   "id": "p_c_usnyj5sxlh",
   "name": "BAI COSTA RICA CLEMENTINE 18OZ 12CT",
-  "code": "0004444866666",
-  "img": "https://images.openfoodfacts.org/images/products/000/444/486/6666/front_en.3.400.jpg",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/3d1cb27a7e0b6d30.img",
   "status": "verified",
-  "confidence": 98
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0eDo000006jN2yIAE/bai-wonderwater-infusion-costa-rica-clementine-18-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_v90rfuby0x",
@@ -1623,11 +1741,14 @@
  {
   "id": "p_c_wm84ikgiks",
   "name": "SNAPPLE KIWI STRAWBERRY 160Z 12CT",
-  "code": "0076183163634",
-  "img": "https://images.openfoodfacts.org/images/products/007/618/316/3634/front_fr.7.400.jpg",
-  "status": "review",
-  "confidence": 90,
-  "note": "older glass-bottle label"
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/c2a37b2ff02a18c2.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LK7nAAG/snapple-kiwi-strawberry-flavored-juice-drink-16-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
  },
  {
   "id": "p_c_wv1n1c71c6",
@@ -1676,7 +1797,455 @@
   "name": "EVIAN WATER 1.5L 12CT",
   "code": "0061314000018",
   "img": "https://images.openfoodfacts.org/images/products/006/131/400/0018/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 92,
+  "note": "right product, but a hand-held/dark/cluttered photo \u2014 hidden until you approve it"
+ },
+ {
+  "id": "p_c_109m0pvuxpq",
+  "name": "ARIZONA TALLBOY KIWI STRAWBERRY 20O",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/d77956d0026a9d7c.img",
   "status": "verified",
-  "confidence": 96
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/kiwi-strawberry-20oz-tallboy",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image",
+  "note": "Arizona's official 20 oz Tall Boy"
+ },
+ {
+  "id": "p_c_12alsiqurxz",
+  "name": "C4 STRAWBERRY BLAST 16OZ 12PK",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/6baf5ec8f0cdc627.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "cellucor.com",
+  "sourceUrl": "https://www.cellucor.com/products/c4-original-carbonated",
+  "credit": "\u00a9 Cellucor / C4 (cellucor.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_12i53q3z1mp",
+  "name": "SUNKIST 12OZ 36CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/c0f0e0241f95790b.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LKACAA4/sunkist-orange-flavored-soda-12-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_18304bewqmm",
+  "name": "ARIZONA TALLBOY LEMON TEA 20OZ 24CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/3cca2d9c3d6fa9f9.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/lemon-tea-20oz-tallboy",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_1bydwpo72mu",
+  "name": "ARIZONA TALLBOY MUCHO MANGO 20OZ 24",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/91c62a6e535df33d.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/mucho-mango-juice-20-oz-tall-boy",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_1fko4xdr1oe",
+  "name": "ARIZONA CAN FRUIT PUNCH 22OZ 24CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/c69492c317448d07.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/fruit-punch-juice-cocktail-22-oz-big-can",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_1gskn0wwuau",
+  "name": "C4 JOLLY RANCH BLUE RASPBERRY 16OZ",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/404baacb4513e595.img",
+  "status": "verified",
+  "confidence": 97,
+  "official": true,
+  "source": "cellucor.com",
+  "sourceUrl": "https://www.cellucor.com/products/c4-energy-x-jolly-rancher",
+  "credit": "\u00a9 Cellucor / C4 (cellucor.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_1hi6j8huqth",
+  "name": "ARIZONA CAN TROPICAL CHILZICLE 22OZ",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/7a62ceb24a7a3b30.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/arizona-tropical-chillzicle-big-can",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_1hlc6eayyo5",
+  "name": "AW 2L 8PK",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/05b3ec2cf6a84a38.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LJuOAAW/aw-root-beer-2-liter-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_1icqgqbhs6n",
+  "name": "ARIZONA TALLBOY PINEAPPLE 20OZ 24CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/0cddce68b3f730f2.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/pineapple-20oz-tallboy",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_1irdn0d15b",
+  "name": "ALANI COTTON CANDY 12OZ 12PK",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/878e4ab040c92f6a.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "alaninu.com",
+  "sourceUrl": "https://www.alaninu.com/products/energy-drink-cotton-candy",
+  "credit": "\u00a9 Alani Nu (alaninu.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_1lrzuzad9si",
+  "name": "C4 POPSICLE CHERRY 16OZ 12CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/5925815c037690e3.img",
+  "status": "verified",
+  "confidence": 97,
+  "official": true,
+  "source": "cellucor.com",
+  "sourceUrl": "https://www.cellucor.com/products/c4-performance-energy-x-popsicle",
+  "credit": "\u00a9 Cellucor / C4 (cellucor.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_1rb31k6zzba",
+  "name": "SCHWEEPS 20OZ 24PK",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/ee5d85af4552fadf.img",
+  "status": "review",
+  "confidence": 91,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LK6EAAW/schweppes-ginger-ale-20-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image",
+  "note": "catalog does not name the flavor; this is Schweppes Ginger Ale 20 oz"
+ },
+ {
+  "id": "p_c_1uyv8917fke",
+  "name": "C4 MANGO FUEGO 16OZ 12PK",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/5207c49bf2cb75c0.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "cellucor.com",
+  "sourceUrl": "https://www.cellucor.com/products/c4-original-carbonated",
+  "credit": "\u00a9 Cellucor / C4 (cellucor.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_20j5ceu4qqn",
+  "name": "ARIZONA TALLBOY FRUIT PUNCH 20OZ 24",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/e2092ebaba8f8030.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/fruit-punch-juice-cocktail-20-oz-tall",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_24re3p41fm5",
+  "name": "7UP 20OZ 24CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/bc83d6eda12a85f8.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LJtpAAG/7up-limelemon-flavored-soda-20-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_27f6guh3l43",
+  "name": "ARIZONA SWEET TEA 20OZ 24CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/162bd60221a4a8ad.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/sweet-tea-20oz-tallboy",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_27p2cnn7g7x",
+  "name": "CRUSH CAN PEACH 12OZ 2/12 PACK",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/cd5bfb6c5d1d2f2a.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LJyjAAG/crush-peach-flavored-soda-12-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_2fjdt3a4wgq",
+  "name": "SUNKIST 12OZ 2/12CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/c0f0e0241f95790b.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LKACAA4/sunkist-orange-flavored-soda-12-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_63bclbxdah",
+  "name": "CANADA DRY GINGER ALE 1L 15CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/4e7d13f29dfffb01.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0eDo000002QkTEIA0/canada-dry-ginger-ale-1-liter-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_7u4gwj39vc",
+  "name": "ALANI BLUE SLUSH 12OZ 12PK",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/53c4e9e2d9eab0af.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "alaninu.com",
+  "sourceUrl": "https://www.alaninu.com/products/energy-drink-blue-slush",
+  "credit": "\u00a9 Alani Nu (alaninu.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_8ye3sx3e3n",
+  "name": "ARIZONA TALLBOY GREEN TEA 20OZ 24CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/0b46d55ec91f151b.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/green-tea-20oz-tallboy",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_93t1soh3ji",
+  "name": "DR PEPPER BLACKBERRY 20 OZ 24CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/6f61e40eb61341fe.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0eWP000000sWu9YAE/dr-pepper-blackberry-flavored-soda-20-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_9t7suphle9",
+  "name": "ARIZONA TALLBOY RX ENERGY 20OZ 24CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/80d953d8d70c3bd1.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/rx-energy-20oz-tallboy",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_ba88xficqb",
+  "name": "C4 PINK LEMONADE 16OZ 12PK",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/05da38d5aa3e3e75.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "cellucor.com",
+  "sourceUrl": "https://www.cellucor.com/products/c4-performance-energy-pink-lemonade",
+  "credit": "\u00a9 Cellucor / C4 (cellucor.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_cyexab0t9g",
+  "name": "SNAPPLE FRUIT PUNCH 16OZ 12CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/0f1b964a26485375.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LK7ZAAW/snapple-fruit-punch-flavored-juice-drink-16-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_dvuj15kco7",
+  "name": "ALANI WATERMELON 12OZ 12PK",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/e2c0847c0a07d168.img",
+  "status": "verified",
+  "confidence": 97,
+  "official": true,
+  "source": "alaninu.com",
+  "sourceUrl": "https://www.alaninu.com/products/energy-drink-watermelon-wave",
+  "credit": "\u00a9 Alani Nu (alaninu.com)",
+  "license": "Official brand product image",
+  "note": "Alani names it \"Watermelon Wave\""
+ },
+ {
+  "id": "p_c_e0hb89hjv6",
+  "name": "BAI STRAWBERRY KIWI KUPANG 18OZ 12C",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/03e81465add98291.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0eDo000006jMzlIAE/bai-wonderwater-infusion-kupang-strawberry-kiwi-18-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_hjo0ujtwgn",
+  "name": "SUNKIST ORANGE 20OZ 24CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/255f34c6a0c771b5.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LKAFAA4/sunkist-orange-flavored-soda-20-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_iqnkptxxz4",
+  "name": "ARIZONA WATERMELON TALLBOY 2OOZ 24C",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/dd8af6dc64213a37.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/watermelon-juice-cocktail-20-oz-tall-boy",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_ki8t9nbiu8",
+  "name": "ARIZONA BLUEBERRY WHITE TEA 20OZ 24",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/5f6ed4570065e3f5.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/blueberry-white-tea-20oz-tallboy",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_llxv6ax8a9",
+  "name": "C4 HAWAIIAN PUNCH 16OZ 12CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/3f3f59333751cd77.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "cellucor.com",
+  "sourceUrl": "https://www.cellucor.com/products/c4-performance-energy-x-hawaiian-punch",
+  "credit": "\u00a9 Cellucor / C4 (cellucor.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_mxpjthbw4v",
+  "name": "SNAPPLE PEACH ZERO 16OZ 12CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/fcfa63d66ea84405.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LK7RAAW/snapple-zero-sugar-peach-tea-16-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_th7ybi6qzm",
+  "name": "7UP 12OZ 36CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/adddb5d3aa0e306c.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LJtmAAG/7up-limelemon-flavored-soda-12-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_w1gawu3jkt",
+  "name": "ALANI HAWAIAN 12OZ 12PK",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/f6ac8c32ef4a5216.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "alaninu.com",
+  "sourceUrl": "https://www.alaninu.com/products/energy-drink-hawaiian-shaved-ice",
+  "credit": "\u00a9 Alani Nu (alaninu.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_yp631nr0y0",
+  "name": "CRUSH PEACH 20OZ 24CT",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/71ecfd7380cf7eb1.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "Keurig Dr Pepper Product Facts",
+  "sourceUrl": "https://www.kdpproductfacts.com/product/a0e3h000003LJymAAG/crush-peach-flavored-soda-20-fl-oz-us",
+  "credit": "\u00a9 Keurig Dr Pepper (kdpproductfacts.com)",
+  "license": "Official brand product image"
+ },
+ {
+  "id": "p_c_zgm9e8sr87",
+  "name": "ARIZONA CAN FROST CHILLZICLE 22OZ 2",
+  "file": "/tmp/claude-0/-home-user-a2z-order-app/f29f5fa3-f140-59f7-afe0-a4d91eeffed8/scratchpad/offdl/8679004bf713132e.img",
+  "status": "verified",
+  "confidence": 98,
+  "official": true,
+  "source": "drinkarizona.com",
+  "sourceUrl": "https://www.drinkarizona.com/products/frost-chillzicle-big-can",
+  "credit": "\u00a9 AriZona Beverages (drinkarizona.com)",
+  "license": "Official brand product image"
  }
 ]

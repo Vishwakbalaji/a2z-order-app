@@ -177,7 +177,7 @@ export function ReviewMatchesScreen() {
                           {reasons.length > 0 && <div className="text-xs text-gray-600 mt-1">{reasons.join(' · ')}</div>}
                         </>
                       ) : (
-                        <div className="text-gray-700">{p.matchMethod === 'ownerdoc' ? 'Price not added (NO PRICE in your matched-prices list)' : 'No Match Found on the price sheet'}</div>
+                        <div className="text-gray-700">{p.matchMethod === 'ownerdoc' ? 'Price Not Listed (NO PRICE in your matched-prices list)' : 'No Match Found on the price sheet'}</div>
                       )}
                     </div>
                   )}

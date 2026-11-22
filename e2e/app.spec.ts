@@ -89,7 +89,7 @@ test('pricing audit: verified prices used, flagged ones wait for review, unmatch
   await searchFor(page, 'fanta grape mexico');
   const fm = page.getByTestId('product-row').first();
   await expect(fm).toContainText('FANTA GRAPE MEXICO');
-  await expect(fm).toContainText('Price not added'); // NO PRICE in his list
+  await expect(fm).toContainText('Price Not Listed'); // NO PRICE in his list
   await searchFor(page, 'smart water alkline 1l');
   await expect(page.getByTestId('product-row').first()).toContainText('$19.99'); // above 80%: accepted by the owner
   await page.goto('/#/settings/review');
@@ -102,7 +102,7 @@ test('pricing audit: verified prices used, flagged ones wait for review, unmatch
   await page.getByRole('button', { name: /^Unmatched/ }).click();
   const ba = page.locator('li', { hasText: 'BODY ARMOUR TROPICAL PUNCH 28OZ 12C' });
   await expect(ba.getByTestId('closest-line')).toContainText('Case count differs (12 vs 15)');
-  await expect(page.locator('li', { hasText: 'GATORADE FUTURE USE 20OZ 24CT' }).getByTestId('closest-line')).toContainText('Price not added (NO PRICE in your matched-prices list)');
+  await expect(page.locator('li', { hasText: 'GATORADE FUTURE USE 20OZ 24CT' }).getByTestId('closest-line')).toContainText('Price Not Listed (NO PRICE in your matched-prices list)');
   await page.getByRole('button', { name: /^Matched/ }).click();
   await expect(page.locator('li', { hasText: 'COKE MEXICO 355ML 24CT' })).toContainText('$40.99');
   await expect(page.locator('li', { hasText: 'VITAMIN WATER ESSENTIAL-ORANGE 20OZ' })).toContainText('from your matched-prices list');
@@ -149,6 +149,15 @@ test('product pictures: shown left of the name, tap to enlarge, cart unchanged, 
   await expect(page.getByTestId('image-summary')).toContainText('Total catalog products542');
   await page.getByRole('button', { name: /^With image/ }).click();
   await expect(page.getByTestId('image-row').first()).toBeVisible();
+  await expect(page.getByTestId('image-summary')).toContainText('Official brand photos');
+  await page.getByRole('button', { name: /^Needs official/ }).click();
+  await expect(page.getByTestId('image-row').first()).toBeVisible();
+  // an official brand photo is shown for a Keurig Dr Pepper product, credited to the brand
+  await searchFor(page, 'dr pepper 20oz 24ct');
+  const dp = page.locator('[data-testid=product-row]', { hasText: /^DR PEPPER\s*20OZ 24CT/ }).first();
+  await dp.getByTestId('product-thumb').click();
+  await expect(page.getByTestId('image-preview')).toContainText('Keurig Dr Pepper');
+  await page.getByTestId('image-preview').getByRole('button', { name: 'Close', exact: true }).click();
   await page.screenshot({ path: `${OUT}/${test.info().project.name}-images-manage.png` });
 });
 
@@ -382,7 +391,7 @@ test('QA 12-13: catalog CSV import, manual match persists after reload, unpriced
   await expect(page.locator('li', { hasText: 'Saratoga Spring Water 28OZ 12PK' }).getByText('confirmed by you')).toBeVisible();
   await addStore(page, 'Snack Store');
   await searchFor(page, 'lays classic');
-  await expect(page.getByTestId('product-row').first()).toContainText('Price not added');
+  await expect(page.getByTestId('product-row').first()).toContainText('Price Not Listed');
   await inc(page, 'Lays Classic Potato Chips 1.5OZ 64CT').click();
   await addCases(page, 'saratoga spring water 28', 'Saratoga Spring Water 28OZ 12PK', 1);
   await expect(page.getByTestId('product-row').first()).toContainText('$24.49');

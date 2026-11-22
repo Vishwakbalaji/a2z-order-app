@@ -3,62 +3,65 @@
 | Metric | Actual result |
 |---|---|
 | Total catalog products | 542 |
-| Verified product images | 68 |
-| Accepted approximate images | 54 |
-| Images requiring review (not shown until you approve) | 76 |
-| Images not found | 344 |
-| Overall image coverage (accepted only) | 22.5% |
+| Official brand photos (shown) | 66 |
+| Verified product images | 110 |
+| Accepted approximate images | 43 |
+| Images requiring review (not shown until you approve) | 82 |
+| Images not found | 307 |
+| Overall image coverage (accepted only) | 28.2% |
 
-Source: Open Food Facts (CC BY-SA 3.0). Every picture was checked by eye for brand, flavor, packaging and size.
+Sources: official brand product photos (Keurig Dr Pepper product facts, AriZona, Alani Nu, Cellucor/C4 stores) and, where no official photo was reachable, Open Food Facts (CC BY-SA 3.0). Every picture was checked by eye for brand, flavor, packaging and size.
+Not reachable for automated download: PepsiCo, Monster and Red Bull sites (bot protection), Coca-Cola product facts (no connection), and 13 Keurig Dr Pepper images that the brand's own image server refuses.
 "Verified" = size confirmed (label or listed volume); "approximate" = same product and packaging, size not shown in the photo.
 
-## Needs your review (76) — Settings › Manage Product Images › Needs review
+## Needs your review (82) — Settings › Manage Product Images › Needs review
 
-- 7UP 12OZ 2/12CT — can size not confirmed
-- 7UP 2L 8CT — dark photo; check the label
 - ACQUA PANNA 1L 12CT — check plastic vs glass bottle
 - AQUAFINA 20OZ 24CT — bottle size not confirmed from the photo
-- ARIZONA CAN KIWI STRAWBERRY 22OZ 24 — can held in hand; size not confirmed
 - ARIZONA CAN PEACH TEA 22OZ 24CT — may be a non-US label ("flavour")
 - ARIZONA CAN RX ENERGY 22OZ 24CT — can size not confirmed
 - ARIZONA CAN SWEET TEA 22OZ 24CT — can size not confirmed
-- ARIZONA CAN WATERMELON 22OZ 24CT — can size not confirmed
-- ARIZONA CAN-GREEN TEA 22OZ 24CT — can size not confirmed
 - ARIZONA CAN-LEMON ICE TEA 22OZ 24PK — 680 ml (23 oz) can shown, catalog is 22 oz
 - ARIZONA GRREN TEA W GINSENG 16OZ 24 — bottle size not confirmed
 - ARIZONA HALF N HALF 16FL 24PK — check it is not the Lite version; size not confirmed
-- AW 12OZ CAN 2-12PK — Canadian (bilingual) can label
-- AW 20OZ 24PK — blurry photo
 - BAI BLACKBERRY BRASILIA 18OZ 12CT — catalog says Blackberry; Bai's Brasilia flavor is Blueberry
 - BANG PURPLE HAZE16OZ 12PK — listed as an energy shot; check it is the 16 oz can
 - BODY ARMOUR ORANGE MANGO 28OZ 15CT — bottle size (16 or 28 oz) not confirmed
-- C4 COSMIC RAINBOW 16OZ 12PK — 500 ml (European) can, catalog is 16 oz
+- C4 STRAWBERRY WATERMELON 16OZ 12CT — can held in hand; right product, but a hand-held/dark/cluttered photo — hidden until you approve it
 - CANADA DRY CLUB SODA 1L 15CT — bottle size not confirmed from the photo
 - CANADA DRY GINGER ALE 20OZ 24CT — bottle held in hand; size not confirmed
 - CANADA DRY TONIC WATER 1L 15CT — bottle size not confirmed from the photo
+- CELSIUS ARTIC VIBE 12OZ 12CT — right product, but a hand-held/dark/cluttered photo — hidden until you approve it
+- CELSIUS COSMIC VIBE 12OZ 12CT — right product, but a hand-held/dark/cluttered photo — hidden until you approve it
 - COKE 20OZ 24CT — bottle size not confirmed from the photo
 - COKE CAN 16OZ 24PK — can size not confirmed
 - COKE CHERRY 20OZ 24CT — dark photo; size not confirmed
 - COKE DIET CAN 16OZ 24CT — close-up of part of the can
 - COKE ZERO CAN 12OZ 2/12CT — can held in hand; size not confirmed
+- CORE POWER 26GR CHOCOLATE 14OZ 12CT — right product, but a hand-held/dark/cluttered photo — hidden until you approve it
 - CORE POWER 42GR VANILLA ELITE 14OZ — flavor not readable on the bottle
 - CORE WATER 1L 12CT — bottle size not confirmed from the photo
-- CRUSH ORANGE 20OZ 24CT — bottle held in hand; size not confirmed
-- CRUSH STARWBERRY 20OZ 24CT — may be a glass (non-US) bottle
+- CRUSH GRAPE 2/12 12OZ — right product, but a hand-held/dark/cluttered photo — hidden until you approve it
 - DASANI 1L 12PK — bottle size not confirmed from the photo
 - DR PEPPER 12OZ 2/12CT — check it is regular Dr Pepper (not a flavor edition)
+- DUNKIN FRENCH VANILA 13.7OZ 12CT — right product, but a hand-held/dark/cluttered photo — hidden until you approve it
 - DUNKIN ORIGINAL ICED 13.7OZ 12CT — check it is the Original flavor
+- ELECTROLIT COCONUT 21OZ 12CT — size not confirmed from the photo; right product, but a hand-held/dark/cluttered photo — hidden until you approve it
 - ELECTROLIT GREEN APPLE 21OZ 12CT — labelled Apple; check it is the Green Apple flavor
 - ESSENTIAL WATER 20OZ 24CT — bottle size not confirmed from the photo
 - EVERFRESH PINEAPPLE 16OZ 12CT — green-tinted photo
+- EVIAN WATER 1.5L 12CT — right product, but a hand-held/dark/cluttered photo — hidden until you approve it
+- FANTA 20OZ 24CT — right product, but a hand-held/dark/cluttered photo — hidden until you approve it
 - FANTA CAN 16OZ 24CT — can size not confirmed
 - FANTA PINEAPPLE 2/12 12OZ — blurry photo
 - FIJI WATER 330ML 24CT — bottle size not confirmed from the photo
+- GATORADE ARTIC BLITZ 28OZ 15CT — right product, but a hand-held/dark/cluttered photo — hidden until you approve it
 - GATORADE BLUE CHERRY 28OZ 15CT — bottle size (20 or 28 oz) not confirmed
 - GATORADE COOL BLUE 28OZ 15PK — bottle size (20 or 28 oz) not confirmed
 - GATORADE FIERCE GRAPE 28OZ 15CT — bottle size (20 or 28 oz) not confirmed
 - GATORADE FIERCE STRAWBERRY 28OZ 15P — bottle size (20 or 28 oz) not confirmed
 - GATORADE FROST GLACIER CHERRY 16OZ — bottle size not confirmed from the photo
+- GATORADE FRUIT PUNCH 20OZ 24PK — right product, but a hand-held/dark/cluttered photo — hidden until you approve it
 - GATORADE GLACIER CHERRY 20OZ 24PK — bottle size not confirmed from the photo
 - GATORADE GLACIER FREEZE 28OZ 15PK — bottle size (20 or 28 oz) not confirmed
 - GATORADE GREEN APPLE 28OZ 15PK — bottle size (20 or 28 oz) not confirmed
@@ -70,6 +73,7 @@ Source: Open Food Facts (CC BY-SA 3.0). Every picture was checked by eye for bra
 - MONSTER ORANGE 16OZ 24CT — shown is Monster Reserve Orange Dreamsicle; check it is this product
 - MOUNTAIN DEW 20OZ 24CT — bottle held in hand; size not confirmed
 - OKF ALOEVERA STRAWBERRY 16.9OZ 12CT — flavor not readable on the label
+- PEPSI ZERO 20OZ 24CT — right product, but a hand-held/dark/cluttered photo — hidden until you approve it
 - POWERADE MOUNTAIN BLAST 20OZ 24CT — close-up of a 600 ml bottle label
 - POWERADE ORANGE 20OZ 24CT — bottle size (20 or 28 oz) not confirmed
 - PURE LEAF LEMON TEA 18.5OZ 12CT — close-up of the label only
@@ -77,26 +81,27 @@ Source: Open Food Facts (CC BY-SA 3.0). Every picture was checked by eye for bra
 - RED BULL 120Z SUGAR FREE 24PK — can size (8.4 or 12 oz) not confirmed
 - RED BULL COCONUT 12OZ 24CT — can size not confirmed
 - RED BULL WATERMELON 12OZ 24CT — can size not confirmed
+- RED BULL WATERMELON 8.4OZ 24CT — right product, but a hand-held/dark/cluttered photo — hidden until you approve it
 - RED BULL YELLOW TROPICAL 12OZ 24CT — washed-out photo
 - RED BULL YELLOW TROPICAL 8.4OZ 24CT — can size (8.4 or 12 oz) not confirmed
+- SAN PELLEGRINO 8.4OZ 24CT — right product, but a hand-held/dark/cluttered photo — hidden until you approve it
 - SAN PELLEGRINO PET 1L 12CT — check it is the plastic (PET) bottle
+- SCHWEEPS 20OZ 24PK — catalog does not name the flavor; this is Schweppes Ginger Ale 20 oz
 - SMART WATER 1.5L 12PK — bottle size not confirmed from the photo
+- SMART WATER 700ML 24PK — right product, but a hand-held/dark/cluttered photo — hidden until you approve it
 - SMART WATER ALKLINE 1L 12CT — bottle size (1 L or 1.5 L) not confirmed
-- SNAPPLE KIWI STRAWBERRY 160Z 12CT — older glass-bottle label
 - SPORTS SHAKE STRAWBERRY 11OZ 12CT — labelled "Sport Shake"; check it is this brand
-- SUNKIST ORANGE 2L 8CT — may be a non-US label
+- SPRITE 2L 8CT — right product, but a hand-held/dark/cluttered photo — hidden until you approve it
+- STARBUCKS FRAPPUCINO MOCHA 9.5OZ 15 — right product, but a hand-held/dark/cluttered photo — hidden until you approve it
 - TOPO CHICO MINERAL WATER 20OZ 24CT — bottle size not confirmed from the photo
 - TOPO CHICO TWIST OF LIME 20OZ 24CT — bottle size not confirmed from the photo
 - TROPICANA APPLE 11OZ 12CT — may be a non-US juice drink bottle
 - TROPICANA PREMIUM CRANBERRY 12OZ 1/ — bottle size not confirmed from the photo
 - VITAMIN WATER XXX-ACAI-BLUEBERRY-PO — photo shows the 16.9 oz bottle; catalog size cut off (price line 20 oz)
 
-## Accepted approximate (54)
+## Accepted approximate (43)
 
-- ALANI ORANGE KISS 12OZ 12PK
-- ALANI PINK SLUSH 12OZ 12PK
 - ARIZONA CAN GRAPEADE 22OZ 24CT — size not confirmed from the photo
-- BAI ZAMBIA BING CHERRY 18OZ 12CT
 - BANG BLUE RAZZ 16OZ 12PK
 - BANG COTTAN CANDY 16OZ 12PK
 - BANG PEACH MANGO 16OZ 12PK
@@ -104,8 +109,6 @@ Source: Open Food Facts (CC BY-SA 3.0). Every picture was checked by eye for bra
 - BODY ARMOUR PINAPPLE COCONUT 16OZ 1 — size not confirmed from the photo
 - BRISK ICE TEA LEMON 12OZ 35CT
 - BRISK LEMON ICE TEA 2/12PK
-- C4 STRAWBERRY WATERMELON 16OZ 12CT — can held in hand
-- CELSIUS ARTIC VIBE 12OZ 12CT
 - CELSIUS FANTASY VIBE 12OZ 12CT
 - COKE DIET 20OZ 24CT
 - COKE MEXICO 355ML 24CT
@@ -114,8 +117,6 @@ Source: Open Food Facts (CC BY-SA 3.0). Every picture was checked by eye for bra
 - CORE POWER 26GR STRAWBERRY BANANA 1
 - CORE POWER 26GR VANILLA 14OZ 12CT
 - DR PEPPER ZERO 20OZ 24PK — size not confirmed from the photo
-- DUNKIN FRENCH VANILA 13.7OZ 12CT
-- ELECTROLIT COCONUT 21OZ 12CT — size not confirmed from the photo
 - ELECTROLIT GRAPE 21OZ 12CT — size not confirmed from the photo
 - EVERFRESH APPLE JUICE 16OZ 12CT
 - EVERFRESH ISLAND FRUIT PUNCH 16OZ 1
@@ -141,26 +142,22 @@ Source: Open Food Facts (CC BY-SA 3.0). Every picture was checked by eye for bra
 - PURE LEAF SWEET TEA 18.5OZ 12CT
 - PURE LIFE 1 GALLON 6CT
 - RED BULL AMBER STRAWBERRY APPRICOT — size cut off in the catalog
-- SNAPPLE APPLE 16OZ 12CT — size not confirmed from the photo
-- SNAPPLE MANGO MADNESS 16OZ 12CT
-- SNAPPLE PEACH TEA 16OZ 12CT
-- SNAPPLE RASBERRY TEA 16OZ 12CT — size not confirmed from the photo
 - TROPICANA PREMIUM LIVELY LEMONADE 1 — size cut off in the catalog
 - VITAMIN WATER SHINE ZERO SUGAR-STRA — size not confirmed from the photo
 
-## No reliable picture found (344) — shown with a placeholder; you can add a photo in the app
+## Still need a better official image
 
-**7UP** (2): 7UP 12OZ 36CT; 7UP 20OZ 24CT
+All products not listed under "official" above — see Settings › Manage Product Images › Needs official.
+
+## No reliable picture found (307) — shown with a placeholder; you can add a photo in the app
 
 **Acqua Panna** (1): ACQUA PANNA 500 ML 24PK
 
-**Alani** (5): ALANI BLUE SLUSH 12OZ 12PK; ALANI BREEZE BERRY 12OZ 12CT; ALANI COTTON CANDY 12OZ 12PK; ALANI HAWAIAN 12OZ 12PK; ALANI WATERMELON 12OZ 12PK
+**Alani** (1): ALANI BREEZE BERRY 12OZ 12CT
 
-**Arizona** (20): ARIZONA BLUEBERRY WHITE TEA 20OZ 24; ARIZONA CAN FROST CHILLZICLE 22OZ 2; ARIZONA CAN FRUIT PUNCH 22OZ 24CT; ARIZONA CAN LEMONADE 22OZ 24CT; ARIZONA CAN ORANGADE 22OZ 24CT; ARIZONA CAN RASPBERRY 22OZ 24CT; ARIZONA CAN RX WATERMELON 22OZ 24CT; ARIZONA CAN TROPICAL CHILZICLE 22OZ; ARIZONA HALF N HALF ICE TEA 20OZ 24; ARIZONA SWEET TEA 20OZ 24CT; ARIZONA TALL BOY VRTY PACK 20OZ 24P; ARIZONA TALLBOY FRUIT PUNCH 20OZ 24; ARIZONA TALLBOY GREEN TEA 20OZ 24CT; ARIZONA TALLBOY KIWI STRAWBERRY 20O; ARIZONA TALLBOY LEMON TEA 20OZ 24CT; ARIZONA TALLBOY MUCHO MANGO 20OZ 24; ARIZONA TALLBOY PINEAPPLE 20OZ 24CT; ARIZONA TALLBOY RX ENERGY 20OZ 24CT; ARIZONA W/O PRICE VPK; ARIZONA WATERMELON TALLBOY 2OOZ 24C
+**Arizona** (7): ARIZONA CAN LEMONADE 22OZ 24CT; ARIZONA CAN ORANGADE 22OZ 24CT; ARIZONA CAN RASPBERRY 22OZ 24CT; ARIZONA CAN RX WATERMELON 22OZ 24CT; ARIZONA HALF N HALF ICE TEA 20OZ 24; ARIZONA TALL BOY VRTY PACK 20OZ 24P; ARIZONA W/O PRICE VPK
 
-**AW** (1): AW 2L 8PK
-
-**BAI** (2): BAI SIMBU STRAWBERRY 18OZ 12CT; BAI STRAWBERRY KIWI KUPANG 18OZ 12C
+**BAI** (1): BAI SIMBU STRAWBERRY 18OZ 12CT
 
 **Bang** (1): BANG ORANGE 16OZ 12PK
 
@@ -174,9 +171,9 @@ Source: Open Food Facts (CC BY-SA 3.0). Every picture was checked by eye for bra
 
 **Brisk** (2): BRISK LEMON 1L 12CT; BRISK STRAWBERRY LEMON 1L 15CT
 
-**C4** (9): C4 COSMIC ORANGE SLICE 16OZ 12PK; C4 COSMIC RAINBOW ULT ENE 16OZ 12CT; C4 FRUIT PUNCH 16OZ 12PK; C4 HAWAIIAN PUNCH 16OZ 12CT; C4 JOLLY RANCH BLUE RASPBERRY 16OZ; C4 MANGO FUEGO 16OZ 12PK; C4 PINK LEMONADE 16OZ 12PK; C4 POPSICLE CHERRY 16OZ 12CT; C4 STRAWBERRY BLAST 16OZ 12PK
+**C4** (3): C4 COSMIC ORANGE SLICE 16OZ 12PK; C4 COSMIC RAINBOW ULT ENE 16OZ 12CT; C4 FRUIT PUNCH 16OZ 12PK
 
-**Canada Dry** (8): CANADA DRY CAN BLACKBERRY 12OZ 24CT; CANADA DRY CAN CRANBERRY 12OZ 24CT; CANADA DRY CLUB CAN 12OZ 24CT; CANADA DRY GINGER ALE 1L 15CT; CANADA DRY GINGER ALE 2L 8CT; CANADA DRY GINGER ALE ZERO SUGAR 2; CANADA DRY TONIC WATER 12OZ 24CT; CANADA DRY TONIC WATER ZERO SUGAR 1
+**Canada Dry** (7): CANADA DRY CAN BLACKBERRY 12OZ 24CT; CANADA DRY CAN CRANBERRY 12OZ 24CT; CANADA DRY CLUB CAN 12OZ 24CT; CANADA DRY GINGER ALE 2L 8CT; CANADA DRY GINGER ALE ZERO SUGAR 2; CANADA DRY TONIC WATER 12OZ 24CT; CANADA DRY TONIC WATER ZERO SUGAR 1
 
 **Celsius** (25): CELSIUS BLUE RAZZ LEMON 12OZ 12CT; CELSIUS CHERRY COLA 12OZ 12 CT; CELSIUS DRAGONFRUIT LEMONADE 12OZ 1; CELSIUS FIZZ DRAGON 12OZ 12CT; CELSIUS FIZZ PINK LEMONADE 12OZ 12C; CELSIUS FUJI APPLE PEAR 12OZ 12CT; CELSIUS GRAPE RUSH 12OZ 12CT; CELSIUS GREEN APPLE CHERRY 12OZ 12C; CELSIUS KIWI STRAWBERRY 12OZ 12CT; CELSIUS LEMON LIME 12OZ 12CT; CELSIUS MANGO LEMONADE 12OZ 12CT; CELSIUS MANGO PASSIONFRUIT 12OZ 12C; CELSIUS ORANGE 12OZ 12CT; CELSIUS PEACH 12OZ 12CT; CELSIUS PEACH MANGO 12OZ 12CT; CELSIUS PLAYA VIBE 12OZ 12CT; CELSIUS RASPBERRY PEACH 12OZ 12CT; CELSIUS RETRO VIBE 12OZ 12CT; CELSIUS SPARKING COLA 12OZ 12CT; CELSIUS STRAW PASSION 12OZ 12CT; CELSIUS VRTY PACK 12OZ 12CT; CELSIUS VRTY PACK 12OZ 18CT; CELSIUS WATERMELON 12OZ 12CT; CELSIUS WATERMELON LEMONADE 12OZ 12; CELSIUS WILD BERRY 12OZ 12CT
 
@@ -186,11 +183,9 @@ Source: Open Food Facts (CC BY-SA 3.0). Every picture was checked by eye for bra
 
 **Core Water** (1): CORE WATER SPORTS 700ML 24CT
 
-**Crush** (2): CRUSH CAN PEACH 12OZ 2/12 PACK; CRUSH PEACH 20OZ 24CT
-
 **D&G** (4): JAMAICAN CREAM SODA D&G 12OZ 24PK; JAMAICAN GINGER BEER D&G 12OZ 24PK; JAMAICAN KOLA D&G 12OZ 24PK; JAMAICAN PINEAPPLE SODA D&G 12OZ 24
 
-**Dr Pepper** (4): DR PEPPER 12OZ 36CT; DR PEPPER BLACKBERRY 20 OZ 24CT; DR PEPPER CREAM COCO 20 OZ 24CT; DR PEPPER STRAWBERRY CREAM 20 OZ 24
+**Dr Pepper** (3): DR PEPPER 12OZ 36CT; DR PEPPER CREAM COCO 20 OZ 24CT; DR PEPPER STRAWBERRY CREAM 20 OZ 24
 
 **Dunkin** (2): DUNKIN CARAMEL ICED 13.7OZ 12CT; DUNKIN MOCAH ICED 13.7OZ 12CT
 
@@ -254,19 +249,17 @@ Source: Open Food Facts (CC BY-SA 3.0). Every picture was checked by eye for bra
 
 **Saratoga** (5): SARATOGA SPARKLING GLASS 12OZ 24CT; SARATOGA SPARKLING PET WATER 16OZ 2; SARATOGA SPARKLING WATER GL 28OZ 12; SARATOGA STILL WATER 12OZ 24CT; SARATOGA STILL WATER GL 28OZ 12CT
 
-**Schweeps** (2): SCHWEEPS 20OZ 24PK; SCHWEEPS Can 2/12
+**Schweeps** (1): SCHWEEPS Can 2/12
 
 **Smart Water** (5): SMART WATER 1L 12CT; SMART WATER 500ML 24PK; SMART WATER ALKALINE 500ML 24CT; SMART WATER ALKLINE 1.5L 12CT; SMART WATER ALKLINE 700ML SPORTS 24
 
-**Snapple** (6): SNAPPLE DIET LEMONADE TEA 12CT; SNAPPLE FRUIT PUNCH 16OZ 12CT; SNAPPLE HALF N HALF LMND 16OZ 12CT; SNAPPLE LEMON TEA ZERO SUGAR 16OZ 1; SNAPPLE PEACH TEA LEMONADE 16OZ 12C; SNAPPLE PEACH ZERO 16OZ 12CT
+**Snapple** (4): SNAPPLE DIET LEMONADE TEA 12CT; SNAPPLE HALF N HALF LMND 16OZ 12CT; SNAPPLE LEMON TEA ZERO SUGAR 16OZ 1; SNAPPLE PEACH TEA LEMONADE 16OZ 12C
 
 **Sports shake** (4): SPORTS SHAKE BANANA 11OZ 12CT; SPORTS SHAKE CHOCOLATE 11OZ 12CT; SPORTS SHAKE STRWABERRY BANANA 11OZ; SPORTS SHAKE VANILA 11OZ 12PK
 
 **Sprite** (4): SPRITE 20OZ 24CT; SPRITE CAN 16OZ 24CT; SPRITE MEXICO 330ML 24CT; SPRITE ZERO 20OZ 24CT
 
 **Starbucks** (8): STARBUCKS CAREMAL 13.7OZ 12CT; STARBUCKS COFFEE 13.7OZ 12CT; STARBUCKS DBL SHOT ESPRE 6.5OZ 12CT; STARBUCKS DBL SHOT M 15OZ 12CT; STARBUCKS DOUBLE CHOT CAREMAL 15OZ; STARBUCKS DOUBLE SHOT VANILA 15OZ 1; STARBUCKS MOCHA 13.7FL 12CT; STARBUCKS VANILA 13.7OZ 12CT
-
-**Sunkist** (3): SUNKIST 12OZ 2/12CT; SUNKIST 12OZ 36CT; SUNKIST ORANGE 20OZ 24CT
 
 **Topo Chico** (1): TOPO CHICO WATER 16.9OZ 18CT
 

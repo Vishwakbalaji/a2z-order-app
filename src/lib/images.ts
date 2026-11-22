@@ -29,6 +29,7 @@ export interface ResolvedImage {
   kind: 'manual' | 'approved' | 'verified' | 'approx';
   credit: string | null;
   sourceUrl: string | null;
+  official: boolean;
 }
 
 type ProductKey = Pick<Product, 'id'> & Partial<Pick<Product, 'catalogName' | 'origin'>>;
@@ -70,12 +71,18 @@ export function bundledUrls(b: BundledImage) {
 export function resolveImage(p: ProductKey, overrides: Map<string, ProductImageOverride>): ResolvedImage | null {
   const o = overrides.get(p.id);
   if (o?.status === 'rejected') return null;
-  if (o?.status === 'manual' && o.dataUrl) return { thumb: o.dataUrl, large: o.dataUrl, kind: 'manual', credit: null, sourceUrl: null };
+  if (o?.status === 'manual' && o.dataUrl) return { thumb: o.dataUrl, large: o.dataUrl, kind: 'manual', credit: null, sourceUrl: null, official: false };
   const b = shipped(p);
   if (!b) return null;
-  if (o?.status === 'approved') return { ...bundledUrls(b), kind: 'approved', credit: b.credit, sourceUrl: b.sourceUrl };
+  if (o?.status === 'approved') return { ...bundledUrls(b), kind: 'approved', credit: b.credit, sourceUrl: b.sourceUrl, official: !!b.official };
   if (b.status === 'review') return null;
-  return { ...bundledUrls(b), kind: b.status, credit: b.credit, sourceUrl: b.sourceUrl };
+  return { ...bundledUrls(b), kind: b.status, credit: b.credit, sourceUrl: b.sourceUrl, official: !!b.official };
+}
+
+/** True when the product shows the brand's own official photo. */
+export function hasOfficialImage(p: ProductKey, overrides: Map<string, ProductImageOverride>): boolean {
+  const r = resolveImage(p, overrides);
+  return !!r && r.official;
 }
 
 /** Status for the "Manage product images" screen. */
@@ -91,8 +98,12 @@ export function imageState(p: ProductKey, overrides: Map<string, ProductImageOve
 
 /** Image coverage: products with an accepted picture (verified, approximate, approved or his photo). */
 export function imageCounts(products: ProductKey[], overrides: Map<string, ProductImageOverride>) {
-  const c = { total: products.length, verified: 0, approx: 0, approved: 0, manual: 0, review: 0, none: 0, rejected: 0, coverage: 0 };
-  for (const p of products) c[imageState(p, overrides)]++;
+  const c = { total: products.length, verified: 0, approx: 0, approved: 0, manual: 0, review: 0, none: 0, rejected: 0, coverage: 0, official: 0 };
+  for (const p of products) {
+    const st = imageState(p, overrides);
+    c[st]++;
+    if ((st === 'verified' || st === 'approx' || st === 'approved') && shipped(p)?.official) c.official++;
+  }
   const accepted = c.verified + c.approx + c.approved + c.manual;
   c.coverage = c.total ? Math.round((accepted / c.total) * 1000) / 10 : 0;
   return c;

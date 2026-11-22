@@ -37,7 +37,7 @@ const CartRow = memo(function CartRow({ line, p, price }: { line: DraftLine; p: 
             {price != null ? (
               <span className="text-gray-600 tabular-nums">{formatCents(price)} per case</span>
             ) : (
-              <span className="text-amber-700 font-semibold">Price not added</span>
+              <span className="text-amber-700 font-semibold">Price Not Listed</span>
             )}
           </div>
         </div>

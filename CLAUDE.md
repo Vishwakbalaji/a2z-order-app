@@ -51,7 +51,14 @@ Live on GitHub Pages; every push to `main` runs `.github/workflows/deploy.yml` (
   (contact sheets to LOOK at) → notes → `decide.py` → `node scripts/build-product-images.mjs decisions.json <dir>`.
   Do not apply EXIF rotation (OFF pixels are already upright but often tagged rotate-90).
 - PDFs (order, detailed, weekly reports) NEVER contain product pictures.
-- 2026-11-22: 542 products → 68 verified, 54 approximate, 76 need review, 344 no picture (coverage 22.5%).
+- Owner request 2026-11-22 (2nd): official U.S. brand photos first, clean/white background, single unit, consistent;
+  hand-held/dark/cluttered shopper photos are hidden (status review). Official sources used: kdpproductfacts.com
+  (Scene7 renders; matched by URL slug = brand+flavor+size, scripts/product-images/kdp_*.{py,cjs}) and the brands'
+  Shopify stores (/products.json: AriZona, Alani Nu, Cellucor/C4). Blocked (bot protection — do not circumvent):
+  PepsiCo, Monster, Red Bull. Merge: `merge_official.py` (official replaces the earlier photo for that product).
+  Missing price label in the UI: "Price Not Listed" (owner's latest wording).
+- 2026-11-22 (after official photos): 542 products → 153 accepted pictures (66 official brand photos, 110 verified,
+  43 approximate), 82 need review, 307 no picture (coverage 28.2%).
 
 ## When the owner uploads a CATALOG (or an updated PRICE SHEET) in chat
 Goal: products should appear under the catalog's names/departments/categories, priced from the price sheet.

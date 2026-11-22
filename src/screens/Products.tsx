@@ -33,7 +33,7 @@ const ProductRow = memo(function ProductRow({ p, qty, price }: { p: Product; qty
   const label = `${titleName(p)} ${p.variation}`.trim();
   return (
     <li className={`row-cv flex items-center gap-2.5 px-3 py-2.5 border-b border-gray-100 ${qty > 0 ? 'bg-brand-light/60' : 'bg-white'}`} data-testid="product-row">
-      <ProductThumb p={p} size={64} />
+      <ProductThumb p={p} size={72} />
       <div className="flex-1 min-w-0">
         <div className="font-semibold leading-snug text-[15px] break-words">{titleName(p) || p.variation}</div>
         {titleName(p) && p.variation && <div className="text-[15px] text-gray-800 leading-snug break-words">{p.variation}</div>}
@@ -44,7 +44,7 @@ const ProductRow = memo(function ProductRow({ p, qty, price }: { p: Product; qty
               <span className="font-normal text-gray-500 text-sm"> / case</span>
             </span>
           ) : (
-            <span className="text-amber-700 font-semibold text-sm">Price not added</span>
+            <span className="text-amber-700 font-semibold text-sm">Price Not Listed</span>
           )}
         </div>
       </div>
