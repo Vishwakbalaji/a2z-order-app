@@ -1,5 +1,5 @@
 import Dexie, { type DBCore, type Middleware, type Table } from 'dexie';
-import type { Draft, ImportLog, Mapping, Order, OrderAdjustment, PriceItem, Product, Settings, Snapshot, Store, WeeklyReport } from '../types';
+import type { Draft, ImportLog, Mapping, Order, OrderAdjustment, PriceItem, Product, ProductImageOverride, Settings, Snapshot, Store, WeeklyReport } from '../types';
 import { SYNCED_TABLES } from '../sync/protocol';
 
 /** A change waiting to be uploaded to the cloud (one entry per record; newer changes overwrite). */
@@ -77,6 +77,7 @@ export class AppDB extends Dexie {
   adjustments!: Table<OrderAdjustment, string>;
   syncOutbox!: Table<OutboxEntry, string>;
   syncMeta!: Table<SyncMetaRow, string>;
+  productImages!: Table<ProductImageOverride, string>;
 
   constructor(name = 'a2z-order-app') {
     super(name);
@@ -103,11 +104,15 @@ export class AppDB extends Dexie {
       syncOutbox: 'k, at',
       syncMeta: 'k',
     });
+    // v4: the owner's product picture decisions (approved / rejected / his own photo), by product id
+    this.version(4).stores({
+      productImages: 'id',
+    });
     this.use(outboxMiddleware());
   }
 }
 
-export const DATA_TABLES = ['products', 'priceItems', 'stores', 'drafts', 'orders', 'settings', 'mappings', 'imports', 'reports', 'adjustments'] as const;
+export const DATA_TABLES = ['products', 'priceItems', 'stores', 'drafts', 'orders', 'settings', 'mappings', 'imports', 'reports', 'adjustments', 'productImages'] as const;
 export type DataTable = (typeof DATA_TABLES)[number];
 
 export let db = new AppDB();

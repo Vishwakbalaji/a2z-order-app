@@ -31,7 +31,7 @@ textarea {
 }
 .row-cv {
   content-visibility: auto;
-  contain-intrinsic-size: auto 76px;
+  contain-intrinsic-size: auto 86px;
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;

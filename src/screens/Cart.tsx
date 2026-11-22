@@ -1,3 +1,4 @@
+import { ProductThumb } from '../components/ProductImage';
 import { memo, useCallback } from 'react';
 import { TopBar } from '../components/TopBar';
 import { Badge, Card, Icon, Stepper, btnDanger, btnSecondary, confirmDialog, promptDialog, toast } from '../components/ui';
@@ -27,7 +28,8 @@ const CartRow = memo(function CartRow({ line, p, price }: { line: DraftLine; p: 
   const name = `${titleName(p)} ${p.variation}`.trim();
   return (
     <li className="px-3 py-3 border-b border-gray-100" data-testid="cart-row">
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-2.5">
+        <ProductThumb p={p} size={48} />
         <div className="flex-1 min-w-0">
           <div className="font-semibold leading-snug break-words">{titleName(p) || p.variation}</div>
           {titleName(p) && p.variation && <div className="text-gray-800 leading-snug break-words">{p.variation}</div>}

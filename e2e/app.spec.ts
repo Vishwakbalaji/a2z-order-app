@@ -110,6 +110,48 @@ test('pricing audit: verified prices used, flagged ones wait for review, unmatch
   await page.screenshot({ path: `${OUT}/${test.info().project.name}-audit.png`, fullPage: false });
 });
 
+test('product pictures: shown left of the name, tap to enlarge, cart unchanged, never in PDFs, manageable in Settings', async ({ page }) => {
+  await addStore(page, 'Picture Store');
+  await searchFor(page, 'gatorade cool blue 20');
+  await expect(page.getByTestId('product-row')).toHaveCount(1);
+  const row = page.locator('[data-testid=product-row]:has([data-has-image=true])').first();
+  await expect(row).toContainText('GATORADE COOL BLUE');
+  // layout: picture | name + price | quantity controls, without overlap
+  const img = await row.getByTestId('product-thumb').boundingBox();
+  const name = await row.locator('div.flex-1').boundingBox();
+  const plus = await row.getByRole('button', { name: /^Increase / }).boundingBox();
+  expect(img!.x + img!.width).toBeLessThanOrEqual(name!.x + 1);
+  expect(name!.x + name!.width).toBeLessThanOrEqual(plus!.x + 1);
+  expect(img!.width).toBeGreaterThanOrEqual(56);
+  expect(img!.width).toBeLessThanOrEqual(80);
+  await expect(row.locator('img')).toHaveJSProperty('complete', true);
+  await row.getByRole('button', { name: /^Increase / }).click();
+  await row.getByTestId('product-thumb').click();
+  const pv = page.getByTestId('image-preview');
+  await expect(pv).toBeVisible();
+  await expect(pv.locator('img').last()).toHaveJSProperty('complete', true);
+  await pv.getByRole('button', { name: 'Close', exact: true }).click();
+  await expect(pv).toBeHidden();
+  await expect(row.getByTestId('qty')).toHaveText('1'); // preview never changes the cart
+  // products without a picture show a placeholder and stay orderable
+  await searchFor(page, 'plastic bag');
+  await expect(page.locator('[data-testid=product-row] [data-has-image=false]').first()).toBeVisible();
+  // cart shows small pictures; PDFs contain no product pictures
+  await page.click('[data-testid=nav-cart]');
+  await expect(page.locator('[data-testid=cart-row] [data-has-image=true]')).toHaveCount(1);
+  for (const b of ['Download Order PDF', 'Download Detailed Order PDF']) {
+    const d = await download(page, b, 'img-');
+    const raw = fs.readFileSync(d.file, 'latin1');
+    expect((raw.match(/\/Subtype\s*\/Image/g) || []).length, b).toBeLessThanOrEqual(1); // the company logo only
+  }
+  // Settings → Manage Product Images
+  await page.goto('/#/settings/images');
+  await expect(page.getByTestId('image-summary')).toContainText('Total catalog products542');
+  await page.getByRole('button', { name: /^With image/ }).click();
+  await expect(page.getByTestId('image-row').first()).toBeVisible();
+  await page.screenshot({ path: `${OUT}/${test.info().project.name}-images-manage.png` });
+});
+
 test('QA 1-9: +/- quantities, auto cart add/remove, sync, totals', async ({ page }) => {
   await addStore(page, 'ABC Convenience Store', '123 Main St, Fort Lauderdale, FL', { phone: '(954) 555-0101', manager: 'Maria' });
   await searchFor(page, 'evian');

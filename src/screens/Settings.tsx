@@ -101,6 +101,7 @@ export function SettingsScreen() {
             badge={reviewCount + unmatched > 0 ? <Badge tone="amber">{reviewCount + unmatched}</Badge> : undefined}
           />
           <LinkRow href="#/settings/products" icon="edit" title="Products & prices" sub="Edit, add, disable products · change prices" />
+          <LinkRow href="#/settings/images" icon="image" title="Manage product images" sub="Check, approve, replace or add product pictures" />
           <LinkRow href="#/settings/backup" icon="download" title="Backup & restore" sub="Save all data to a file · restore it on any phone" />
         </Card>
 

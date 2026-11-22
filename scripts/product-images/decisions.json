@@ -1,0 +1,1681 @@
+[
+ {
+  "id": "p_c_10eojmka6el",
+  "name": "RED BULL YELLOW TROPICAL 8.4OZ 24CT",
+  "code": "9002490229160",
+  "img": "https://images.openfoodfacts.org/images/products/900/249/022/9160/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "can size (8.4 or 12 oz) not confirmed"
+ },
+ {
+  "id": "p_c_10lufi07h8g",
+  "name": "MONSTER MANGO LOCO 16OZ 24CT",
+  "code": "5060947546493",
+  "img": "https://images.openfoodfacts.org/images/products/506/094/754/6493/front_de.6.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_12v21vcfzzv",
+  "name": "GATORADE FROST GLACIER FREEZE 20OZ",
+  "code": "0052000208085",
+  "img": "https://images.openfoodfacts.org/images/products/005/200/020/8085/front.5.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_12yy5ujidbj",
+  "name": "BODY ARMOUR FRUIT PUNCH 16OZ 12CT",
+  "code": "06693275",
+  "img": "https://images.openfoodfacts.org/images/products/06693275/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_13evpkl7yg9",
+  "name": "BANG PURPLE HAZE16OZ 12PK",
+  "code": "0610764261670",
+  "img": "https://images.openfoodfacts.org/images/products/061/076/426/1670/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "listed as an energy shot; check it is the 16 oz can"
+ },
+ {
+  "id": "p_c_13mhff3co5z",
+  "name": "CANADA DRY GINGER ALE CAN 12OZ 24CT",
+  "code": "06224017",
+  "img": "https://images.openfoodfacts.org/images/products/06224017/front_en.7.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_13vjxafp6n7",
+  "name": "CORE POWER 42GR VANILLA ELITE 14OZ",
+  "code": "0811620020657",
+  "img": "https://images.openfoodfacts.org/images/products/081/162/002/0657/front_en.95.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "flavor not readable on the bottle"
+ },
+ {
+  "id": "p_c_13wl6lcprjt",
+  "name": "ZEPHYRHILLS 16.9OZ 40CT",
+  "code": "0073430005044",
+  "img": "https://images.openfoodfacts.org/images/products/007/343/000/5044/front.3.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_14pww0kujwb",
+  "name": "AW 12OZ CAN 2-12PK",
+  "code": "0059531000027",
+  "img": "https://images.openfoodfacts.org/images/products/005/953/100/0027/front_en.11.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "Canadian (bilingual) can label"
+ },
+ {
+  "id": "p_c_162bpho2arj",
+  "name": "BODY ARMOUR PINAPPLE COCONUT 16OZ 1",
+  "code": "0858176002836",
+  "img": "https://images.openfoodfacts.org/images/products/085/817/600/2836/front_en.7.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1634g48uwli",
+  "name": "SMART WATER 700ML 24PK",
+  "code": "6115124798901",
+  "img": "https://images.openfoodfacts.org/images/products/611/512/479/8901/front_en.4.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_166bty5ferk",
+  "name": "C4 ORANGE SLICE 16OZ 12PK",
+  "code": "0842595109368",
+  "img": "https://images.openfoodfacts.org/images/products/084/259/510/9368/front_en.6.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_169r4frz0rp",
+  "name": "FANTA ORANGE 20OZ 24PK",
+  "code": "8888002086473",
+  "img": "https://images.openfoodfacts.org/images/products/888/800/208/6473/front_en.4.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_16ew3pry19u",
+  "name": "ALANI CHERRY SLUSH 12OZ 12PK",
+  "code": "0810030511267",
+  "img": "https://images.openfoodfacts.org/images/products/081/003/051/1267/front_en.7.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_16gjw3ay652",
+  "name": "GHOST WELCH GRAPE 16OZ 12CT",
+  "code": "0810128528191",
+  "img": "https://images.openfoodfacts.org/images/products/081/012/852/8191/front_en.4.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_16nmgelrnjd",
+  "name": "SPRITE 12OZ 2/12CT",
+  "code": "04913207",
+  "img": "https://images.openfoodfacts.org/images/products/04913207/front.12.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_16pa0pxpcy2",
+  "name": "RED BULL 8.4OZ 24PK",
+  "code": "90162909",
+  "img": "https://images.openfoodfacts.org/images/products/90162909/front.3.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_1894f7ney0s",
+  "name": "C4 COSMIC RAINBOW 16OZ 12PK",
+  "code": "0842595119145",
+  "img": "https://images.openfoodfacts.org/images/products/084/259/511/9145/front_en.21.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "500 ml (European) can, catalog is 16 oz"
+ },
+ {
+  "id": "p_c_18f8yjf1s5q",
+  "name": "JARRITOS MANDARIN 12.5OZ 24CT",
+  "code": "0090478341309",
+  "img": "https://images.openfoodfacts.org/images/products/009/047/834/1309/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_18gz32c7296",
+  "name": "PURE LIFE WATER 16.9 OZ 40CT",
+  "code": "06827465",
+  "img": "https://images.openfoodfacts.org/images/products/06827465/front.12.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_19bp8sfzbvs",
+  "name": "RED BULL 120Z SUGAR FREE 24PK",
+  "code": "0611269000443",
+  "img": "https://images.openfoodfacts.org/images/products/061/126/900/0443/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "can size (8.4 or 12 oz) not confirmed"
+ },
+ {
+  "id": "p_c_19wk8j0nla8",
+  "name": "DR PEPPER 2L 8CT",
+  "code": "5000112547542",
+  "img": "https://images.openfoodfacts.org/images/products/500/011/254/7542/front_en.24.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_1b3koyjpqb2",
+  "name": "ELECTROLIT GREEN APPLE 21OZ 12CT",
+  "code": "0887725000016",
+  "img": "https://images.openfoodfacts.org/images/products/088/772/500/0016/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "labelled Apple; check it is the Green Apple flavor"
+ },
+ {
+  "id": "p_c_1bvxxw53te5",
+  "name": "VITAMIN WATER XXX-ACAI-BLUEBERRY-PO",
+  "code": "0786162003546",
+  "img": "https://images.openfoodfacts.org/images/products/078/616/200/3546/front_en.13.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "photo shows the 16.9 oz bottle; catalog size cut off (price line 20 oz)"
+ },
+ {
+  "id": "p_c_1c1do6ho709",
+  "name": "COKE DIET 20OZ 24CT",
+  "code": "0049000000450",
+  "img": "https://images.openfoodfacts.org/images/products/004/900/000/0450/front_en.9.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_1cgy5l8unt2",
+  "name": "STARBUCKS FRAPPUCINO MOCHA 9.5OZ 15",
+  "code": "01264904",
+  "img": "https://images.openfoodfacts.org/images/products/01264904/front_en.39.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_1clws7yqqlq",
+  "name": "ARIZONA GRREN TEA W GINSENG 16OZ 24",
+  "code": "0613008724221",
+  "img": "https://images.openfoodfacts.org/images/products/061/300/872/4221/front_fr.22.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "bottle size not confirmed"
+ },
+ {
+  "id": "p_c_1czii6zv3dv",
+  "name": "ARIZONA CAN SWEET TEA 22OZ 24CT",
+  "code": "0613008753122",
+  "img": "https://images.openfoodfacts.org/images/products/061/300/875/3122/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "can size not confirmed"
+ },
+ {
+  "id": "p_c_1eac3kdpii4",
+  "name": "COKE 20OZ 24CT",
+  "code": "7861024626255",
+  "img": "https://images.openfoodfacts.org/images/products/786/102/462/6255/front_en.5.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "bottle size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1ecfhu1gso2",
+  "name": "SMART WATER 1.5L 12PK",
+  "code": "36365654",
+  "img": "https://images.openfoodfacts.org/images/products/36365654/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1euusmcm0s9",
+  "name": "SAN PELLEGRINO GLASS 750ML 15CT",
+  "code": "8002270011054",
+  "img": "https://images.openfoodfacts.org/images/products/800/227/001/1054/front_en.18.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_1f7nz7h59p6",
+  "name": "TOPO CHICO MINERAL WATER 20OZ 24CT",
+  "code": "0021136016444",
+  "img": "https://images.openfoodfacts.org/images/products/002/113/601/6444/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1fggqy0on1k",
+  "name": "ZEPHYRHILLS 16.9OZ 32CT",
+  "code": "0073430005044",
+  "img": "https://images.openfoodfacts.org/images/products/007/343/000/5044/front.3.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_1fp7ikim370",
+  "name": "EVERFRESH LIME 16OZ 12CT",
+  "code": "0076737123473",
+  "img": "https://images.openfoodfacts.org/images/products/007/673/712/3473/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_1g20tklaklk",
+  "name": "ESSENTIAL WATER 20OZ 24CT",
+  "code": "30161474",
+  "img": "https://images.openfoodfacts.org/images/products/30161474/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1gjqva8tbp3",
+  "name": "CELSIUS COSMIC VIBE 12OZ 12CT",
+  "code": "0889392001204",
+  "img": "https://images.openfoodfacts.org/images/products/088/939/200/1204/front_en.3.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_1hkd6z50ke2",
+  "name": "TROPICANA PREMIUM CRANBERRY 12OZ 1/",
+  "code": "0048500017814",
+  "img": "https://images.openfoodfacts.org/images/products/004/850/001/7814/front_fr.4.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "bottle size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1ipjml3pk3w",
+  "name": "SUNKIST ORANGE 2L 8CT",
+  "code": "0078000113464",
+  "img": "https://images.openfoodfacts.org/images/products/007/800/011/3464/front_en.17.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "may be a non-US label"
+ },
+ {
+  "id": "p_c_1iua8290yid",
+  "name": "GATORADE LEMON LIME 28OZ 15PK",
+  "code": "0055405065864",
+  "img": "https://images.openfoodfacts.org/images/products/005/540/506/5864/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle held in hand; size not confirmed"
+ },
+ {
+  "id": "p_c_1ivi4agbimz",
+  "name": "RED BULL SUGAR FREE 8.4OZ 24CT",
+  "code": "9002490216030",
+  "img": "https://images.openfoodfacts.org/images/products/900/249/021/6030/front_en.3.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_1j0nhfw350u",
+  "name": "OKF ALOEVERA STRAWBERRY 16.9OZ 12CT",
+  "code": "0884394000170",
+  "img": "https://images.openfoodfacts.org/images/products/088/439/400/0170/front_en.25.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "flavor not readable on the label"
+ },
+ {
+  "id": "p_c_1j361l4cpiz",
+  "name": "TOPO CHICO TWIST OF LIME 20OZ 24CT",
+  "code": "0021136180657",
+  "img": "https://images.openfoodfacts.org/images/products/002/113/618/0657/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1j5xycbyx0f",
+  "name": "EVIAN WATER 0.5L 24CT",
+  "code": "3068320055008",
+  "img": "https://images.openfoodfacts.org/images/products/306/832/005/5008/front.32.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_1jdi3p6u6g8",
+  "name": "BAI ZAMBIA BING CHERRY 18OZ 12CT",
+  "code": "0813694025569",
+  "img": "https://images.openfoodfacts.org/images/products/081/369/402/5569/front_en.24.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_1kq4mp6xj0g",
+  "name": "COKE ZERO CAN 12OZ 2/12CT",
+  "code": "4890008109357",
+  "img": "https://images.openfoodfacts.org/images/products/489/000/810/9357/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "can held in hand; size not confirmed"
+ },
+ {
+  "id": "p_c_1kxx294jkrw",
+  "name": "CANADA DRY CLUB SODA 1L 15CT",
+  "code": "0078000146455",
+  "img": "https://images.openfoodfacts.org/images/products/007/800/014/6455/front_en.8.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "bottle size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1lattm0cvh8",
+  "name": "CRUSH GRAPE 20OZ 24CT",
+  "code": "05654406",
+  "img": "https://images.openfoodfacts.org/images/products/05654406/front_en.10.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_1ltizj7nnv9",
+  "name": "SNAPPLE MANGO MADNESS 16OZ 12CT",
+  "code": "0076183202043",
+  "img": "https://images.openfoodfacts.org/images/products/007/618/320/2043/front_fr.12.400.jpg",
+  "status": "approx",
+  "confidence": 95
+ },
+ {
+  "id": "p_c_1ltv6fbjhpy",
+  "name": "DUNKIN FRENCH VANILA 13.7OZ 12CT",
+  "code": "0000202000552",
+  "img": "https://images.openfoodfacts.org/images/products/000/020/200/0552/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95
+ },
+ {
+  "id": "p_c_1lx1po6h64g",
+  "name": "RED BULL COCONUT 12OZ 24CT",
+  "code": "90435409",
+  "img": "https://images.openfoodfacts.org/images/products/90435409/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "can size not confirmed"
+ },
+ {
+  "id": "p_c_1mc6o4com8p",
+  "name": "BRISK ICE TEA LEMON 12OZ 35CT",
+  "code": "25355536",
+  "img": "https://images.openfoodfacts.org/images/products/25355536/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_1n0hhc97jv5",
+  "name": "GHOST CAN ORANGE CREAM 16OZ 12CT",
+  "code": "0810128524292",
+  "img": "https://images.openfoodfacts.org/images/products/081/012/852/4292/front_en.3.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_1nl35qndf5l",
+  "name": "INCA KOLA 12OZ 24PK",
+  "code": "04998606",
+  "img": "https://images.openfoodfacts.org/images/products/04998606/front.11.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_1ogcxll6raa",
+  "name": "EVERFRESH APPLE JUICE 16OZ 12CT",
+  "code": "0076737111043",
+  "img": "https://images.openfoodfacts.org/images/products/007/673/711/1043/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_1pfd9doydho",
+  "name": "AQUAFINA 20OZ 24CT",
+  "code": "60184054",
+  "img": "https://images.openfoodfacts.org/images/products/60184054/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1pqptq7opgz",
+  "name": "CELSIUS TROPICAL VIBE 12OZ 12CT",
+  "code": "0889392021394",
+  "img": "https://images.openfoodfacts.org/images/products/088/939/202/1394/front_en.45.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_1pqw7xmc5ue",
+  "name": "COKE ZERO 20OZ 24CT",
+  "code": "0687385000322",
+  "img": "https://images.openfoodfacts.org/images/products/068/738/500/0322/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1q2zqd1a8df",
+  "name": "BODY ARMOUR ORANGE MANGO 16OZ 12CT",
+  "code": "0067000012365",
+  "img": "https://images.openfoodfacts.org/images/products/006/700/001/2365/front_en.3.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_1q8xs3ms45t",
+  "name": "GATORADE FROST GLACIER CHERRY 16OZ",
+  "code": "0052000102475",
+  "img": "https://images.openfoodfacts.org/images/products/005/200/010/2475/front_en.10.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1sf7zmxnqou",
+  "name": "JARRITOS LIME 12.5OZ 24CT",
+  "code": "0090478214191",
+  "img": "https://images.openfoodfacts.org/images/products/009/047/821/4191/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_1st8nzynxsk",
+  "name": "GATORADE LEMONADE 20OZ 24CT",
+  "code": "0052000046786",
+  "img": "https://images.openfoodfacts.org/images/products/005/200/004/6786/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "bottle size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1su2qywzy64",
+  "name": "CELSIUS ARTIC VIBE 12OZ 12CT",
+  "code": "9816832021417",
+  "img": "https://images.openfoodfacts.org/images/products/981/683/202/1417/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_1sxngkouk8a",
+  "name": "PURE LIFE 20OZ 24CT",
+  "code": "6223001930549",
+  "img": "https://images.openfoodfacts.org/images/products/622/300/193/0549/front_en.6.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "600 ml bottle shown, catalog is 20 oz"
+ },
+ {
+  "id": "p_c_1tf0msvye9g",
+  "name": "ARIZONA CAN KIWI STRAWBERRY 22OZ 24",
+  "code": "0613008735432",
+  "img": "https://images.openfoodfacts.org/images/products/061/300/873/5432/front_en.23.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "can held in hand; size not confirmed"
+ },
+ {
+  "id": "p_c_1tfani6jxrk",
+  "name": "MONSTER ORANGE 16OZ 24CT",
+  "code": "0070847890805",
+  "img": "https://images.openfoodfacts.org/images/products/007/084/789/0805/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "shown is Monster Reserve Orange Dreamsicle; check it is this product"
+ },
+ {
+  "id": "p_c_1tmbnd2x104",
+  "name": "CANADA DRY GINGER ALE 20OZ 24CT",
+  "code": "0078000050325",
+  "img": "https://images.openfoodfacts.org/images/products/007/800/005/0325/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "bottle held in hand; size not confirmed"
+ },
+ {
+  "id": "p_c_1twal8c3kwv",
+  "name": "SAN PELLEGRINO 8.4OZ 24CT",
+  "code": "8002270000225",
+  "img": "https://images.openfoodfacts.org/images/products/800/227/000/0225/front.3.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_1txp5ydbhoo",
+  "name": "FANTA STRAWBERRY 20OZ 24PK",
+  "code": "0049000069211",
+  "img": "https://images.openfoodfacts.org/images/products/004/900/006/9211/front_en.4.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1u5joj226jw",
+  "name": "AQUAFINA 1L 15CT",
+  "code": "01215704",
+  "img": "https://images.openfoodfacts.org/images/products/01215704/front_en.4.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_1ulaw83dp3x",
+  "name": "FANTA 20OZ 24CT",
+  "code": "0049000019162",
+  "img": "https://images.openfoodfacts.org/images/products/004/900/001/9162/front_en.12.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_1uww26d4x2q",
+  "name": "MONSTER WHITE ZERO ULTRA 16OZ 24CT",
+  "code": "0070847015208",
+  "img": "https://images.openfoodfacts.org/images/products/007/084/701/5208/front_en.7.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_1v1tw1ln8ao",
+  "name": "MALTA INDIA GLASS 12OZ 24CT",
+  "code": "08155351",
+  "img": "https://images.openfoodfacts.org/images/products/08155351/front_en.8.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_1vmp4z7i0cq",
+  "name": "FANTA CAN 16OZ 24CT",
+  "code": "49333336",
+  "img": "https://images.openfoodfacts.org/images/products/49333336/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "can size not confirmed"
+ },
+ {
+  "id": "p_c_1vptn4wqvgk",
+  "name": "AQUAFINA 16.9OZ 32CT",
+  "code": "8941100310434",
+  "img": "https://images.openfoodfacts.org/images/products/894/110/031/0434/front_en.8.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_1wbxfxkw0ud",
+  "name": "EVERFRESH ISLAND FRUIT PUNCH 16OZ 1",
+  "code": "0076737123923",
+  "img": "https://images.openfoodfacts.org/images/products/007/673/712/3923/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95
+ },
+ {
+  "id": "p_c_1wc6azdsi0a",
+  "name": "PURE LEAF LEMON TEA 18.5OZ 12CT",
+  "code": "0012044291658",
+  "img": "https://images.openfoodfacts.org/images/products/001/204/429/1658/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "close-up of the label only"
+ },
+ {
+  "id": "p_c_1wcjq7pu33",
+  "name": "VITAMIN WATER SHINE ZERO SUGAR-STRA",
+  "code": "0786162004987",
+  "img": "https://images.openfoodfacts.org/images/products/078/616/200/4987/front_en.19.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1wej2zsi754",
+  "name": "SNAPPLE LEMON TEA 16OZ 12CT",
+  "code": "7016724164747",
+  "img": "https://images.openfoodfacts.org/images/products/701/672/416/4747/front_en.4.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_1wx68rtlfmt",
+  "name": "DR PEPPER ZERO 20OZ 24PK",
+  "code": "5902860412038",
+  "img": "https://images.openfoodfacts.org/images/products/590/286/041/2038/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1x2scvec9et",
+  "name": "PEPSI 20OZ 24CT",
+  "code": "0012000011535",
+  "img": "https://images.openfoodfacts.org/images/products/001/200/001/1535/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1xdbnn4ddsz",
+  "name": "VITA MALTA CLASSIC 11.2 OZ 24CT",
+  "code": "5741000002315",
+  "img": "https://images.openfoodfacts.org/images/products/574/100/000/2315/front.5.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_1xwfbl5d0r6",
+  "name": "MOUNTAIN DEW BAJA 20 OZ 24CT",
+  "code": "0012000140006",
+  "img": "https://images.openfoodfacts.org/images/products/001/200/014/0006/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1yo5qju6y2t",
+  "name": "GATORADE GLACIER CHERRY 20OZ 24PK",
+  "code": "0052000103106",
+  "img": "https://images.openfoodfacts.org/images/products/005/200/010/3106/front_en.7.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_1ypxawffh73",
+  "name": "CORE POWER 26GR VANILLA 14OZ 12CT",
+  "code": "72611197",
+  "img": "https://images.openfoodfacts.org/images/products/72611197/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_1yvbcu5wlp0",
+  "name": "GATORADE BLUE CHERRY 28OZ 15CT",
+  "code": "6010400104103",
+  "img": "https://images.openfoodfacts.org/images/products/601/040/010/4103/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size (20 or 28 oz) not confirmed"
+ },
+ {
+  "id": "p_c_1z2f8v8okzp",
+  "name": "SNAPPLE PEACH TEA 16OZ 12CT",
+  "code": "0076183004821",
+  "img": "https://images.openfoodfacts.org/images/products/007/618/300/4821/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95
+ },
+ {
+  "id": "p_c_1z8kq8smkpk",
+  "name": "GATORADE COOL BLUE 20OZ 24PK",
+  "code": "0052000324815",
+  "img": "https://images.openfoodfacts.org/images/products/005/200/032/4815/front_en.49.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_1zqjtdlrcky",
+  "name": "POWERADE LEMON LIME 20 OZ 24CT",
+  "code": "0049000003697",
+  "img": "https://images.openfoodfacts.org/images/products/004/900/000/3697/front_en.6.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_1ztv34x75tv",
+  "name": "POWERADE MOUNTAIN BERRY BLAST 28OZ",
+  "code": "0049000079357",
+  "img": "https://images.openfoodfacts.org/images/products/004/900/007/9357/front_en.3.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_20hzhdpz40x",
+  "name": "GATORADE LEMON 20OZ 24PK",
+  "code": "8001160001151",
+  "img": "https://images.openfoodfacts.org/images/products/800/116/000/1151/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "may be a non-US label (\"Lemon Flavour\")"
+ },
+ {
+  "id": "p_c_23clycutt4v",
+  "name": "GATORADE ARTIC BLITZ 28OZ 15CT",
+  "code": "0052000010220",
+  "img": "https://images.openfoodfacts.org/images/products/005/200/001/0220/front_en.3.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_23hlrqnu6w2",
+  "name": "CRUSH GRAPE 2/12 12OZ",
+  "code": "07891205",
+  "img": "https://images.openfoodfacts.org/images/products/07891205/front_en.17.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_246ysq7e842",
+  "name": "ELECTROLIT ORANGE 21OZ 12CT",
+  "code": "0887725000924",
+  "img": "https://images.openfoodfacts.org/images/products/088/772/500/0924/front_en.8.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_24iea2er0u1",
+  "name": "CRUSH ORANGE 2/12 12OZ",
+  "code": "07891108",
+  "img": "https://images.openfoodfacts.org/images/products/07891108/front_en.17.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_24opwupn0h1",
+  "name": "JARRITOS PINEAPPLE 12.5OZ 24CT",
+  "code": "0090478006949",
+  "img": "https://images.openfoodfacts.org/images/products/009/047/800/6949/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95
+ },
+ {
+  "id": "p_c_24wrqsdldys",
+  "name": "MINUTE MAID LEMONADE 20OZ 24PK",
+  "code": "0025000058011",
+  "img": "https://images.openfoodfacts.org/images/products/002/500/005/8011/front_en.18.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_25x6bobhoml",
+  "name": "RED BULL WATERMELON 8.4OZ 24CT",
+  "code": "90435768",
+  "img": "https://images.openfoodfacts.org/images/products/90435768/front_en.4.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_266phtlmlgt",
+  "name": "ELECTROLIT COCONUT 21OZ 12CT",
+  "code": "0887725000047",
+  "img": "https://images.openfoodfacts.org/images/products/088/772/500/0047/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_269loabxpsv",
+  "name": "EVERFRESH PINEAPPLE 16OZ 12CT",
+  "code": "0076737200693",
+  "img": "https://images.openfoodfacts.org/images/products/007/673/720/0693/front_en.4.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "green-tinted photo"
+ },
+ {
+  "id": "p_c_27hybw9pxli",
+  "name": "PEPSI 12 OZ 36CT",
+  "code": "01256808",
+  "img": "https://images.openfoodfacts.org/images/products/01256808/front_en.23.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_28a7fqd65nt",
+  "name": "BODY ARMOUR LYTE PEACH MANGO 16OZ 1",
+  "code": "0067000012341",
+  "img": "https://images.openfoodfacts.org/images/products/006/700/001/2341/front_en.4.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_28tk438vsmt",
+  "name": "SPRITE 2L 8CT",
+  "code": "5000112575071",
+  "img": "https://images.openfoodfacts.org/images/products/500/011/257/5071/front_en.3.400.jpg",
+  "status": "verified",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_28x9r9p9sht",
+  "name": "BANG COTTAN CANDY 16OZ 12PK",
+  "code": "8720211191749",
+  "img": "https://images.openfoodfacts.org/images/products/872/021/119/1749/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_28xt5bumfkk",
+  "name": "CRUSH STARWBERRY 20OZ 24CT",
+  "code": "0078000027587",
+  "img": "https://images.openfoodfacts.org/images/products/007/800/002/7587/front_en.4.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "may be a glass (non-US) bottle"
+ },
+ {
+  "id": "p_c_2953c8lomj2",
+  "name": "GATORADE FRUIT PUNCH 20OZ 24PK",
+  "code": "0052000328660",
+  "img": "https://images.openfoodfacts.org/images/products/005/200/032/8660/front_en.20.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_29duj7q8hny",
+  "name": "MOUNTAIN DEW 20OZ 24CT",
+  "code": "01200218",
+  "img": "https://images.openfoodfacts.org/images/products/01200218/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle held in hand; size not confirmed"
+ },
+ {
+  "id": "p_c_29fxdecc6mc",
+  "name": "FIJI WATER 330ML 24CT",
+  "code": "16133761",
+  "img": "https://images.openfoodfacts.org/images/products/16133761/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_2ambp6hb1hp",
+  "name": "AQUAFINA 16.9OZ 40CT",
+  "code": "8941100310434",
+  "img": "https://images.openfoodfacts.org/images/products/894/110/031/0434/front_en.8.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_2bjgf4f9phm",
+  "name": "SAN PELLEGRINO PET 1L 12CT",
+  "code": "8002270002045",
+  "img": "https://images.openfoodfacts.org/images/products/800/227/000/2045/front_fr.15.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "check it is the plastic (PET) bottle"
+ },
+ {
+  "id": "p_c_2c5ahlhhg1i",
+  "name": "TROPICANA PREMIUM LIVELY LEMONADE 1",
+  "code": "85995550",
+  "img": "https://images.openfoodfacts.org/images/products/85995550/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size cut off in the catalog"
+ },
+ {
+  "id": "p_c_2ccnqxvfh1m",
+  "name": "VITAMIN WATER ENERGY-TROPICAL CITRU",
+  "code": "0786162650016",
+  "img": "https://images.openfoodfacts.org/images/products/078/616/265/0016/front_en.42.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_2cyixgmwbcd",
+  "name": "EVERFRESH LEMONADE 16OZ 12CT",
+  "code": "0076737107305",
+  "img": "https://images.openfoodfacts.org/images/products/007/673/710/7305/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_2d265bfprvg",
+  "name": "BRISK LEMON ICE TEA 2/12PK",
+  "code": "0012000039218",
+  "img": "https://images.openfoodfacts.org/images/products/001/200/003/9218/front.8.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_2d35auyzvv4",
+  "name": "RED BULL WATERMELON 12OZ 24CT",
+  "code": "0611269000023",
+  "img": "https://images.openfoodfacts.org/images/products/061/126/900/0023/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "can size not confirmed"
+ },
+ {
+  "id": "p_c_2d3ac5xg2m0",
+  "name": "MAISON PERRIER SPARKLING 16.9 OZ 24",
+  "code": "0074780515504",
+  "img": "https://images.openfoodfacts.org/images/products/007/478/051/5504/front_en.9.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "bottle size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_2dxn68837tx",
+  "name": "CORE POWER 42GR STRAWBERRY ELITE 14",
+  "code": "0811620021425",
+  "img": "https://images.openfoodfacts.org/images/products/081/162/002/1425/front_en.73.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_2dyskxhzch4",
+  "name": "7UP 2L 8CT",
+  "code": "06547436",
+  "img": "https://images.openfoodfacts.org/images/products/06547436/front_en.12.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "dark photo; check the label"
+ },
+ {
+  "id": "p_c_2e12wqbocnr",
+  "name": "CRUSH ORANGE 20OZ 24CT",
+  "code": "0078000013207",
+  "img": "https://images.openfoodfacts.org/images/products/007/800/001/3207/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle held in hand; size not confirmed"
+ },
+ {
+  "id": "p_c_2e2x27t8v2j",
+  "name": "STARBUCKS FRAPPUCHINE VANILA 9.5OZ",
+  "code": "01241000",
+  "img": "https://images.openfoodfacts.org/images/products/01241000/front_en.23.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_2e3xz0wb87v",
+  "name": "PEPSI CHERRY 20OZ 24CT",
+  "code": "0069000300084",
+  "img": "https://images.openfoodfacts.org/images/products/006/900/030/0084/front_en.8.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_2e914tcwtuk",
+  "name": "FANTA PINEAPPLE 20OZ 24CT",
+  "code": "0049000545500",
+  "img": "https://images.openfoodfacts.org/images/products/004/900/054/5500/front_en.8.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_2egkcpry372",
+  "name": "GATORADE GREEN APPLE 28OZ 15PK",
+  "code": "0052000104264",
+  "img": "https://images.openfoodfacts.org/images/products/005/200/010/4264/front_en.4.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size (20 or 28 oz) not confirmed"
+ },
+ {
+  "id": "p_c_2ffq2pdjw5d",
+  "name": "DR PEPPER 20OZ 24CT",
+  "code": "05490733",
+  "img": "https://images.openfoodfacts.org/images/products/05490733/front_en.8.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_2g4u8nnfrg1",
+  "name": "7UP 12OZ 2/12CT",
+  "code": "5285000320388",
+  "img": "https://images.openfoodfacts.org/images/products/528/500/032/0388/front.5.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "can size not confirmed"
+ },
+ {
+  "id": "p_c_2gmgc87hl2r",
+  "name": "CELSIUS KIWI GUAVA 12OZ 12CT",
+  "code": "7350058335580",
+  "img": "https://images.openfoodfacts.org/images/products/735/005/833/5580/front_en.10.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_34z48euduh",
+  "name": "PEPSI DIET 20 OZ 24CT",
+  "code": "0012000171741",
+  "img": "https://images.openfoodfacts.org/images/products/001/200/017/1741/front_en.25.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_35t7uxhp8g",
+  "name": "ARIZONA CAN RX ENERGY 22OZ 24CT",
+  "code": "0613008756444",
+  "img": "https://images.openfoodfacts.org/images/products/061/300/875/6444/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "can size not confirmed"
+ },
+ {
+  "id": "p_c_3j7usnlhjm",
+  "name": "DR PEPPER DIET 20OZ 24PK",
+  "code": "0078000083408",
+  "img": "https://images.openfoodfacts.org/images/products/007/800/008/3408/front.7.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_3l79wxr14f",
+  "name": "MINUTE MAID LEMONADE 12OZ 2/12PK",
+  "code": "0025000058073",
+  "img": "https://images.openfoodfacts.org/images/products/002/500/005/8073/front_en.22.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_42rcdq871l",
+  "name": "ARIZONA CAN-LEMON ICE TEA 22OZ 24PK",
+  "code": "0613008722678",
+  "img": "https://images.openfoodfacts.org/images/products/061/300/872/2678/front_en.8.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "680 ml (23 oz) can shown, catalog is 22 oz"
+ },
+ {
+  "id": "p_c_49i3nsrhov",
+  "name": "ALANI ORANGE KISS 12OZ 12PK",
+  "code": "0810030514619",
+  "img": "https://images.openfoodfacts.org/images/products/081/003/051/4619/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_4ax0laf9zt",
+  "name": "COKE CAN 16OZ 24PK",
+  "code": "5000112552508",
+  "img": "https://images.openfoodfacts.org/images/products/500/011/255/2508/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "can size not confirmed"
+ },
+ {
+  "id": "p_c_59f8a0qd72",
+  "name": "ARIZONA CAN GRAPEADE 22OZ 24CT",
+  "code": "0613008719296",
+  "img": "https://images.openfoodfacts.org/images/products/061/300/871/9296/front_en.5.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_5arh04sxfh",
+  "name": "BAI COCONUT PINEAPPLE PUNA 18OZ 12C",
+  "code": "13690267",
+  "img": "https://images.openfoodfacts.org/images/products/13690267/front_en.3.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_5hxrdrjsp0",
+  "name": "COKE DIET CAN 16OZ 24CT",
+  "code": "0049000053425",
+  "img": "https://images.openfoodfacts.org/images/products/004/900/005/3425/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "close-up of part of the can"
+ },
+ {
+  "id": "p_c_5x038slufn",
+  "name": "ARIZONA CAN-GREEN TEA 22OZ 24CT",
+  "code": "05258284",
+  "img": "https://images.openfoodfacts.org/images/products/05258284/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "can size not confirmed"
+ },
+ {
+  "id": "p_c_5ydl5n87i1",
+  "name": "MONSTER ULTRA VIOLET 16OZ 24PK",
+  "code": "5060751215578",
+  "img": "https://images.openfoodfacts.org/images/products/506/075/121/5578/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_6giq34jhrn",
+  "name": "PURE LEAF SWEET TEA 18.5OZ 12CT",
+  "code": "0048500020630",
+  "img": "https://images.openfoodfacts.org/images/products/004/850/002/0630/front_en.5.400.jpg",
+  "status": "approx",
+  "confidence": 95
+ },
+ {
+  "id": "p_c_6uj7l19bt0",
+  "name": "PURE LIFE 1 GALLON 6CT",
+  "code": "17532563",
+  "img": "https://images.openfoodfacts.org/images/products/17532563/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95
+ },
+ {
+  "id": "p_c_77645201qc",
+  "name": "CORE POWER 26GR STRAWBERRY BANANA 1",
+  "code": "05435395",
+  "img": "https://images.openfoodfacts.org/images/products/05435395/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_1ll7rrvqoz",
+  "name": "RED BULL AMBER APPRICOT 12OZ 24CT",
+  "code": "0611269001303",
+  "img": "https://images.openfoodfacts.org/images/products/061/126/900/1303/front_en.23.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_78piiwl1tn",
+  "name": "RED BULL AMBER STRAWBERRY APPRICOT",
+  "code": "0611269001303",
+  "img": "https://images.openfoodfacts.org/images/products/061/126/900/1303/front_en.23.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size cut off in the catalog"
+ },
+ {
+  "id": "p_c_7uwjup54w8",
+  "name": "BAI COCONUT MOLOKAI 18OZ 12CT",
+  "code": "0852311004273",
+  "img": "https://images.openfoodfacts.org/images/products/085/231/100/4273/front_en.23.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_7y175zvd1k",
+  "name": "OCEAN SPRAY CRAN+GRAPE 15.2 OZ 12PK",
+  "code": "0031200015525",
+  "img": "https://images.openfoodfacts.org/images/products/003/120/001/5525/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_851i2mg3af",
+  "name": "CELSIUS FANTASY VIBE 12OZ 12CT",
+  "code": "0889392000597",
+  "img": "https://images.openfoodfacts.org/images/products/088/939/200/0597/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_88ixc51aia",
+  "name": "SNAPPLE RASBERRY TEA 16OZ 12CT",
+  "code": "0076183323786",
+  "img": "https://images.openfoodfacts.org/images/products/007/618/332/3786/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_9knfaewy1b",
+  "name": "BODY ARMOUR ORANGE MANGO 28OZ 15CT",
+  "code": "0810113830001",
+  "img": "https://images.openfoodfacts.org/images/products/081/011/383/0001/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size (16 or 28 oz) not confirmed"
+ },
+ {
+  "id": "p_c_9vx2an88x7",
+  "name": "GATORADE COOL BLUE 28OZ 15PK",
+  "code": "62338431",
+  "img": "https://images.openfoodfacts.org/images/products/62338431/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size (20 or 28 oz) not confirmed"
+ },
+ {
+  "id": "p_c_a64jdeb6es",
+  "name": "CANADA DRY TONIC WATER 1L 15CT",
+  "code": "39534453",
+  "img": "https://images.openfoodfacts.org/images/products/39534453/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "bottle size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_aq81mv12x4",
+  "name": "ARIZONA CAN-MUCHO MANGO 22OZ 24CT",
+  "code": "0613008756482",
+  "img": "https://images.openfoodfacts.org/images/products/061/300/875/6482/front_en.3.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_bab1rpd8gt",
+  "name": "COKE MEXICO 355ML 24CT",
+  "code": "0049000047790",
+  "img": "https://images.openfoodfacts.org/images/products/004/900/004/7790/front_en.9.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_bk9lnysn58",
+  "name": "SMART WATER ALKLINE 1L 12CT",
+  "code": "0786162006165",
+  "img": "https://images.openfoodfacts.org/images/products/078/616/200/6165/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size (1 L or 1.5 L) not confirmed"
+ },
+ {
+  "id": "p_c_bzv2z2wnzj",
+  "name": "FIJI WATER 0.5L 4/6CT",
+  "code": "9417574000083",
+  "img": "https://images.openfoodfacts.org/images/products/941/757/400/0083/front_fr.30.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_c1v7lb3g35",
+  "name": "AW 20OZ 24PK",
+  "code": "0078000052404",
+  "img": "https://images.openfoodfacts.org/images/products/007/800/005/2404/front.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "blurry photo"
+ },
+ {
+  "id": "p_c_d2ktirkkuf",
+  "name": "BANG BLUE RAZZ 16OZ 12PK",
+  "code": "0610764863638",
+  "img": "https://images.openfoodfacts.org/images/products/061/076/486/3638/front_en.31.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_d7rskmsjgy",
+  "name": "FANTA STRAWBERRY 12OZ 2/12PK",
+  "code": "0049000014266",
+  "img": "https://images.openfoodfacts.org/images/products/004/900/001/4266/front_en.36.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_do10sh9lyc",
+  "name": "C4 STRAWBERRY WATERMELON 16OZ 12CT",
+  "code": "0842595117769",
+  "img": "https://images.openfoodfacts.org/images/products/084/259/511/7769/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "can held in hand"
+ },
+ {
+  "id": "p_c_fo76o98m3w",
+  "name": "DR PEPPER 12OZ 2/12CT",
+  "code": "0789530",
+  "img": "https://images.openfoodfacts.org/images/products/0789530/front_en.6.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "check it is regular Dr Pepper (not a flavor edition)"
+ },
+ {
+  "id": "p_c_hsn8jidnlx",
+  "name": "RED BULL YELLOW TROPICAL 12OZ 24CT",
+  "code": "0180854000347",
+  "img": "https://images.openfoodfacts.org/images/products/018/085/400/0347/front_en.28.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "washed-out photo"
+ },
+ {
+  "id": "p_c_hvr048n2mg",
+  "name": "TROPICANA APPLE 11OZ 12CT",
+  "code": "5022313113500",
+  "img": "https://images.openfoodfacts.org/images/products/502/231/311/3500/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "may be a non-US juice drink bottle"
+ },
+ {
+  "id": "p_c_jkdlkiwk96",
+  "name": "COKE VANILA 20 OZ 24CT",
+  "code": "1555063506451",
+  "img": "https://images.openfoodfacts.org/images/products/155/506/350/6451/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_k010g3thil",
+  "name": "BAI BLACKBERRY BRASILIA 18OZ 12CT",
+  "code": "0852311004013",
+  "img": "https://images.openfoodfacts.org/images/products/085/231/100/4013/front_en.8.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "catalog says Blackberry; Bai's Brasilia flavor is Blueberry"
+ },
+ {
+  "id": "p_c_k5d789hqe9",
+  "name": "SNAPPLE APPLE 16OZ 12CT",
+  "code": "0076183202081",
+  "img": "https://images.openfoodfacts.org/images/products/007/618/320/2081/front_en.12.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_l95i7js19q",
+  "name": "GATORADE FIERCE GRAPE 28OZ 15CT",
+  "code": "0052000324822",
+  "img": "https://images.openfoodfacts.org/images/products/005/200/032/4822/front_en.20.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size (20 or 28 oz) not confirmed"
+ },
+ {
+  "id": "p_c_l96tc1fyx3",
+  "name": "MONSTER ENERGY MEGA CAP 24OZ 12CT",
+  "code": "5060335634399",
+  "img": "https://images.openfoodfacts.org/images/products/506/033/563/4399/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_lm3hgi4qxp",
+  "name": "GATORADE FIERCE STRAWBERRY 28OZ 15P",
+  "code": "0052000104783",
+  "img": "https://images.openfoodfacts.org/images/products/005/200/010/4783/front_en.4.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size (20 or 28 oz) not confirmed"
+ },
+ {
+  "id": "p_c_lwk47zaub6",
+  "name": "ACQUA PANNA GLASS 750ML 12CT",
+  "code": "8002270018466",
+  "img": "https://images.openfoodfacts.org/images/products/800/227/001/8466/front_fr.33.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_m931ziakdk",
+  "name": "ARIZONA CAN PEACH TEA 22OZ 24CT",
+  "code": "0613008753481",
+  "img": "https://images.openfoodfacts.org/images/products/061/300/875/3481/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "may be a non-US label (\"flavour\")"
+ },
+ {
+  "id": "p_c_mb3zhvzjqk",
+  "name": "FANTA PINEAPPLE 2/12 12OZ",
+  "code": "0067000011061",
+  "img": "https://images.openfoodfacts.org/images/products/006/700/001/1061/front_en.9.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "blurry photo"
+ },
+ {
+  "id": "p_c_mkpmcf8uvu",
+  "name": "GATORADE GLACIER FREEZE 28OZ 15PK",
+  "code": "0052000324860",
+  "img": "https://images.openfoodfacts.org/images/products/005/200/032/4860/front_en.10.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size (20 or 28 oz) not confirmed"
+ },
+ {
+  "id": "p_c_n5c0hdwnv6",
+  "name": "PEPSI ZERO 20OZ 24CT",
+  "code": "1918066018800",
+  "img": "https://images.openfoodfacts.org/images/products/191/806/601/8800/front_en.3.400.jpg",
+  "status": "verified",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_ne99j7kzsd",
+  "name": "ARIZONA CAN WATERMELON 22OZ 24CT",
+  "code": "0613008745370",
+  "img": "https://images.openfoodfacts.org/images/products/061/300/874/5370/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "can size not confirmed"
+ },
+ {
+  "id": "p_c_np2ela4ebi",
+  "name": "SPORTS SHAKE STRAWBERRY 11OZ 12CT",
+  "code": "0070801104030",
+  "img": "https://images.openfoodfacts.org/images/products/007/080/110/4030/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "labelled \"Sport Shake\"; check it is this brand"
+ },
+ {
+  "id": "p_c_o7x694zx2",
+  "name": "CRUSH STRAWBERRY 2/12 12OZ",
+  "code": "0078000009132",
+  "img": "https://images.openfoodfacts.org/images/products/007/800/000/9132/front_en.15.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_omgph8j715",
+  "name": "DASANI 20OZ 24PK",
+  "code": "04997704",
+  "img": "https://images.openfoodfacts.org/images/products/04997704/front.6.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_omniotj7ig",
+  "name": "POWERADE MOUNTAIN BLAST 20OZ 24CT",
+  "code": "9300624008354",
+  "img": "https://images.openfoodfacts.org/images/products/930/062/400/8354/front_en.18.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "close-up of a 600 ml bottle label"
+ },
+ {
+  "id": "p_c_p1bwsww2rk",
+  "name": "DASANI 1L 12PK",
+  "code": "0049000026573",
+  "img": "https://images.openfoodfacts.org/images/products/004/900/002/6573/front_en.4.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_pymhetis65",
+  "name": "COKE CHERRY 20OZ 24CT",
+  "code": "04963105",
+  "img": "https://images.openfoodfacts.org/images/products/04963105/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "dark photo; size not confirmed"
+ },
+ {
+  "id": "p_c_qiuifbu845",
+  "name": "POWERADE ORANGE 20OZ 24CT",
+  "code": "0049000079364",
+  "img": "https://images.openfoodfacts.org/images/products/004/900/007/9364/front_en.14.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size (20 or 28 oz) not confirmed"
+ },
+ {
+  "id": "p_c_qkliaelcqg",
+  "name": "BANG PEACH MANGO 16OZ 12PK",
+  "code": "0610764863812",
+  "img": "https://images.openfoodfacts.org/images/products/061/076/486/3812/front_en.13.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_rcckoazf1p",
+  "name": "ALANI PINK SLUSH 12OZ 12PK",
+  "code": "0810030518501",
+  "img": "https://images.openfoodfacts.org/images/products/081/003/051/8501/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_sglu25cah3",
+  "name": "CORE POWER 26GR CHOCOLATE 14OZ 12CT",
+  "code": "0811620022217",
+  "img": "https://images.openfoodfacts.org/images/products/081/162/002/2217/front_en.3.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_t2aewwlpv",
+  "name": "JARRITOS TAMARINOO 12.5OZ 24CT GLAS",
+  "code": "0090478007106",
+  "img": "https://images.openfoodfacts.org/images/products/009/047/800/7106/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 96
+ },
+ {
+  "id": "p_c_t93cb6bw15",
+  "name": "ESSENTIAL 500ML 24CT",
+  "code": "0657227106178",
+  "img": "https://images.openfoodfacts.org/images/products/065/722/710/6178/front_en.3.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_ug6yto6zsh",
+  "name": "MOUNTAIN DEW DIET 20OZ 24PK",
+  "code": "15360542",
+  "img": "https://images.openfoodfacts.org/images/products/15360542/front_en.3.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_usnyj5sxlh",
+  "name": "BAI COSTA RICA CLEMENTINE 18OZ 12CT",
+  "code": "0004444866666",
+  "img": "https://images.openfoodfacts.org/images/products/000/444/486/6666/front_en.3.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_v90rfuby0x",
+  "name": "ACQUA PANNA 1L 12CT",
+  "code": "19326177",
+  "img": "https://images.openfoodfacts.org/images/products/19326177/front_en.4.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "check plastic vs glass bottle"
+ },
+ {
+  "id": "p_c_vamtiy6r84",
+  "name": "ELECTROLIT GRAPE 21OZ 12CT",
+  "code": "0887725000917",
+  "img": "https://images.openfoodfacts.org/images/products/088/772/500/0917/front_en.3.400.jpg",
+  "status": "approx",
+  "confidence": 95,
+  "note": "size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_vbyinkg5sv",
+  "name": "PEPSI 12OZ 2/12CT",
+  "code": "01256808",
+  "img": "https://images.openfoodfacts.org/images/products/01256808/front_en.23.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_wdxq4fi74l",
+  "name": "MINUTE MAID FRUIT PUNCH 20OZ 24PK",
+  "code": "0025000058028",
+  "img": "https://images.openfoodfacts.org/images/products/002/500/005/8028/front_en.17.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "dark photo; size not confirmed"
+ },
+ {
+  "id": "p_c_welovv7vya",
+  "name": "CORE WATER 1L 12CT",
+  "code": "9786833451653",
+  "img": "https://images.openfoodfacts.org/images/products/978/683/345/1653/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "bottle size not confirmed from the photo"
+ },
+ {
+  "id": "p_c_wm84ikgiks",
+  "name": "SNAPPLE KIWI STRAWBERRY 160Z 12CT",
+  "code": "0076183163634",
+  "img": "https://images.openfoodfacts.org/images/products/007/618/316/3634/front_fr.7.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "older glass-bottle label"
+ },
+ {
+  "id": "p_c_wv1n1c71c6",
+  "name": "ARIZONA HALF N HALF 16FL 24PK",
+  "code": "0613008760663",
+  "img": "https://images.openfoodfacts.org/images/products/061/300/876/0663/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 90,
+  "note": "check it is not the Lite version; size not confirmed"
+ },
+ {
+  "id": "p_c_x6532d5jj1",
+  "name": "GATORADE LIME CUCUMBER 20OZ 24PK",
+  "code": "0052000133264",
+  "img": "https://images.openfoodfacts.org/images/products/005/200/013/3264/front_en.9.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_xl412ahd3h",
+  "name": "DUNKIN ORIGINAL ICED 13.7OZ 12CT",
+  "code": "0049000544404",
+  "img": "https://images.openfoodfacts.org/images/products/004/900/054/4404/front_en.3.400.jpg",
+  "status": "review",
+  "confidence": 91,
+  "note": "check it is the Original flavor"
+ },
+ {
+  "id": "p_c_y2aygvmrct",
+  "name": "BODY ARMOUR STRAWBEERY BANANA 16OZ",
+  "code": "0067000012327",
+  "img": "https://images.openfoodfacts.org/images/products/006/700/001/2327/front_en.13.400.jpg",
+  "status": "verified",
+  "confidence": 98
+ },
+ {
+  "id": "p_c_y2c8bolg91",
+  "name": "FIJI WATER 1L 2/6PK",
+  "code": "9417574000021",
+  "img": "https://images.openfoodfacts.org/images/products/941/757/400/0021/front_en.3.400.jpg",
+  "status": "verified",
+  "confidence": 97
+ },
+ {
+  "id": "p_c_yid3czx5zo",
+  "name": "EVIAN WATER 1.5L 12CT",
+  "code": "0061314000018",
+  "img": "https://images.openfoodfacts.org/images/products/006/131/400/0018/front_en.3.400.jpg",
+  "status": "verified",
+  "confidence": 96
+ }
+]

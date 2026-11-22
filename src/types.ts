@@ -202,3 +202,16 @@ export interface Snapshot {
   reason: string;
   json: string;
 }
+
+/**
+ * The owner's own decision about a product's picture (wins over the picture shipped with the app):
+ * 'approved' = the shipped picture is confirmed, 'rejected' = show no picture, 'manual' = his own photo.
+ * Kept across app updates and synced between phones.
+ */
+export interface ProductImageOverride {
+  id: string; // product id
+  status: 'approved' | 'rejected' | 'manual';
+  dataUrl?: string | null; // 'manual': the photo, resized to ≤ 400px (WebP/JPEG data URL)
+  catalogName: string;
+  updatedAt: number;
+}

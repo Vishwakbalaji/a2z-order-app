@@ -34,6 +34,22 @@ Live on GitHub Pages; every push to `main` runs `.github/workflows/deploy.yml` (
   snapshots with unique ids (WR-YYYY-MM-DD, revisions -R1…); corrections = new revision, never edits.
 - Commission = 1% of confirmed sales (orders with missing prices / voided orders excluded).
 
+## Product pictures (owner request 2026-11-22)
+- One picture of the single retail unit (bottle/can), keyed by PRODUCT ID (never by name):
+  `src/data/productImages.ts` + `public/products/t/<id>.webp` (160px thumb, precached) and `l/<id>.webp`
+  (480px preview, cached on first open). Logic: `src/lib/images.ts`; UI: `src/components/ProductImage.tsx`,
+  Settings → Manage Product Images (`src/screens/admin/ManageImages.tsx`).
+- Owner decisions (approve / reject / his own photo) live in the synced `productImages` table and ALWAYS win;
+  never overwrite them. Pictures with status 'review' are NOT shown until he approves. No picture > wrong picture.
+- Source: Open Food Facts (CC BY-SA 3.0, credited in the preview and Image credits). Retailer/manufacturer
+  photos are not copied (licence/terms). Every picture was checked by eye: brand, flavor, packaging, size.
+  Statuses: verified (size confirmed) · approx (size not confirmed, identity/packaging consistent) · review.
+- Pipeline (scripts/product-images/): `search.mjs run` (NODE_USE_ENV_PROXY=1) → `rank.py` → `sheets.py`
+  (contact sheets to LOOK at) → notes → `decide.py` → `node scripts/build-product-images.mjs decisions.json <dir>`.
+  Do not apply EXIF rotation (OFF pixels are already upright but often tagged rotate-90).
+- PDFs (order, detailed, weekly reports) NEVER contain product pictures.
+- 2026-11-22: 542 products → 69 verified, 53 approximate, 76 need review, 344 no picture (coverage 22.5%).
+
 ## When the owner uploads a CATALOG (or an updated PRICE SHEET) in chat
 Goal: products should appear under the catalog's names/departments/categories, priced from the price sheet.
 

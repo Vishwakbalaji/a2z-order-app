@@ -10,6 +10,8 @@ import { StoresScreen, StoreEditScreen } from './screens/Stores';
 import { SettingsScreen } from './screens/Settings';
 import { ImportPricesScreen } from './screens/admin/ImportPrices';
 import { ImportCatalogScreen } from './screens/admin/ImportCatalog';
+import { ImagePreviewHost } from './components/ProductImage';
+import { ManageImagesScreen } from './screens/admin/ManageImages';
 import { ReviewMatchesScreen } from './screens/admin/ReviewMatches';
 import { ManageProductsScreen, ProductEditScreen } from './screens/admin/ManageProducts';
 import { BackupScreen } from './screens/admin/Backup';
@@ -83,6 +85,7 @@ export function App() {
     else if (sub === 'review') screen = <ReviewMatchesScreen />;
     else if (sub === 'products') screen = sub2 ? <ProductEditScreen key={sub2} id={sub2} /> : <ManageProductsScreen />;
     else if (sub === 'backup') screen = <BackupScreen />;
+    else if (sub === 'images') screen = <ManageImagesScreen />;
     else screen = <SettingsScreen />;
   } else screen = <ProductsScreen />;
 
@@ -98,6 +101,7 @@ export function App() {
       </main>
       <BottomNav tab={tab === 'reports' ? 'orders' : tab === 'pair' ? 'settings' : ['cart', 'orders', 'stores', 'settings'].includes(tab) ? tab : 'products'} />
       <StorePickerHost />
+      <ImagePreviewHost />
       <DialogHost />
       <ToastHost />
     </div>

@@ -1,0 +1,236 @@
+# sheet 01
+3 C r 90 can size (8.4 or 12 oz) not confirmed
+4 C a 96
+8 C v 98
+9 A a 95 size not confirmed from the photo
+10 A r 90 listed as an energy shot; check it is the 16 oz can
+# sheet 02
+11 A v 98
+12 A r 90 flavor not readable on the bottle
+13 A v 97
+15 A r 90 Canadian (bilingual) can label
+16 A a 95 size not confirmed from the photo
+17 A v 97
+18 A v 98
+19 C a 95 size not confirmed from the photo
+20 B v 98
+# sheet 03
+21 A a 96
+23 B v 98
+24 C v 97
+28 A r 90 500 ml (European) can, catalog is 16 oz
+29 A a 96
+30 B v 97
+# sheet 04
+31 B r 90 can size (8.4 or 12 oz) not confirmed
+35 A v 98
+38 A r 91 labelled Apple; check it is the Green Apple flavor
+# sheet 05
+41 A r 90 photo shows the 16.9 oz bottle; catalog size cut off (price line 20 oz)
+43 A a 96
+45 A v 98
+46 A r 91 bottle size not confirmed
+49 A r 91 can size not confirmed
+# sheet 06
+54 A r 91 bottle size not confirmed from the photo
+55 C r 90 bottle size not confirmed from the photo
+58 A v 98
+59 B r 90 bottle size not confirmed from the photo
+# sheet 07
+62 A v 97
+65 A a 96
+67 B r 90 bottle size not confirmed from the photo
+68 A v 97
+70 A r 91 bottle size not confirmed from the photo
+# sheet 08
+75 A r 90 may be a non-US label
+76 A r 90 bottle held in hand; size not confirmed
+77 B v 98
+78 A r 90 flavor not readable on the label
+79 A r 90 bottle size not confirmed from the photo
+80 B v 98
+# sheet 09
+81 B a 96
+86 B r 90 can held in hand; size not confirmed
+88 A r 91 bottle size not confirmed from the photo
+# sheet 10
+91 A v 97
+94 B a 95
+95 A a 95
+96 A r 91 can size not confirmed
+97 C a 96
+98 A v 98
+99 B v 98
+# sheet 11
+101 A a 96
+104 C r 90 bottle size not confirmed from the photo
+105 A v 98
+106 A a 95 size not confirmed from the photo
+107 A v 98
+108 C r 90 bottle size not confirmed from the photo
+# sheet 12
+118 A a 96
+119 A r 91 bottle size not confirmed from the photo
+120 A a 96
+# sheet 13
+122 B r 90 600 ml bottle shown, catalog is 20 oz
+123 A r 91 can held in hand; size not confirmed
+124 A r 90 shown is Monster Reserve Orange Dreamsicle; check it is this product
+125 A r 91 bottle held in hand; size not confirmed
+126 A v 97
+127 B a 95 size not confirmed from the photo
+128 A v 97
+130 B v 97
+# sheet 14
+133 B v 98
+135 C a 96
+136 C r 90 can size not confirmed
+137 C v 98
+139 A a 95
+140 A r 90 close-up of the label only
+# sheet 15
+141 A a 95 size not confirmed from the photo
+142 A v 97
+144 C a 95 size not confirmed from the photo
+146 A a 95 size not confirmed from the photo
+147 B v 98
+150 B a 95 size not confirmed from the photo
+# sheet 16
+153 C r 90 bottle size not confirmed from the photo
+154 B a 96
+156 A r 90 bottle size (20 or 28 oz) not confirmed
+157 B a 95
+158 B v 98
+159 A v 97
+# sheet 17
+161 A v 98
+162 A r 90 may be a non-US label ("Lemon Flavour")
+169 C v 98
+# sheet 18
+171 A v 97
+175 A v 98
+177 A v 98
+178 B a 95
+180 A v 97
+# sheet 19
+186 A v 97
+187 A a 95 size not confirmed from the photo
+188 A r 90 green-tinted photo
+# sheet 20
+193 A v 97
+196 B v 98
+197 A v 96
+198 A a 96
+199 B r 90 may be a glass (non-US) bottle
+200 A v 97
+# sheet 21
+201 C r 90 bottle held in hand; size not confirmed
+203 C r 90 bottle size not confirmed from the photo
+206 C v 98
+# sheet 22
+211 A r 91 check it is the plastic (PET) bottle
+213 A a 95 size cut off in the catalog
+214 A v 98
+216 A a 96
+217 C a 96
+218 A r 90 can size not confirmed
+219 A r 91 bottle size not confirmed from the photo
+# sheet 23
+222 A v 98
+224 A r 91 dark photo; check the label
+225 B r 90 bottle held in hand; size not confirmed
+226 A v 98
+227 A v 97
+228 B a 96
+229 A r 90 bottle size (20 or 28 oz) not confirmed
+230 A v 97
+# sheet 24
+236 B r 90 can size not confirmed
+238 A v 98
+# sheet 25
+241 B v 98
+242 A r 91 can size not confirmed
+244 A v 97
+245 A a 96
+247 B r 91 680 ml (23 oz) can shown, catalog is 22 oz
+248 A a 96
+249 A r 90 can size not confirmed
+250 A a 95 size not confirmed from the photo
+# sheet 26
+251 A v 98
+253 A r 90 close-up of part of the can
+254 A r 91 can size not confirmed
+255 B a 96
+257 C a 95
+259 C a 95
+260 A a 96
+# sheet 27
+92 261A v 98
+261 A a 95 size cut off in the catalog
+263 A v 98
+264 A a 95 size not confirmed from the photo
+265 A a 96
+266 A a 95 size not confirmed from the photo
+270 B r 90 bottle size (16 or 28 oz) not confirmed
+# sheet 28
+272 B r 90 bottle size (20 or 28 oz) not confirmed
+274 A r 91 bottle size not confirmed from the photo
+275 A v 98
+278 A a 96
+279 B r 90 bottle size (1 L or 1.5 L) not confirmed
+280 C v 98
+# sheet 29
+281 A r 90 blurry photo
+283 A a 96
+285 A v 97
+286 A a 95 can held in hand
+290 A r 90 check it is regular Dr Pepper (not a flavor edition)
+# sheet 30
+300 A r 90 washed-out photo
+# sheet 31
+301 B r 90 may be a non-US juice drink bottle
+305 C a 95 size not confirmed from the photo
+308 A r 90 catalog says Blackberry; Bai's Brasilia flavor is Blueberry
+309 C a 95 size not confirmed from the photo
+# sheet 32
+311 C r 90 bottle size (20 or 28 oz) not confirmed
+312 A a 96
+313 A r 90 bottle size (20 or 28 oz) not confirmed
+315 B v 98
+317 C r 90 may be a non-US label ("flavour")
+318 A r 90 blurry photo
+319 B r 90 bottle size (20 or 28 oz) not confirmed
+# sheet 33
+321 A v 96
+322 C r 91 can size not confirmed
+323 A r 91 labelled "Sport Shake"; check it is this brand
+324 A v 97
+326 A v 97
+327 A r 90 close-up of a 600 ml bottle label
+# sheet 34
+331 B r 90 bottle size not confirmed from the photo
+333 C r 91 dark photo; size not confirmed
+336 B r 90 bottle size (20 or 28 oz) not confirmed
+337 A a 96
+340 A a 96
+# sheet 35
+342 A v 97
+345 A a 96
+347 A v 97
+# sheet 36
+352 A v 97
+353 B v 98
+355 A r 91 check plastic vs glass bottle
+356 B a 95 size not confirmed from the photo
+357 A v 97
+# sheet 37
+361 A r 90 dark photo; size not confirmed
+362 A r 90 bottle size not confirmed from the photo
+363 C r 90 older glass-bottle label
+365 B r 90 check it is not the Lite version; size not confirmed
+367 A v 98
+369 A r 91 check it is the Original flavor
+370 A v 98
+# sheet 38
+371 C v 97
+372 B v 96

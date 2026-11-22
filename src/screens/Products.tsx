@@ -7,6 +7,7 @@ import { search } from '../lib/search';
 import { effectivePrice, titleName } from '../lib/products';
 import { formatCents } from '../lib/money';
 import type { Product } from '../types';
+import { ProductThumb } from '../components/ProductImage';
 
 const PAGE = 60;
 
@@ -31,7 +32,8 @@ const ProductRow = memo(function ProductRow({ p, qty, price }: { p: Product; qty
   const tap = useCallback(() => askQty(p, qty), [p, qty]);
   const label = `${titleName(p)} ${p.variation}`.trim();
   return (
-    <li className={`row-cv flex items-center gap-2 px-3 py-2.5 border-b border-gray-100 ${qty > 0 ? 'bg-brand-light/60' : 'bg-white'}`} data-testid="product-row">
+    <li className={`row-cv flex items-center gap-2.5 px-3 py-2.5 border-b border-gray-100 ${qty > 0 ? 'bg-brand-light/60' : 'bg-white'}`} data-testid="product-row">
+      <ProductThumb p={p} size={64} />
       <div className="flex-1 min-w-0">
         <div className="font-semibold leading-snug text-[15px] break-words">{titleName(p) || p.variation}</div>
         {titleName(p) && p.variation && <div className="text-[15px] text-gray-800 leading-snug break-words">{p.variation}</div>}
