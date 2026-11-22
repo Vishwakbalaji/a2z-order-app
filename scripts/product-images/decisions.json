@@ -598,8 +598,9 @@
   "name": "MONSTER WHITE ZERO ULTRA 16OZ 24CT",
   "code": "0070847015208",
   "img": "https://images.openfoodfacts.org/images/products/007/084/701/5208/front_en.7.400.jpg",
-  "status": "verified",
-  "confidence": 98
+  "status": "approx",
+  "confidence": 95,
+  "note": "Canadian (bilingual) can label"
  },
  {
   "id": "p_c_1v1tw1ln8ao",

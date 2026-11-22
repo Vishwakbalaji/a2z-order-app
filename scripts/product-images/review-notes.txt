@@ -82,7 +82,7 @@
 128 A v 97
 130 B v 97
 # sheet 14
-133 B v 98
+133 B a 95 Canadian (bilingual) can label
 135 C a 96
 136 C r 90 can size not confirmed
 137 C v 98
