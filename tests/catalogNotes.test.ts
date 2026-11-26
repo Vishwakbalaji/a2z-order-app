@@ -1,5 +1,5 @@
 import 'fake-indexeddb/auto';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { AppDB, useDb, db } from '../src/db/db';
 import * as S from '../src/state/store';
 import { BUNDLED_DATASETS } from '../src/data/bundled';
@@ -18,6 +18,14 @@ const cat = (desc: string) => S.getState().products.find((p) => p.origin === 'ca
 const info = (desc: string) => S.priceInfoOf(cat(desc).id);
 
 describe("owner's price notes on the catalog PDF (bundled v9)", () => {
+  // these tests describe the data up to v9; v10 (the corrected full catalog) is tested in correctedCatalog.test.ts
+  let later: typeof BUNDLED_DATASETS = [];
+  beforeEach(() => {
+    later = BUNDLED_DATASETS.splice(9);
+  });
+  afterEach(() => {
+    BUNDLED_DATASETS.push(...later);
+  });
   it('a note line applies only when group, size, case count and multipack are identical', () => {
     expect(noteFor('COKE 20OZ 24CT', 'Coke')!.entry.cents).toBe(3299);
     expect(noteFor('FANTA STRAWBERRY 2L 1/8PK', 'Fanta')!.entry.cents).toBe(2150); // 1/8 = a case of 8

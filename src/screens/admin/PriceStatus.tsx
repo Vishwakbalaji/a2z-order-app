@@ -20,7 +20,7 @@ export function PriceStatusScreen() {
   const rows = useMemo(() => {
     const pos = new Map(browseIds.map((id, i) => [id, i]));
     return products
-      .filter((p) => p.origin !== 'pricesheet' && p.active)
+      .filter((p) => p.origin !== 'pricesheet' && p.active && !p.missingFromCatalog)
       .sort((a, b) => (pos.get(a.id) ?? 1e9) - (pos.get(b.id) ?? 1e9))
       .map((p) => ({ p, info: priceInfo(p, priceItemById) }));
   }, [products, priceItemById, browseIds]);

@@ -59,7 +59,7 @@ describe('owner price list A2Z_Mismatch_With_Prices (bundled v8)', () => {
     expect(s.products.filter((p) => p.supplement?.status === 'select').length).toBe(3);
     // Red Bull Amber: 8.4 oz per redbull.com → the 8 oz / 24 price ($40.99); orange in his list, so it stays approximate
     expect(info('RED BULL AMBER STRAWBERRY APPRICOT')).toMatchObject({ cents: 4099, status: 'approximate' });
-    expect(displayName(cat('RED BULL AMBER STRAWBERRY APPRICOT'))).toContain('8.4 OZ / 24 CT');
+    expect(displayName(cat('RED BULL AMBER STRAWBERRY APPRICOT'))).toContain('12 OZ / 24 CT'); // size from his corrected catalog
     // a safety copy was taken before applying
     expect((await db.snapshots.toArray()).some((x) => x.reason.includes('A2Z_Mismatch_With_Prices'))).toBe(true);
   });

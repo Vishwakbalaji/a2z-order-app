@@ -99,7 +99,7 @@ export function ManageProductsScreen() {
           </>
         ) : (
           <>
-            <p className="text-xs text-gray-500 px-1">Changing a line's price updates every product linked to it, and all draft carts. Completed orders keep their original prices.</p>
+            <p className="text-xs text-gray-500 px-1">The old price sheet, kept for reference. Catalog products are priced from your corrected catalog — to change a product's price, open it on the Products tab (or Settings › Prices to check). Completed orders always keep their original prices.</p>
             <ul className="bg-white rounded-2xl border border-gray-200 divide-y divide-gray-100">
               {lines.map((i) => (
                 <li key={i.id}>
@@ -153,7 +153,7 @@ export function ProductEditScreen({ id }: { id: string }) {
     variation: p?.variation || '',
     units: p?.unitsPerCase != null ? String(p.unitsPerCase) : '',
     sku: p?.sku || '',
-    active: p?.active ?? true,
+    active: (p?.active ?? true) && !p?.missingFromCatalog,
     override: centsToInput(p?.priceOverrideCents),
   }));
   const [linkId, setLinkId] = useState<string | null>(p?.priceItemId || null);
@@ -183,7 +183,7 @@ export function ProductEditScreen({ id }: { id: string }) {
       await addManualProduct({ ...base, catalogName: '', priceItemId: linkId });
       toast('Product added');
     } else {
-      await saveProduct({ ...p, ...base });
+      await saveProduct({ ...p, ...base, missingFromCatalog: f.active ? false : p.missingFromCatalog });
       if (linkId && linkId !== p.priceItemId) await confirmMatch(p.id, linkId);
       toast('Product saved');
     }
@@ -225,7 +225,7 @@ export function ProductEditScreen({ id }: { id: string }) {
           </div>
           <label className="flex items-center gap-3 py-2">
             <input type="checkbox" className="w-5 h-5 accent-brand" checked={f.active} onChange={(e) => setF({ ...f, active: e.target.checked })} />
-            <span className="font-medium">Active (uncheck to disable a discontinued product)</span>
+            <span className="font-medium">Show in product list (uncheck to hide a discontinued product)</span>
           </label>
         </Card>
         <Card className="p-4">
@@ -246,7 +246,7 @@ export function ProductEditScreen({ id }: { id: string }) {
               {linked ? 'Change price sheet line' : 'Link to price sheet line'}
             </button>
           )}
-          <Field label="Manual case price (optional)" hint="Overrides the price sheet. Leave empty to use the linked price sheet line.">
+          <Field label="Your case price (optional)" hint="Overrides the catalog price (shown green, confirmed by you). Leave empty to use the price from your corrected catalog.">
             <input className={inputCls} value={f.override} onChange={up('override')} inputMode="decimal" placeholder="e.g. 12.50" />
           </Field>
         </Card>

@@ -2,7 +2,7 @@ import type { DraftLine, PriceItem, PriceOption, PriceStatus, Product, Totals } 
 import { editDistance, normText, parsePack, tokens } from './normalize';
 import { standardName } from './naming';
 
-type Naming = Pick<Product, 'brand' | 'name' | 'variation'> & { origin?: Product['origin']; catalogName?: string; category?: string };
+type Naming = Pick<Product, 'brand' | 'name' | 'variation'> & { origin?: Product['origin']; catalogName?: string; category?: string; listName?: string };
 
 /**
  * Does the product name already say the brand? ("COKE CAN" for brand Coke, "NESQUICK …" for
@@ -25,6 +25,7 @@ function nameHasBrand(name: string, brand: string): boolean {
 const isA2ZLine = (p: { origin?: Product['origin']; catalogName?: string }) => p.origin === 'catalog' && !!p.catalogName && p.catalogName === p.catalogName.toUpperCase();
 
 export function displayName(p: Naming): string {
+  if (p.listName) return p.listName; // exactly as in the owner's latest catalog
   // catalog products: standardized name from the original catalog line ("PEPSI DIET — 12 OZ / 24 CT (2 × 12)")
   if (isA2ZLine(p)) return standardName(p.catalogName!, p.category).full;
   const parts = p.origin === 'catalog' && nameHasBrand(p.name, p.brand) ? [p.name, p.variation] : [p.brand, p.name, p.variation];
@@ -32,14 +33,16 @@ export function displayName(p: Naming): string {
 }
 
 /** Name without the size part (for the product card title). */
-export function titleName(p: Pick<Product, 'brand' | 'name'> & { origin?: Product['origin']; catalogName?: string; category?: string }): string {
+export function titleName(p: Pick<Product, 'brand' | 'name'> & { origin?: Product['origin']; catalogName?: string; category?: string; listName?: string }): string {
+  if (p.listName) return p.listName;
   if (isA2ZLine(p)) return standardName(p.catalogName!, p.category).title;
   const parts = p.origin === 'catalog' && nameHasBrand(p.name, p.brand) ? [p.name] : [p.brand, p.name];
   return parts.map((s) => (s || '').trim()).filter(Boolean).join(' ');
 }
 
 /** Size / case count line ("12 OZ / 24 CT (2 × 12)"); other products: their size text as entered. */
-export function sizeLabel(p: Pick<Product, 'variation'> & { origin?: Product['origin']; catalogName?: string; category?: string }): string {
+export function sizeLabel(p: Pick<Product, 'variation'> & { origin?: Product['origin']; catalogName?: string; category?: string; listName?: string }): string {
+  if (p.listName) return ''; // the catalog name already says size and pack
   if (isA2ZLine(p)) return standardName(p.catalogName!, p.category).size;
   return (p.variation || '').trim();
 }

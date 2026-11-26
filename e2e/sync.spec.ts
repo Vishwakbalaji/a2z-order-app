@@ -46,9 +46,9 @@ test('cloud sync: first phone uploads, second phone pairs, changes sync both way
   const A = await phone(browser, '2026-11-23T14:00:00Z'); // Mon Nov 23, 9 AM New York (week 1)
   await ready(A.page);
   await addStore(A.page, 'Cloud Store');
-  await addCases(A.page, 'coke 20oz', 'COKE 20 OZ / 24 CT', 2); // 2 × 32.99
+  await addCases(A.page, 'coke 20oz', 'COKE 20OZ 24CT', 2); // 2 × 32.99
   await finalize(A.page);
-  await addCases(A.page, 'sprite 20oz', 'SPRITE 20 OZ / 24 CT', 1); // stays in the cart (draft)
+  await addCases(A.page, 'sprite 20oz', 'SPRITE 20OZ 24CT', 1); // stays in the cart (draft)
   await A.page.goto('/#/settings');
   await expect(A.page.getByTestId('cloud-sync')).toContainText('Off');
   await A.page.getByRole('button', { name: 'Turn on cloud sync' }).click();
@@ -82,11 +82,11 @@ test('cloud sync: first phone uploads, second phone pairs, changes sync both way
   // the products are not duplicated
   await B.page.click('[data-testid=nav-products]');
   await B.page.fill('input[aria-label="Search products"]', 'coke 20oz 24ct');
-  await expect(B.page.getByRole('button', { name: 'Increase COKE 20 OZ / 24 CT', exact: true })).toHaveCount(1);
+  await expect(B.page.getByRole('button', { name: 'Increase COKE 20OZ 24CT', exact: true })).toHaveCount(1);
 
   // ---------- phone B takes an order → phone A sees it
   await addStore(B.page, 'Phone B Store');
-  await addCases(B.page, 'monster green', 'MONSTER GREEN 16 OZ / 24 CT', 3); // 3 × 38.50
+  await addCases(B.page, 'monster green', 'MONSTER GREEN 16OZ 24CT', 3); // 3 × 38.50
   await finalize(B.page);
   await syncAndWait(B.page);
   await syncAndWait(A.page);

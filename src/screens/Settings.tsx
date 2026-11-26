@@ -41,7 +41,6 @@ function LinkRow({ href, icon, title, sub, badge }: { href: string; icon: string
 
 export function SettingsScreen() {
   const settings = useApp((s) => s.settings);
-  const reviewCount = useApp((s) => s.reviewCount);
   const products = useApp((s) => s.products);
   const priceItems = useApp((s) => s.priceItems);
   const [rep, setRep] = useState({ repName: settings.repName, repPhone: settings.repPhone });
@@ -59,7 +58,6 @@ export function SettingsScreen() {
       }
     })();
   }, []);
-  const unmatched = products.filter((p) => p.active && p.origin !== 'pricesheet' && p.matchStatus === 'unmatched').length;
   const catalogCount = products.filter((p) => p.origin === 'catalog').length;
   const priceToCheck = useApp((s) => s.priceToCheck);
 
@@ -104,9 +102,8 @@ export function SettingsScreen() {
           <LinkRow
             href="#/settings/review"
             icon="link"
-            title="Review price matching"
-            sub="Confirm catalog ↔ price sheet matches"
-            badge={reviewCount + unmatched > 0 ? <Badge tone="amber">{reviewCount + unmatched}</Badge> : undefined}
+            title="Price sheet links (advanced)"
+            sub="How products link to the old price sheet · prices now come from your corrected catalog"
           />
           <LinkRow href="#/settings/products" icon="edit" title="Products & prices" sub="Edit, add, disable products · change prices" />
           <LinkRow href="#/settings/backup" icon="download" title="Backup & restore" sub="Save all data to a file · restore it on any phone" />

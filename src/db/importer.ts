@@ -6,10 +6,11 @@ import { db, stableId, uid } from './db';
 import { takeSnapshot } from './backup';
 import type { DraftLine, Mapping, PriceItem, Product, Settings } from '../types';
 import { matchProduct, buildSiblingCounts, DEFAULT_CONTEXT } from '../lib/matching';
-import { displayName, mappingKey, priceItemKey, unitsFromText } from '../lib/products';
+import { displayName, mappingKey, priceItemKey, supersededPriceItemIds, unitsFromText } from '../lib/products';
 import type { BundledMapping } from '../data/bundled';
 import { normText } from '../lib/normalize';
 import type { SupplementRow } from '../data/supplementPrices';
+import type { CorrectedRow } from '../data/correctedCatalog';
 
 export interface PriceRowInput {
   section: string;
@@ -387,6 +388,21 @@ export async function syncBundledData(): Promise<number[]> {
           review: r.select,
         };
       }
+      if (ds.kind === 'correctedCatalog') {
+        const r = await applyCorrectedCatalog(ds.rows, ds.fileName);
+        const fmt = (c: number) => `$${(c / 100).toFixed(2)}`;
+        notice = {
+          title: 'Your corrected catalog applied',
+          text:
+            `Names and prices now follow your corrected catalog: ${r.priced} prices confirmed (green), ${r.blank} left blank for you to fill in.` +
+            (r.added ? ` ${r.added} new products added (Saratoga glass / plastic).` : '') +
+            (r.hidden ? ` ${r.hidden} products that are not in this catalog are hidden from the list (kept — Settings › Manage products).` : '') +
+            (r.replaced.length ? ` Prices you had typed in the app that differ from the catalog were updated: ${r.replaced.map((x) => `${x.name} ${fmt(x.from)} → ${fmt(x.to)}`).join('; ')}.` : '') +
+            ' A safety copy of your data was saved first (Settings › Backup & restore).',
+          at: Date.now(),
+          review: 0,
+        };
+      }
       if (ds.kind === 'rematch') {
         const prev = new Map((await db.products.toArray()).map((p) => [p.id, p]));
         await rematchCatalogProducts();
@@ -512,3 +528,84 @@ async function addBundledMappings(list: BundledMapping[]) {
 }
 
 export { displayName };
+
+/**
+ * The owner's corrected full catalog (bundled v10): every row's name is shown exactly as printed, its green/red price
+ * becomes the confirmed price, a blank price stays blank. New rows become new catalog products. Catalog and
+ * price-sheet products that are not in this catalog are hidden from the list (flagged, never deleted). His file is
+ * his latest verified list, so a different price he had typed in the app earlier is updated (and listed in the notice).
+ */
+export async function applyCorrectedCatalog(rows: CorrectedRow[], fileName: string) {
+  await takeSnapshot(`Before the corrected catalog (${fileName.replace(/\.pdf\b/, '')})`);
+  const { splitDescription } = await import('../data/a2zCatalog');
+  const res = { priced: 0, blank: 0, added: 0, hidden: 0, replaced: [] as { name: string; from: number; to: number }[] };
+  const now = Date.now();
+  await db.transaction('rw', db.products, async () => {
+    const all = await db.products.toArray();
+    const byLine = new Map<string, Product>();
+    for (const p of all) if (p.origin === 'catalog' && p.catalogName) byLine.set(normText(p.catalogName), p);
+    const covered = new Set<string>();
+    let order = all.reduce((m, p) => Math.max(m, p.order), 0);
+    for (const [name, cents, color, appLine, group, department] of rows) {
+      const existing = byLine.get(normText(appLine ?? name));
+      if (existing && covered.has(existing.id)) continue; // the same product printed twice ("RED BULL 20OZ 12CT / 12PK")
+      const supplement: NonNullable<Product['supplement']> = {
+        cents,
+        status: cents != null ? 'confirmed' : 'none',
+        row: name,
+        source: fileName,
+        ...(cents == null ? { note: 'Blank in your corrected catalog' } : color === 'red' ? { note: 'Red in your corrected catalog' } : {}),
+        at: now,
+      };
+      if (existing) {
+        covered.add(existing.id);
+        let { priceOverrideCents, priceConfirmedAt } = existing;
+        if (cents != null && priceOverrideCents != null && priceOverrideCents !== cents) {
+          res.replaced.push({ name, from: priceOverrideCents, to: cents });
+          priceOverrideCents = null;
+          priceConfirmedAt = null;
+        }
+        await db.products.put({ ...existing, listName: name, supplement, priceOverrideCents, priceConfirmedAt, missingFromCatalog: false, updatedAt: now });
+      } else {
+        const { name: n, variation } = splitDescription(name);
+        const base = { department, category: group, brand: group, name: n, variation, unitsPerCase: unitsFromText(variation), sku: '', catalogName: name };
+        const id = stableId('p_c_', mappingKey(base));
+        const old = await db.products.get(id);
+        const p: Product = {
+          ...(old || {
+            id,
+            origin: 'catalog' as const,
+            priceItemId: null,
+            priceOverrideCents: null,
+            matchStatus: 'unmatched' as const,
+            matchMethod: '',
+            matchScore: 0,
+            suggestedPriceItemId: null,
+            active: true,
+            order: (order += 10),
+            createdAt: now,
+          }),
+          ...base,
+          listName: name,
+          supplement,
+          missingFromCatalog: false,
+          updatedAt: now,
+        };
+        await db.products.put(p);
+        covered.add(id);
+        if (!old) res.added++;
+      }
+      if (cents != null) res.priced++;
+      else res.blank++;
+    }
+    // products from the earlier catalog / price sheet that are not in this catalog: hidden from the list, kept.
+    // (Counted only if they were on the list before — price-sheet lines already shown through a catalog product were not.)
+    const shownBefore = supersededPriceItemIds(all);
+    for (const p of await db.products.toArray()) {
+      if (covered.has(p.id) || p.missingFromCatalog || !p.active || (p.origin !== 'catalog' && p.origin !== 'pricesheet')) continue;
+      await db.products.put({ ...p, missingFromCatalog: true, updatedAt: now });
+      if (p.origin === 'catalog' || !(p.priceItemId && shownBefore.has(p.priceItemId))) res.hidden++;
+    }
+  });
+  return res;
+}

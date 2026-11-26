@@ -89,7 +89,8 @@ function deriveCatalog(products: Product[], priceItems: PriceItem[]): Partial<Ap
   const priceItemById = new Map(priceItems.map((i) => [i.id, i]));
   const productById = new Map(products.map((p) => [p.id, p]));
   const sup = supersededPriceItemIds(products);
-  const visible = products.filter((p) => p.active && !(p.origin === 'pricesheet' && p.priceItemId && sup.has(p.priceItemId)));
+  // not in the owner's latest catalog → hidden from the list (kept for carts/orders; can be shown again in Manage products)
+  const visible = products.filter((p) => p.active && !p.missingFromCatalog && !(p.origin === 'pricesheet' && p.priceItemId && sup.has(p.priceItemId)));
   const deptOrder = new Map<string, number>();
   [...products].sort((a, b) => a.order - b.order).forEach((p) => {
     const d = p.department || 'Other';

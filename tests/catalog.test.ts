@@ -1,5 +1,5 @@
 import 'fake-indexeddb/auto';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { AppDB, useDb, db } from '../src/db/db';
 import * as S from '../src/state/store';
 import { BUNDLED_DATASETS, LATEST_BUNDLED_VERSION } from '../src/data/bundled';
@@ -19,6 +19,14 @@ async function fresh() {
 const cat = (desc: string) => S.getState().products.find((p) => p.origin === 'catalog' && p.catalogName === desc)!;
 
 describe('real A2Z catalog (bundled update v2)', () => {
+  // these tests describe the data up to v9; v10 (the corrected full catalog) is tested in correctedCatalog.test.ts
+  let later: typeof BUNDLED_DATASETS = [];
+  beforeEach(() => {
+    later = BUNDLED_DATASETS.splice(9);
+  });
+  afterEach(() => {
+    BUNDLED_DATASETS.push(...later);
+  });
   it('catalog data matches the PDF: every printed description is present exactly once', async () => {
     const pages = await loadPdfPages(new URL('./fixtures/A2Z_Beverages_Product_List_11.20.26.pdf', import.meta.url).pathname);
     const printed = new Set<string>();
@@ -36,7 +44,7 @@ describe('real A2Z catalog (bundled update v2)', () => {
 
   it('imports all 543 products, prices only reliable matches, no duplicates, searchable at once', async () => {
     const s = await fresh();
-    expect(s.settings.bundledVersion).toBe(LATEST_BUNDLED_VERSION);
+    expect(s.settings.bundledVersion).toBe(9); // v10 is set aside in this file
     const catalog = s.products.filter((p) => p.origin === 'catalog');
     // 543 printed products; "RED BULL 20OZ 12CT" and "RED BULL 20OZ 12PK" are the same product written two ways
     expect(catalog.length).toBe(542);

@@ -111,7 +111,18 @@ Goal: products should appear under the catalog's names/departments/categories, p
   products confirmed. Pepsi/Dew/Dr Pepper 2L: note $13.99 ≠ price sheet $21.50 → note used (told the owner).
   Not covered: Sprite Mexico 330ML, Fanta Pineapple/Strawberry Mexico 335ML (note says 355 ML). → 495 confirmed,
   34 approximate, 3 needs review, 10 not listed. List for the owner: `OUT=… npx vitest run tests/tool-unconfirmed.test.ts`.
-Next free version: 10 (also set BUNDLED_VERSION in src/data/bundledVersion.ts — a test checks they match).
+- v10 correctedCatalog: owner's "A2Z_Corrected_Full_Catalog.pdf" (2026-11-26, tests/fixtures; damaged xref — poppler
+  can't open it, PyMuPDF and pdf.js can; 5 red entries are FreeText notes). THE CURRENT SOURCE OF TRUTH for names and
+  prices: src/data/correctedCatalog.ts (543 rows; extracted with PyMuPDF colors + pdf.js, checked vs page images;
+  tests/correctedCatalog.test.ts re-checks the data against the PDF). `Product.listName` = name exactly as printed
+  (displayName/titleName use it; sizeLabel empty). Green/red = confirmed price; blank (ARIZONA W/O PRICE VPK) = none.
+  8 new Saratoga lines (glass/plastic); products not in it (old Saratoga ×5, Topo Chico ×3, 8 price-sheet-only items)
+  get `missingFromCatalog` → hidden from the list, kept (Manage products › "Show in product list"). Prices he typed
+  earlier that differ were updated to the catalog (listed in the notice); his price on the blank row kept.
+  → 541 confirmed, 1 blank. Pepsi/Dew/Dr Pepper 2L = $21.50 (his file), Red Bull Amber Strawberry = 12 OZ 24CT $54.99.
+  Old price-sheet line edits no longer change catalog prices (catalog price comes first); change prices per product.
+  Tests for v2–v9 set v10 aside (beforeEach splice(9)).
+Next free version: 11 (also set BUNDLED_VERSION in src/data/bundledVersion.ts — a test checks they match).
 
 ## Cloud sync (Cloudflare Worker + D1) — `worker/`
 - `worker/src/index.ts`: /status, /claim (first phone sets the key hash), /sync (push outbox + pull by seq),

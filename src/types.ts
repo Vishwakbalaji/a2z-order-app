@@ -47,6 +47,7 @@ export interface Product {
   /** When the owner confirmed an approximate price or picked one of several (stored in priceOverrideCents). */
   priceConfirmedAt?: number | null;
   active: boolean; // false = discontinued / hidden
+  listName?: string; // the name exactly as in the owner's latest catalog (A2Z_Corrected_Full_Catalog) — shown in the app
   missingFromCatalog?: boolean; // was in an earlier catalog but not in the latest one (kept, flagged)
   order: number;
   createdAt: number;
