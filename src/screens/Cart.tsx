@@ -5,12 +5,14 @@ import { PdfActions } from '../components/PdfActions';
 import { pickStore } from '../components/StorePicker';
 import { askQty } from './Products';
 import { useApp, changeQty, setQty, setNote, clearDraft, finalizeOrder, cartTotals, getState, isFirstOrderPending } from '../state/store';
-import { displayName, priceInfo, sizeLabel, titleName, type PriceInfo } from '../lib/products';
+import { displayName, sizeLabel, titleName, type PriceInfo } from '../lib/products';
 import { PriceLabel } from '../components/PriceLabel';
 import { formatCents } from '../lib/money';
 import type { DraftLine, Product } from '../types';
 import type { PdfOrder } from '../lib/pdfExport';
 import { go } from '../lib/router';
+
+const NO_PRICE: PriceInfo = { cents: null, status: 'none', source: '' };
 
 const CartRow = memo(function CartRow({ line, p, info }: { line: DraftLine; p: Product | undefined; info: PriceInfo }) {
   const price = info.cents;
@@ -79,7 +81,7 @@ export function CartScreen() {
   const stores = useApp((s) => s.stores);
   const drafts = useApp((s) => s.drafts);
   const productById = useApp((s) => s.productById);
-  const priceItemById = useApp((s) => s.priceItemById);
+  const priceInfoById = useApp((s) => s.priceInfoById);
   const settings = useApp((s) => s.settings);
   const store = stores.find((s) => s.id === storeId);
   const lines = (storeId && drafts.get(storeId)) || [];
@@ -96,7 +98,7 @@ export function CartScreen() {
       date: new Date(),
       lines: lines.map((l) => {
         const p = s.productById.get(l.productId);
-        const info = p ? priceInfo(p, s.priceItemById) : null;
+        const info = s.priceInfoById.get(l.productId) || null;
         return { name: p ? displayName(p) : '(deleted product)', qty: l.qty, priceCents: info?.cents ?? null, note: l.note, approx: info?.status === 'approximate' };
       }),
       totals: cartTotals(lines, s),
@@ -148,7 +150,7 @@ export function CartScreen() {
             <ul className="bg-white mt-3 border-y border-gray-200">
               {lines.map((l) => {
                 const p = productById.get(l.productId);
-                return <CartRow key={l.productId} line={l} p={p} info={p ? priceInfo(p, priceItemById) : { cents: null, status: 'none', source: '' }} />;
+                return <CartRow key={l.productId} line={l} p={p} info={priceInfoById.get(l.productId) || NO_PRICE} />;
               })}
             </ul>
           )}

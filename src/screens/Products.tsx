@@ -4,11 +4,12 @@ import { Icon, Stepper, promptDialog } from '../components/ui';
 import { pickStore } from '../components/StorePicker';
 import { useApp, changeQty, setQty, updateSettings } from '../state/store';
 import { search } from '../lib/search';
-import { priceInfo, sizeLabel, titleName, type PriceInfo } from '../lib/products';
+import { sizeLabel, titleName, type PriceInfo } from '../lib/products';
 import { PriceLabel } from '../components/PriceLabel';
 import type { Product } from '../types';
 
 const PAGE = 60;
+const NO_PRICE: PriceInfo = { cents: null, status: 'none', source: '' };
 
 async function ensureStoreThen(fn: () => boolean) {
   if (fn()) return;
@@ -49,28 +50,45 @@ export function ProductsScreen() {
   const browseIds = useApp((s) => s.browseIds);
   const index = useApp((s) => s.index);
   const productById = useApp((s) => s.productById);
-  const priceItemById = useApp((s) => s.priceItemById);
+  const priceInfoById = useApp((s) => s.priceInfoById);
   const departments = useApp((s) => s.departments);
+  const subOf = useApp((s) => s.subOf);
+  const subsByDept = useApp((s) => s.subsByDept);
   const drafts = useApp((s) => s.drafts);
   const storeId = useApp((s) => s.settings.selectedStoreId);
   const notice = useApp((s) => s.settings.dataNotice);
 
   const [q, setQ] = useState(() => sessionStorage.getItem('q') || '');
-  const [dept, setDept] = useState(() => sessionStorage.getItem('dept') || 'All');
+  const [dept, setDeptRaw] = useState(() => sessionStorage.getItem('dept') || 'All');
+  const [sub, setSub] = useState(() => sessionStorage.getItem('sub') || 'All');
+  const setDept = (d: string) => {
+    setDeptRaw(d);
+    setSub('All');
+  };
   const dq = useDeferredValue(q);
   useEffect(() => {
     try {
       sessionStorage.setItem('q', q);
       sessionStorage.setItem('dept', dept);
+      sessionStorage.setItem('sub', sub);
     } catch {
       /* ignore */
     }
-  }, [q, dept]);
+  }, [q, dept, sub]);
+  const subs = dept === 'All' ? [] : subsByDept.get(dept) || [];
+  const activeSub = subs.includes(sub) ? sub : 'All';
 
   const qtyMap = useMemo(() => new Map((storeId ? drafts.get(storeId) || [] : []).map((l) => [l.productId, l.qty])), [drafts, storeId]);
-  const deptIds = useMemo(() => (dept === 'All' ? browseIds : browseIds.filter((id) => (productById.get(id)?.department || 'Other') === dept)), [dept, browseIds, productById]);
+  const inDept = useMemo(() => (dept === 'All' ? browseIds : browseIds.filter((id) => (productById.get(id)?.department || 'Other') === dept)), [dept, browseIds, productById]);
+  const subCounts = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const id of inDept) m.set(subOf.get(id) || '', (m.get(subOf.get(id) || '') || 0) + 1);
+    return m;
+  }, [inDept, subOf]);
+  const deptIds = useMemo(() => (activeSub === 'All' ? inDept : inDept.filter((id) => subOf.get(id) === activeSub)), [inDept, activeSub, subOf]);
   const ids = useMemo(() => search(dq, deptIds, index), [dq, deptIds, index]);
   const allCount = useMemo(() => (dept !== 'All' && dq.trim() && ids.length === 0 ? search(dq, browseIds, index).length : 0), [dept, dq, ids, browseIds, index]);
+  const searching = !!dq.trim();
 
   const [limit, setLimit] = useState(PAGE);
   useEffect(() => setLimit(PAGE), [ids]);
@@ -83,23 +101,36 @@ export function ProductsScreen() {
     return () => io.disconnect();
   }, [ids.length, limit]);
 
-  const showHeaders = !dq.trim() && dept === 'All';
+  // headings: section (when showing all) and price-sheet brand heading (when not narrowed to one brand)
+  const showDept = !searching && dept === 'All';
+  const showSub = !searching && activeSub === 'All';
   const visible = ids.slice(0, limit);
   const rows: React.ReactNode[] = [];
   let lastDept = '';
+  let lastSub = '';
   for (const id of visible) {
     const p = productById.get(id);
     if (!p) continue;
     const d = p.department || 'Other';
-    if (showHeaders && d !== lastDept) {
+    if (showDept && d !== lastDept) {
       rows.push(
-        <li key={'h-' + d} className="bg-gray-100 px-3 py-1.5 text-xs font-bold tracking-wide text-gray-600 uppercase border-b border-gray-200">
+        <li key={'h-' + d} className="bg-gray-200 px-3 py-1.5 text-xs font-bold tracking-wide text-gray-700 uppercase border-b border-gray-300" data-testid="dept-heading">
           {d}
         </li>,
       );
       lastDept = d;
+      lastSub = '';
     }
-    rows.push(<ProductRow key={id} p={p} qty={qtyMap.get(id) || 0} info={priceInfo(p, priceItemById)} />);
+    const sb = subOf.get(id) || '';
+    if (showSub && sb !== lastSub) {
+      rows.push(
+        <li key={'s-' + d + sb} className="bg-gray-50 px-3 py-1 text-xs font-semibold text-brand border-b border-gray-200" data-testid="sub-heading">
+          {sb}
+        </li>,
+      );
+      lastSub = sb;
+    }
+    rows.push(<ProductRow key={id} p={p} qty={qtyMap.get(id) || 0} info={priceInfoById.get(id) || NO_PRICE} />);
   }
 
   return (
@@ -143,6 +174,23 @@ export function ProductsScreen() {
               </button>
             ))}
           </div>
+          {subs.length > 1 && (
+            <div className="flex gap-1.5 overflow-x-auto no-scrollbar mt-2 -mx-3 px-3" role="tablist" aria-label="Brands">
+              {['All', ...subs].map((sname) => (
+                <button
+                  key={sname}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeSub === sname}
+                  onClick={() => setSub(sname)}
+                  className={`shrink-0 h-8 px-3 rounded-lg text-[13px] font-semibold border ${activeSub === sname ? 'bg-brand-light text-brand border-brand' : 'bg-gray-50 text-gray-700 border-gray-200'}`}
+                >
+                  {sname === 'All' ? `All ${dept.charAt(0) + dept.slice(1).toLowerCase()}` : sname}
+                  <span className="ml-1 text-gray-500 font-normal">{sname === 'All' ? inDept.length : subCounts.get(sname) || 0}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
       {notice && !q && (
@@ -164,14 +212,15 @@ export function ProductsScreen() {
         </div>
       )}
       <div className="px-3 py-1.5 text-xs text-gray-500 bg-gray-50 border-b border-gray-200" aria-live="polite">
-        {ids.length} product{ids.length === 1 ? '' : 's'} · prices are per case
+        {ids.length} product{ids.length === 1 ? '' : 's'}
+        {searching && (dept !== 'All' || activeSub !== 'All') ? ` in ${activeSub !== 'All' ? activeSub : dept.charAt(0) + dept.slice(1).toLowerCase()}` : ''} · prices are per case
       </div>
       <ul className="bg-white flex-1">{rows}</ul>
       {ids.length === 0 && (
         <div className="text-center text-gray-500 py-12 px-6">
           <p className="font-semibold text-gray-700">No products found</p>
           {allCount > 0 && (
-            <button type="button" className="mt-3 text-brand font-semibold underline" onClick={() => setDept('All')}>
+            <button type="button" className="mt-3 text-brand font-semibold underline" onClick={() => setDept('All')} data-testid="search-all">
               Show {allCount} result{allCount === 1 ? '' : 's'} in all departments
             </button>
           )}

@@ -138,7 +138,7 @@ describe('real A2Z catalog (bundled update v2)', () => {
     const sheetCoke = s.products.find((p) => p.origin === 'pricesheet' && displayName(p) === 'COKE / FANTA / SPRITE & FLAVORS 20OZ / 24CT')!;
     expect(s.browseIds).not.toContain(sheetCoke.id);
     // the one-time summary notice
-    expect(s.settings.dataNotice?.title).toBe('New prices from your price list');
+    expect(s.settings.dataNotice?.title).toBe('Your catalog price notes applied');
     expect(s.settings.dataNotice?.text).toContain('A safety copy of your data was saved first');
   });
 
@@ -197,7 +197,7 @@ describe('real A2Z catalog (bundled update v2)', () => {
 
     // v6: the owner accepts suggestions above 80% — never over his own decisions
     BUNDLED_DATASETS.push(...saved.slice(1));
-    expect(await syncBundledData()).toEqual([6, 7, 8]);
+    expect(await syncBundledData()).toEqual([6, 7, 8, 9]);
     await S.reload();
     expect(S.priceOf(cat('SMART WATER ALKLINE 1.5L 12CT').id)).toBe(2999);
     expect(cat('SMART WATER ALKLINE 1.5L 12CT').matchMethod).toBe('owner80');

@@ -52,6 +52,14 @@ Live on GitHub Pages; every push to `main` runs `.github/workflows/deploy.yml` (
   "(2 × 12)" multipacks; 36CT stays 36). The printed catalog text stays the key (mappingKey) and stays searchable.
   Size/count corrections with evidence: `src/data/catalogCorrections.ts` (Red Bull Amber = 8.4 oz, redbull.com).
 
+## Categories & speed (owner request 2026-11-26)
+- Products screen: section chips (price-sheet sections) → brand-heading chips (`src/lib/categories.ts`: each catalog
+  Group goes under the price-sheet heading most of its products are priced from, e.g. "Coke / Fanta / Sprite & Flavors";
+  brands not on the sheet keep their name). List ordered section → heading (price-sheet order). Search works inside the
+  chosen category, with "Show N results in all departments" when nothing matches there.
+- Speed: price info computed once per data change (`state.priceInfoById`, rows stay memoized); secondary screens are
+  React.lazy; bundled documents are loaded only when `settings.bundledVersion < BUNDLED_VERSION`.
+
 ## When the owner uploads a CATALOG (or an updated PRICE SHEET) in chat
 Goal: products should appear under the catalog's names/departments/categories, priced from the price sheet.
 
@@ -96,7 +104,14 @@ Goal: products should appear under the catalog's names/departments/categories, p
 - v8 supplement: owner's "A2Z_Mismatch_With_Prices.pdf" (50 rows → exact catalog lines, tests/supplement.test.ts;
   safety snapshot first; his own prices win) → 482 confirmed, 44 approximate, 5 needs review (3 price selection),
   11 Price Not Listed.
-Next free version: 9.
+- v9 supplement: owner's price NOTES written on the catalog PDF (FreeText annotations, pages 1–2;
+  tests/fixtures/A2Z_Beverages_Product_List_11.20.26_notes.pdf; src/data/catalogPriceNotes.ts, tests/catalogNotes.test.ts):
+  group prices by size/count (Coke·Sprite·Fanta, Canada Dry, Pepsi·Dew·Dr Pepper, Sunkist·Crush·Schweeps, Gatorade,
+  A&W·7UP) + his picks for Canada Dry Ginger Ale/Tonic Zero. Applied only on identical size+count(+multipack) → 118
+  products confirmed. Pepsi/Dew/Dr Pepper 2L: note $13.99 ≠ price sheet $21.50 → note used (told the owner).
+  Not covered: Sprite Mexico 330ML, Fanta Pineapple/Strawberry Mexico 335ML (note says 355 ML). → 495 confirmed,
+  34 approximate, 3 needs review, 10 not listed. List for the owner: `OUT=… npx vitest run tests/tool-unconfirmed.test.ts`.
+Next free version: 10 (also set BUNDLED_VERSION in src/data/bundledVersion.ts — a test checks they match).
 
 ## Cloud sync (Cloudflare Worker + D1) — `worker/`
 - `worker/src/index.ts`: /status, /claim (first phone sets the key hash), /sync (push outbox + pull by seq),

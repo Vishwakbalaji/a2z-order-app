@@ -10,7 +10,9 @@ import { exportBackup, restoreBackup, restoreSnapshot, type BackupFile } from '.
 import type { Draft, DraftLine, Order, OrderAdjustment, PriceItem, Product, Settings, Store } from '../types';
 import { ensureWeeklyReports } from '../db/reports';
 import { buildIndex, type IndexEntry } from '../lib/search';
-import { computeTotals, displayName, effectivePrice, priceInfo, supersededPriceItemIds, type PriceInfo } from '../lib/products';
+import { buildCategories } from '../lib/categories';
+import { BUNDLED_VERSION } from '../data/bundledVersion';
+import { computeTotals, displayName, priceInfo, supersededPriceItemIds, type PriceInfo } from '../lib/products';
 
 export interface AppState {
   ready: boolean;
@@ -25,7 +27,11 @@ export interface AppState {
   index: Map<string, IndexEntry>;
   browseIds: string[]; // active, visible products in catalog order
   departments: string[];
+  subOf: Map<string, string>; // productId → price-sheet brand heading ("Coke / Fanta / Sprite & Flavors")
+  subsByDept: Map<string, string[]>; // department → headings, price-sheet order
+  priceInfoById: Map<string, PriceInfo>; // computed once per data change (rows stay memoized)
   reviewCount: number;
+  priceToCheck: number; // products needing the owner: choose a price / review (status 'review')
   reportsVersion: number;
 }
 
@@ -55,7 +61,11 @@ let state: AppState = {
   index: new Map(),
   browseIds: [],
   departments: [],
+  subOf: new Map(),
+  subsByDept: new Map(),
+  priceInfoById: new Map(),
   reviewCount: 0,
+  priceToCheck: 0,
   reportsVersion: 0,
 };
 
@@ -85,17 +95,23 @@ function deriveCatalog(products: Product[], priceItems: PriceItem[]): Partial<Ap
     const d = p.department || 'Other';
     if (!deptOrder.has(d)) deptOrder.set(d, deptOrder.size);
   });
-  // within a department: grouped by brand (A–Z), catalog products first, then catalog / sheet order
+  // within a department: by price-sheet brand heading (price-sheet order), then brand, catalog products first,
+  // then catalog / sheet order
+  const cats = buildCategories(visible, priceItemById);
+  const subRank = new Map<string, number>();
+  for (const list of cats.subsByDept.values()) list.forEach((l, i) => subRank.set(l, i));
   const groupKey = (p: Product) => (p.category || p.brand || '').toUpperCase().split(/[\s/]+/)[0] || '~';
   const keys = new Map(visible.map((p) => [p.id, groupKey(p)]));
   visible.sort(
     (a, b) =>
       deptOrder.get(a.department || 'Other')! - deptOrder.get(b.department || 'Other')! ||
+      subRank.get(cats.sub.get(a.id)!)! - subRank.get(cats.sub.get(b.id)!)! ||
       keys.get(a.id)!.localeCompare(keys.get(b.id)!) ||
       Number(a.origin === 'pricesheet') - Number(b.origin === 'pricesheet') ||
       a.order - b.order,
   );
   const departments = [...new Set(visible.map((p) => p.department || 'Other'))];
+  const priceInfoById = new Map(products.map((p) => [p.id, priceInfo(p, priceItemById)]));
   return {
     products,
     productById,
@@ -104,13 +120,18 @@ function deriveCatalog(products: Product[], priceItems: PriceItem[]): Partial<Ap
     index: buildIndex(visible),
     browseIds: visible.map((p) => p.id),
     departments,
+    subOf: cats.sub,
+    subsByDept: cats.subsByDept,
+    priceInfoById,
+    priceToCheck: visible.filter((p) => p.origin !== 'pricesheet' && priceInfoById.get(p.id)!.status === 'review').length,
     reviewCount: products.filter((p) => p.active && p.origin !== 'pricesheet' && p.matchStatus === 'review').length,
   };
 }
 
 export async function init() {
   try {
-    await importer.syncBundledData();
+    const have = (await db.settings.get('app'))?.bundledVersion ?? 0;
+    if (have < BUNDLED_VERSION) await importer.syncBundledData();
     await reload();
     await refreshReports(); // finalize any reporting week that ended while the app was closed
     // ask the browser not to evict our data under storage pressure
@@ -159,12 +180,14 @@ export async function reload() {
 /* ------------------------- prices & totals ------------------------- */
 
 export function priceOf(productId: string, s: AppState = state): number | null {
-  const p = s.productById.get(productId);
-  return p ? effectivePrice(p, s.priceItemById) : null;
+  return priceInfoOf(productId, s).cents;
 }
+const NOT_FOUND: PriceInfo = { cents: null, status: 'none', source: 'Product not found' };
 export function priceInfoOf(productId: string, s: AppState = state): PriceInfo {
+  const known = s.priceInfoById.get(productId);
+  if (known) return known;
   const p = s.productById.get(productId);
-  return p ? priceInfo(p, s.priceItemById) : { cents: null, status: 'none', source: 'Product not found' };
+  return p ? priceInfo(p, s.priceItemById) : NOT_FOUND;
 }
 export function cartTotals(lines: DraftLine[], s: AppState = state) {
   return computeTotals(lines, (id) => priceOf(id, s), (id) => priceInfoOf(id, s).status === 'approximate');

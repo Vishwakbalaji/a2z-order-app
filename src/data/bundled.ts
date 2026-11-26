@@ -18,6 +18,7 @@ import { A2Z_CATALOG_FILE, A2Z_CATALOG_ROWS, brandForGroup, splitDescription } f
 import { ACCEPTED_80, ACCEPTED_90 } from './acceptedMatches';
 import { OWNER_DOC_FILE, OWNER_DOC_MATCHES } from './ownerMatchedPrices';
 import { SUPPLEMENT_FILE, SUPPLEMENT_ROWS, type SupplementRow } from './supplementPrices';
+import { CATALOG_NOTES_FILE, catalogNoteRows } from './catalogPriceNotes';
 
 /** A verified catalog-product → price-sheet-line link (checked by a person, not guessed). */
 export interface BundledMapping {
@@ -34,7 +35,7 @@ export type BundledDataset =
   // links between catalog products and price lines (decisions you already made by hand are never overwritten)
   | { version: number; kind: 'mappings'; fileName: string; mappings: BundledMapping[] }
   // the owner's supplemental price list (red = confirmed, orange = approximate) applied to exact catalog lines
-  | { version: number; kind: 'supplement'; fileName: string; rows: SupplementRow[] }
+  | { version: number; kind: 'supplement'; fileName: string; rows: SupplementRow[]; title?: string }
   // re-run price matching for every catalog product with the current rules (hand decisions are kept)
   | { version: number; kind: 'rematch'; fileName: string }
   // settings values applied only where the setting is still empty (never overwrites what you typed)
@@ -118,7 +119,15 @@ export const BUNDLED_DATASETS: BundledDataset[] = [
     fileName: SUPPLEMENT_FILE,
     rows: SUPPLEMENT_ROWS,
   },
-  // Next: { version: 9, kind: 'catalog' | 'pricesheet' | 'settings' | 'mappings' | 'rematch' | 'supplement', ... }
+  {
+    // Owner's price notes written on the catalog PDF (2026-11-26): group prices by size / count → confirmed.
+    version: 9,
+    kind: 'supplement',
+    fileName: CATALOG_NOTES_FILE,
+    title: 'Your catalog price notes applied',
+    rows: catalogNoteRows(),
+  },
+  // Next: { version: 10, kind: 'catalog' | 'pricesheet' | 'settings' | 'mappings' | 'rematch' | 'supplement', ... }
 ];
 
-export const LATEST_BUNDLED_VERSION = Math.max(...BUNDLED_DATASETS.map((d) => d.version));
+export const LATEST_BUNDLED_VERSION = Math.max(...BUNDLED_DATASETS.map((d) => d.version)); // = BUNDLED_VERSION (bundledVersion.ts)

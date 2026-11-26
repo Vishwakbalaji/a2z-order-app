@@ -14,10 +14,16 @@ const PAGE = 60;
 export function PriceStatusScreen() {
   const products = useApp((s) => s.products);
   const priceItemById = useApp((s) => s.priceItemById);
-  const rows = useMemo(
-    () => products.filter((p) => p.origin !== 'pricesheet' && p.active).map((p) => ({ p, info: priceInfo(p, priceItemById) })),
-    [products, priceItemById],
-  );
+  const browseIds = useApp((s) => s.browseIds);
+  const subOf = useApp((s) => s.subOf);
+  // same order as the product list: section → price-sheet brand heading
+  const rows = useMemo(() => {
+    const pos = new Map(browseIds.map((id, i) => [id, i]));
+    return products
+      .filter((p) => p.origin !== 'pricesheet' && p.active)
+      .sort((a, b) => (pos.get(a.id) ?? 1e9) - (pos.get(b.id) ?? 1e9))
+      .map((p) => ({ p, info: priceInfo(p, priceItemById) }));
+  }, [products, priceItemById, browseIds]);
   const counts = useMemo(() => {
     const c = { confirmed: 0, approximate: 0, review: 0, none: 0, mine: 0 };
     for (const r of rows) {
@@ -79,6 +85,7 @@ export function PriceStatusScreen() {
           {shown.slice(0, limit).map(({ p, info }) => (
             <li key={p.id} data-testid="price-row">
               <Card className="p-3">
+                <div className="text-xs text-gray-500">{[p.department, subOf.get(p.id)].filter(Boolean).join(' › ')}</div>
                 <div className="font-semibold leading-snug break-words">{titleName(p)}</div>
                 {sizeLabel(p) && <div className="text-sm text-gray-700">{sizeLabel(p)}</div>}
                 <div className="mt-1">

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { Suspense, lazy, useEffect, useRef } from 'react';
 import { useRoute } from './lib/router';
 import { useApp, currentLines, cartTotals } from './state/store';
 import { DialogHost, Icon, ToastHost } from './components/ui';
@@ -7,20 +7,23 @@ import { ProductsScreen } from './screens/Products';
 import { CartScreen } from './screens/Cart';
 import { OrdersScreen, OrderDetailScreen } from './screens/Orders';
 import { StoresScreen, StoreEditScreen } from './screens/Stores';
-import { SettingsScreen } from './screens/Settings';
-import { ImportPricesScreen } from './screens/admin/ImportPrices';
-import { ImportCatalogScreen } from './screens/admin/ImportCatalog';
-import { PriceStatusScreen } from './screens/admin/PriceStatus';
-import { ReviewMatchesScreen } from './screens/admin/ReviewMatches';
-import { ManageProductsScreen, ProductEditScreen } from './screens/admin/ManageProducts';
-import { BackupScreen } from './screens/admin/Backup';
-import { WeeklyReportsScreen, WeeklyReportScreen } from './screens/WeeklyReports';
-import { PairScreen } from './screens/Pair';
+// screens used less often are loaded when first opened (smaller, faster start)
+const SettingsScreen = lazy(() => import('./screens/Settings').then((m) => ({ default: m.SettingsScreen })));
+const ImportPricesScreen = lazy(() => import('./screens/admin/ImportPrices').then((m) => ({ default: m.ImportPricesScreen })));
+const ImportCatalogScreen = lazy(() => import('./screens/admin/ImportCatalog').then((m) => ({ default: m.ImportCatalogScreen })));
+const PriceStatusScreen = lazy(() => import('./screens/admin/PriceStatus').then((m) => ({ default: m.PriceStatusScreen })));
+const ReviewMatchesScreen = lazy(() => import('./screens/admin/ReviewMatches').then((m) => ({ default: m.ReviewMatchesScreen })));
+const ManageProductsScreen = lazy(() => import('./screens/admin/ManageProducts').then((m) => ({ default: m.ManageProductsScreen })));
+const ProductEditScreen = lazy(() => import('./screens/admin/ManageProducts').then((m) => ({ default: m.ProductEditScreen })));
+const BackupScreen = lazy(() => import('./screens/admin/Backup').then((m) => ({ default: m.BackupScreen })));
+const WeeklyReportsScreen = lazy(() => import('./screens/WeeklyReports').then((m) => ({ default: m.WeeklyReportsScreen })));
+const WeeklyReportScreen = lazy(() => import('./screens/WeeklyReports').then((m) => ({ default: m.WeeklyReportScreen })));
+const PairScreen = lazy(() => import('./screens/Pair').then((m) => ({ default: m.PairScreen })));
 
 function BottomNav({ tab }: { tab: string }) {
   const drafts = useApp((s) => s.drafts);
   const storeId = useApp((s) => s.settings.selectedStoreId);
-  const reviewCount = useApp((s) => s.reviewCount);
+  const reviewCount = useApp((s) => s.priceToCheck);
   void drafts;
   void storeId;
   const t = cartTotals(currentLines());
@@ -96,7 +99,7 @@ export function App() {
         </div>
       )}
       <main ref={mainRef} className="flex-1 overflow-y-auto overscroll-contain" id="main">
-        {screen}
+        <Suspense fallback={<div className="p-10 text-center text-gray-500">Loading…</div>}>{screen}</Suspense>
       </main>
       <BottomNav tab={tab === 'reports' ? 'orders' : tab === 'pair' ? 'settings' : ['cart', 'orders', 'stores', 'settings'].includes(tab) ? tab : 'products'} />
       <StorePickerHost />

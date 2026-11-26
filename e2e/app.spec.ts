@@ -73,8 +73,8 @@ test.beforeEach(async ({ page }, info) => {
 
 test('@smoke loads the A2Z catalog with case prices from the price sheet', async ({ page }) => {
   await expect(page.getByText('A2Z Beverage Distributors')).toBeVisible();
-  await expect(page.getByTestId('data-notice')).toContainText('New prices from your price list');
-  await expect(page.getByTestId('data-notice')).toContainText('A safety copy of your data was saved first');
+  await expect(page.getByTestId('data-notice')).toContainText('Your catalog price notes applied');
+  await expect(page.getByTestId('data-notice')).toContainText('118 prices from your notes are confirmed (green).');
   await searchFor(page, 'zephyrhills 8oz');
   const row = page.getByTestId('product-row').first();
   await expect(row).toContainText('ZEPHYRHILLS');
@@ -92,9 +92,11 @@ test('pricing audit: verified prices used, flagged ones wait for review, unmatch
   await searchFor(page, 'fanta grape mexico');
   const fm = page.getByTestId('product-row').first();
   await expect(fm).toContainText('FANTA GRAPE MEXICO');
-  await expect(fm).toContainText('$40.99'); // NO PRICE in his matched list (v7); orange in his later price list (v8)
-  await expect(fm).toContainText('Approximate');
-  await expect(fm.getByTestId('price')).toHaveClass(/text-orange-600/);
+  await expect(fm).toContainText('$40.99'); // NO PRICE in his matched list (v7); orange (v8); his catalog note 355 ML (v9)
+  await expect(fm).toContainText('Confirmed');
+  await expect(fm.getByTestId('price')).toHaveClass(/text-green-700/);
+  await searchFor(page, 'fanta pineapple mexico');
+  await expect(page.getByTestId('product-row').first().getByTestId('price')).toHaveClass(/text-orange-600/); // 335 ML: not in his note
   await searchFor(page, 'topo chico');
   await expect(page.getByTestId('product-row').first()).toContainText('Price Not Listed');
   await searchFor(page, 'smart water alkline 1l');
@@ -160,13 +162,13 @@ test('price statuses: orange approximate counted and marked, owner confirms it (
   expect(o.text).not.toContain('$38.50'); // distributor PDF: never prices
   // Settings › Prices to check
   await page.goto('/#/settings/prices');
-  await expect(page.getByTestId('price-summary')).toContainText('Approximate44');
-  await expect(page.getByTestId('price-summary')).toContainText('Price Not Listed11');
+  await expect(page.getByTestId('price-summary')).toContainText('Approximate34');
+  await expect(page.getByTestId('price-summary')).toContainText('Price Not Listed10');
   await page.getByRole('button', { name: /^Choose price/ }).click();
-  const tonic = page.getByTestId('price-row').filter({ hasText: 'CANADA DRY TONIC WATER ZERO SUGAR' });
-  await expect(tonic).toContainText('Needs price selection');
-  await tonic.getByRole('button', { name: '$24.99 · 1 L / 15 ct' }).click();
-  await expect(page.getByTestId('price-row').filter({ hasText: 'CANADA DRY TONIC WATER ZERO SUGAR' })).toHaveCount(0);
+  const ba = page.getByTestId('price-row').filter({ hasText: 'BODYARMOR TROPICAL PASSION FRUIT' });
+  await expect(ba).toContainText('Needs price selection');
+  await ba.getByRole('button', { name: '$20.99 · 16 oz / 12 ct' }).click();
+  await expect(page.getByTestId('price-row').filter({ hasText: 'BODYARMOR TROPICAL PASSION FRUIT' })).toHaveCount(0);
   await page.getByRole('button', { name: /^Approximate/ }).click();
   await page.getByLabel('Search prices').fill('monster java');
   await page.getByTestId('price-row').first().getByRole('button', { name: 'Confirm $38.50' }).click();
@@ -177,10 +179,47 @@ test('price statuses: orange approximate counted and marked, owner confirms it (
   await expect(page.getByTestId('approx-note')).toHaveCount(0);
   await searchFor(page, 'monster java');
   await expect(page.getByTestId('product-row').filter({ hasText: 'MONSTER JAVA VARIETY' }).first().getByTestId('price')).toHaveAttribute('data-status', 'confirmed');
-  await searchFor(page, 'tonic water zero');
-  await expect(page.getByTestId('product-row').first()).toContainText('$24.99');
+  await searchFor(page, 'tropical passion');
+  await expect(page.getByTestId('product-row').first()).toContainText('$20.99');
   await expect(page.getByTestId('product-row').first()).toContainText('Confirmed');
   await page.screenshot({ path: `${OUT}/${test.info().project.name}-prices.png` });
+});
+
+test('order by category: section → price-sheet brand heading, search inside it, add to cart', async ({ page }) => {
+  await addStore(page, 'Category Store');
+  await page.click('[data-testid=nav-products]');
+  await expect(page.getByTestId('dept-heading').first()).toHaveText('WATER');
+  await page.getByRole('tab', { name: 'Soda', exact: true }).click();
+  const brands = page.getByRole('tablist', { name: 'Brands' });
+  await expect(brands.getByRole('tab').nth(1)).toContainText('Coke / Fanta / Sprite & Flavors');
+  await expect(brands.getByRole('tab').nth(2)).toContainText('Pepsi / Dew / Dr Pepper');
+  await brands.getByRole('tab', { name: /^Pepsi \/ Dew \/ Dr Pepper/ }).click();
+  await expect(page.getByTestId('product-row')).toHaveCount(25);
+  await expect(page.getByTestId('sub-heading')).toHaveCount(0);
+  const pepsi2l = page.getByTestId('product-row').filter({ hasText: /^PEPSI2 L \/ 8 CT/ });
+  await expect(pepsi2l).toContainText('$13.99'); // from the owner's note on the catalog
+  await expect(pepsi2l).toContainText('Confirmed');
+  await pepsi2l.getByRole('button', { name: /^Increase / }).click();
+  await pepsi2l.getByRole('button', { name: /^Increase / }).click();
+  // search inside the chosen brand heading
+  await page.fill('input[aria-label="Search products"]', 'dr pepper 20');
+  await expect(page.getByTestId('product-row').first()).toContainText('DR PEPPER');
+  await expect(page.getByText(/products? in Pepsi \/ Dew \/ Dr Pepper/)).toBeVisible();
+  await page.getByTestId('product-row').first().getByRole('button', { name: /^Increase / }).click();
+  // a name from another category: offered across all departments
+  await page.fill('input[aria-label="Search products"]', 'gatorade cool blue 28');
+  await expect(page.getByTestId('product-row')).toHaveCount(0);
+  await page.getByTestId('search-all').click();
+  await expect(page.getByTestId('product-row')).toHaveCount(1);
+  await page.getByTestId('product-row').first().getByRole('button', { name: /^Increase / }).click();
+  await page.click('[data-testid=nav-cart]');
+  await expect(page.getByTestId('cart-row')).toHaveCount(3);
+  await expect(page.getByTestId('total-cases')).toHaveText('4');
+  await expect(page.getByTestId('total-value')).toHaveText('$83.96'); // 2 × 13.99 + 25.99 + 29.99
+  await page.click('[data-testid=nav-products]');
+  await page.fill('input[aria-label="Search products"]', '');
+  await page.getByRole('tab', { name: 'Soda', exact: true }).click();
+  await page.screenshot({ path: `${OUT}/${test.info().project.name}-categories.png` });
 });
 
 test('QA 1-9: +/- quantities, auto cart add/remove, sync, totals', async ({ page }) => {

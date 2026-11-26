@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Badge, Card, Field, Icon, PageHeader, btnPrimary, btnSecondary, inputCls, toast } from '../components/ui';
 import { useApp, updateSettings } from '../state/store';
-import { priceInfo } from '../lib/products';
 import { CloudSyncCard } from '../components/CloudSyncCard';
 
 function resizeImage(file: File, max = 600): Promise<string> {
@@ -62,8 +61,7 @@ export function SettingsScreen() {
   }, []);
   const unmatched = products.filter((p) => p.active && p.origin !== 'pricesheet' && p.matchStatus === 'unmatched').length;
   const catalogCount = products.filter((p) => p.origin === 'catalog').length;
-  const priceItemById = useApp((s) => s.priceItemById);
-  const priceToCheck = products.filter((p) => p.active && p.origin !== 'pricesheet' && priceInfo(p, priceItemById).status === 'review').length;
+  const priceToCheck = useApp((s) => s.priceToCheck);
 
   return (
     <div>

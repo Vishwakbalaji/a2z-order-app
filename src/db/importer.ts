@@ -7,10 +7,9 @@ import { takeSnapshot } from './backup';
 import type { DraftLine, Mapping, PriceItem, Product, Settings } from '../types';
 import { matchProduct, buildSiblingCounts, DEFAULT_CONTEXT } from '../lib/matching';
 import { displayName, mappingKey, priceItemKey, unitsFromText } from '../lib/products';
-import { A2Z_COMPANY } from '../data/a2zPriceSheet';
-import { BUNDLED_DATASETS, type BundledMapping } from '../data/bundled';
+import type { BundledMapping } from '../data/bundled';
 import { normText } from '../lib/normalize';
-import { SUPPLEMENT_RESOLVED, type SupplementRow } from '../data/supplementPrices';
+import type { SupplementRow } from '../data/supplementPrices';
 
 export interface PriceRowInput {
   section: string;
@@ -313,6 +312,8 @@ export async function leaveUnmatched(productId: string) {
  * applied on the next start after the app is updated — stores, carts and orders untouched.
  */
 export async function syncBundledData(): Promise<number[]> {
+  // the documents are loaded only when this phone still needs one of them (keeps normal starts light)
+  const [{ BUNDLED_DATASETS }, { A2Z_COMPANY }] = await Promise.all([import('../data/bundled'), import('../data/a2zPriceSheet')]);
   const run = async () => {
     const applied: number[] = [];
     await db.transaction('rw', db.settings, async () => {
@@ -376,8 +377,12 @@ export async function syncBundledData(): Promise<number[]> {
       if (ds.kind === 'supplement') {
         const r = await applySupplement(ds.rows, ds.fileName);
         notice = {
-          title: 'New prices from your price list',
-          text: `${r.confirmed} confirmed (green), ${r.approximate} approximate (orange), ${r.select} need you to choose the right price, ${r.none} not on the sheet.${r.skipped ? ` ${r.skipped} products you priced yourself were left as they are.` : ''} A safety copy of your data was saved first (Settings › Backup & restore).`,
+          title: ds.title || 'New prices from your price list',
+          text: `${
+            r.approximate + r.select + r.none === 0
+              ? `${r.confirmed} prices from your notes are confirmed (green). Still to price: see Settings › Prices to check.`
+              : `${r.confirmed} confirmed (green), ${r.approximate} approximate (orange), ${r.select} need you to choose the right price, ${r.none} not on the sheet.`
+          }${r.skipped ? ` ${r.skipped} products you priced yourself were left as they are.` : ''} A safety copy of your data was saved first (Settings › Backup & restore).`,
           at: Date.now(),
           review: r.select,
         };
@@ -449,7 +454,8 @@ export async function moveDraftsToCatalogNames() {
  * confirmed himself are never changed. A safety snapshot of all data is taken first.
  */
 export async function applySupplement(rows: SupplementRow[], fileName: string) {
-  await takeSnapshot('Before the new price list (A2Z_Mismatch_With_Prices)');
+  await takeSnapshot(`Before the new price list (${fileName.replace(/\.pdf\b/, '')})`);
+  const { SUPPLEMENT_RESOLVED } = await import('../data/supplementPrices');
   const res = { confirmed: 0, approximate: 0, select: 0, none: 0, skipped: 0, missing: [] as string[] };
   const products = (await db.products.toArray()).filter((p) => p.origin === 'catalog');
   const byLine = new Map<string, Product[]>();

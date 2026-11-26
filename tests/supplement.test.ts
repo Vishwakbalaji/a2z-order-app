@@ -18,7 +18,13 @@ const info = (desc: string) => S.priceInfoOf(cat(desc).id);
 
 describe('owner price list A2Z_Mismatch_With_Prices (bundled v8)', () => {
   it('every row points at real catalog lines; red = confirmed, orange = approximate, grey = not listed', async () => {
-    const s = await fresh();
+    const later = BUNDLED_DATASETS.splice(8); // a phone with v1–v8 (v9 = his catalog notes, tested separately)
+    let s!: Awaited<ReturnType<typeof fresh>>;
+    try {
+      s = await fresh();
+    } finally {
+      BUNDLED_DATASETS.push(...later);
+    }
     const lines = new Set(s.products.filter((p) => p.origin === 'catalog').map((p) => p.catalogName));
     const used = new Set<string>();
     for (const r of SUPPLEMENT_ROWS) {
@@ -98,7 +104,7 @@ describe('owner price list A2Z_Mismatch_With_Prices (bundled v8)', () => {
       const p = cat('ARIZONA CAN-GREEN TEA 22OZ 24CT');
       await S.saveProduct({ ...p, priceOverrideCents: 1999 });
       const before = await db.products.count();
-      BUNDLED_DATASETS.push(...saved);
+      BUNDLED_DATASETS.push(saved[0]);
       expect(await syncBundledData()).toEqual([8]);
       await S.reload();
       expect(S.priceInfoOf(cat('ARIZONA CAN-GREEN TEA 22OZ 24CT').id)).toMatchObject({ cents: 1999, status: 'confirmed' }); // his price wins
